@@ -192,7 +192,7 @@ def process_arg_rainfall(arg_records: list[dict]) -> Path:
             "time_of_measurement": time_meas,
             "rainfall_mm": float(rainfall) if rainfall is not None else 0.0,
             "previous_rainfall_mm": float(prev_rainfall) if prev_rainfall is not None else 0.0,
-            "source": "observed",
+            "source": "OBSERVED",
             "provenance": "CFM-DSS_ARG",
         })
 
@@ -229,7 +229,7 @@ def process_reservoirs(reservoir_records: list[dict]) -> Path:
             "storage_capacity_dead_mcm": round(float(dead), 3),
             "storage_fill_pct": fill_pct,
             "unit": "million_cubic_meters_MCM",
-            "source": "observed",
+            "source": "OBSERVED",
             "provenance": "CFM-DSS_LakeOperationSystem",
         })
 
@@ -267,7 +267,7 @@ def process_michaung_hourly(michaung_data: dict) -> Path:
             "hourly_precipitation_mm": round(p_val, 2),
             "cumulative_rainfall_mm": round(cum_rainfall, 2),
             "event_name": "Cyclone_Michaung_2023",
-            "source": "observed",
+            "source": "OBSERVED",
             "provenance": "ERA5_IMD_Calibrated",
         })
 

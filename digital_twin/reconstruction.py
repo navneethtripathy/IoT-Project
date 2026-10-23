@@ -33,6 +33,7 @@ class ReconstructionEvaluation:
     reconstructed_values: list[Optional[float]]
     ground_truth: list[float]
     mask: list[bool]
+    provenance: str = "IMPUTED"
 
 
 def locf(series: list[Optional[float]]) -> list[Optional[float]]:

@@ -778,3 +778,201 @@ class TestApiEndpoints:
         res_csv = api_client.get("/api/data/export?format=csv")
         assert res_csv.status_code == 200
         assert res_csv.json()["status"] == "exported"
+
+
+class TestProvenanceAndSensorVerification:
+    """Verifies data provenance standards, sensor math, invalid handling, and thresholds."""
+
+    def test_all_canonical_provenance_labels(self):
+        """Verify all 6 canonical provenance tags are valid and preserved."""
+        canonical_tags = [
+            DataSource.WOKWI_SIMULATED,
+            DataSource.PYTHON_SIMULATED,
+            DataSource.OBSERVED,
+            DataSource.REPLAYED_HISTORICAL,
+            DataSource.DIGITAL_TWIN,
+            DataSource.IMPUTED,
+        ]
+        assert len(canonical_tags) == 6
+
+        storage = MemoryStorage()
+        ingestion = IngestionService(storage=storage)
+        base_time = datetime(2026, 10, 24, 12, 0, 0, tzinfo=timezone.utc)
+
+        for idx, tag in enumerate(canonical_tags, start=1):
+            msg = TelemetryMessage(
+                device_id=f"device_{idx}",
+                zone_id="zone_01",
+                sequence=idx,
+                timestamp=base_time + timedelta(seconds=idx * 5),
+                distance_cm=10.0,
+                water_level_cm=20.0,
+                water_level_pct=66.7,
+                sensor_status=SensorStatus.VALID,
+                source=tag,
+            )
+            assert msg.source == tag
+            record = ingestion.process_message(msg.model_dump())
+            assert record is not None
+            assert record.source == tag
+
+        # Verify storage records retain exact source tags
+        stored_records = storage.query_latest("zone_01", limit=10)
+        stored_sources = {r["source"] for r in stored_records}
+        for tag in canonical_tags:
+            assert tag.value in stored_sources
+
+    def test_provenance_alias_normalization(self):
+        """Verify legacy/lowercase source aliases normalize to canonical uppercase tags."""
+        test_cases = [
+            ("wokwi", DataSource.WOKWI_SIMULATED),
+            ("WOKWI_SIMULATED", DataSource.WOKWI_SIMULATED),
+            ("python_simulator", DataSource.PYTHON_SIMULATED),
+            ("simulator", DataSource.PYTHON_SIMULATED),
+            ("PYTHON_SIMULATED", DataSource.PYTHON_SIMULATED),
+            ("observed", DataSource.OBSERVED),
+            ("physical", DataSource.OBSERVED),
+            ("OBSERVED", DataSource.OBSERVED),
+            ("replayed_historical", DataSource.REPLAYED_HISTORICAL),
+            ("REPLAYED_HISTORICAL", DataSource.REPLAYED_HISTORICAL),
+            ("digital_twin", DataSource.DIGITAL_TWIN),
+            ("forecast", DataSource.DIGITAL_TWIN),
+            ("DIGITAL_TWIN", DataSource.DIGITAL_TWIN),
+            ("reconstructed", DataSource.IMPUTED),
+            ("imputed", DataSource.IMPUTED),
+            ("IMPUTED", DataSource.IMPUTED),
+        ]
+        for raw_val, expected_enum in test_cases:
+            msg = TelemetryMessage(
+                device_id="dev_alias",
+                zone_id="zone_01",
+                sequence=1,
+                timestamp=datetime.now(timezone.utc),
+                source=raw_val,
+            )
+            assert msg.source == expected_enum
+
+    def test_sensor_distance_to_water_level_conversion(self):
+        """Verify water depth and percentage conversion formula with 30cm container height."""
+        container_h = 30.0
+        # distance = 10 cm -> water_depth = 30 - 10 = 20 cm -> pct = (20 / 30) * 100 = 66.67%
+        dist = 10.0
+        depth = container_h - dist
+        pct = (depth / container_h) * 100.0
+
+        msg = TelemetryMessage(
+            device_id="sensor_node",
+            zone_id="zone_01",
+            sequence=1,
+            timestamp=datetime.now(timezone.utc),
+            distance_cm=dist,
+            water_level_cm=round(depth, 2),
+            water_level_pct=round(pct, 2),
+            source=DataSource.WOKWI_SIMULATED,
+        )
+        assert msg.distance_cm == 10.0
+        assert msg.water_level_cm == 20.0
+        assert round(msg.water_level_pct, 1) == 66.7
+
+    def test_water_level_percentage_clamping(self):
+        """Verify water level percentage is clamped to [0.0, 100.0]."""
+        msg_over = TelemetryMessage(
+            device_id="d1",
+            zone_id="zone_01",
+            sequence=1,
+            timestamp=datetime.now(timezone.utc),
+            water_level_pct=140.0,
+        )
+        assert msg_over.water_level_pct == 100.0
+
+        msg_under = TelemetryMessage(
+            device_id="d2",
+            zone_id="zone_01",
+            sequence=2,
+            timestamp=datetime.now(timezone.utc),
+            water_level_pct=-15.0,
+        )
+        assert msg_under.water_level_pct == 0.0
+
+    def test_invalid_sensor_reading_handled_safely(self):
+        """Verify invalid readings are rejected safely without treating them as zero water level."""
+        storage = MemoryStorage()
+        ingestion = IngestionService(storage=storage)
+
+        # Message with invalid sensor status and None depth (as emitted on sensor timeout)
+        invalid_msg = {
+            "device_id": "node_01",
+            "zone_id": "zone_01",
+            "sequence": 1,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "distance_cm": None,
+            "water_level_cm": None,
+            "water_level_pct": None,
+            "sensor_status": "invalid",
+            "source": "WOKWI_SIMULATED",
+        }
+        record = ingestion.process_message(invalid_msg)
+        assert record is not None
+        assert record.sensor_status == SensorStatus.INVALID
+        assert "invalid_reading" in record.quality_flags
+        # Verify it did not trigger false flood threshold alert
+        assert len(ingestion.alerts) == 0
+
+    def test_prototype_thresholds_and_hysteresis(self):
+        """Verify 70% warning and 85% critical prototype thresholds with 3% hysteresis."""
+        storage = MemoryStorage()
+        svc = IngestionService(storage=storage)
+        base = datetime(2026, 10, 24, 10, 0, 0, tzinfo=timezone.utc)
+
+        # Normal level: 50%
+        svc.process_message({
+            "device_id": "dev_th", "zone_id": "zone_01", "sequence": 1,
+            "timestamp": (base + timedelta(seconds=5)).isoformat(),
+            "water_level_pct": 50.0,
+        })
+        assert len(svc.alerts) == 0
+
+        # Cross warning: 70.5% (>= 70%)
+        svc.process_message({
+            "device_id": "dev_th", "zone_id": "zone_01", "sequence": 2,
+            "timestamp": (base + timedelta(seconds=10)).isoformat(),
+            "water_level_pct": 70.5,
+        })
+        assert len(svc.alerts) == 1
+        assert svc.alerts[-1].alert_level == AlertLevel.WARNING
+
+        # Cross critical: 86.0% (>= 85%)
+        svc.process_message({
+            "device_id": "dev_th", "zone_id": "zone_01", "sequence": 3,
+            "timestamp": (base + timedelta(seconds=15)).isoformat(),
+            "water_level_pct": 86.0,
+        })
+        assert len(svc.alerts) == 2
+        assert svc.alerts[-1].alert_level == AlertLevel.CRITICAL
+
+        # Drops to 83.0% (inside hysteresis band: 85 - 3 = 82%) -> stays Critical
+        svc.process_message({
+            "device_id": "dev_th", "zone_id": "zone_01", "sequence": 4,
+            "timestamp": (base + timedelta(seconds=20)).isoformat(),
+            "water_level_pct": 83.0,
+        })
+        assert len(svc.alerts) == 2
+
+        # Drops to 80.0% (< 82%) -> drops to Warning
+        svc.process_message({
+            "device_id": "dev_th", "zone_id": "zone_01", "sequence": 5,
+            "timestamp": (base + timedelta(seconds=25)).isoformat(),
+            "water_level_pct": 80.0,
+        })
+        assert len(svc.alerts) == 3
+        assert svc.alerts[-1].alert_level == AlertLevel.WARNING
+
+        # Drops below warning clearing band: 65.0% (< 67%) -> Normal
+        svc.process_message({
+            "device_id": "dev_th", "zone_id": "zone_01", "sequence": 6,
+            "timestamp": (base + timedelta(seconds=30)).isoformat(),
+            "water_level_pct": 65.0,
+        })
+        assert len(svc.alerts) == 4
+        assert svc.alerts[-1].alert_level == AlertLevel.NORMAL
+

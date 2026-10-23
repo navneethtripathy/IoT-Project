@@ -142,7 +142,7 @@ def get_zones():
         state["sensor_status"] = status.get("sensor_status", "valid")
         state["alert_level"] = status.get("alert_level", "normal")
         state["zone_type"] = "virtual"
-        state["data_source"] = status.get("source", "digital_twin")
+        state["data_source"] = status.get("source", "DIGITAL_TWIN")
         state["is_stale"] = status.get("is_stale", False)
 
     return {"zones": states, "count": len(states)}
@@ -166,7 +166,8 @@ def get_zone(zone_id: str):
     state["sensor_status"] = status.get("sensor_status", "valid")
     state["alert_level"] = status.get("alert_level", "normal")
     state["zone_type"] = "virtual"
-    state["data_source"] = status.get("source", "digital_twin")
+    state["data_source"] = status.get("source", "DIGITAL_TWIN")
+    state["is_stale"] = status.get("is_stale", False)
 
     return state
 
@@ -227,7 +228,13 @@ def get_alerts(level: Optional[str] = None, limit: int = Query(50, ge=1, le=200)
 
 @app.get("/api/scenarios")
 def get_scenarios():
-    return {"scenarios": list_scenarios()}
+    return {
+        "scenarios": list_scenarios(),
+        "disclaimer": (
+            "Scenario outputs are hypothetical digital-twin model simulations for resilience testing, "
+            "not actual future observations or official flood predictions."
+        ),
+    }
 
 
 @app.get("/api/scenarios/status")
@@ -426,6 +433,7 @@ def get_forecast(zone_id: str):
     res = forecast.to_dict()
     res["zone_name"] = state.get("zone_name", "")
     res["subbasin"] = state.get("subbasin", "")
+    res["provenance"] = "DIGITAL_TWIN"
     return res
 
 

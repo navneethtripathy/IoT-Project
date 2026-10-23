@@ -214,7 +214,7 @@ class TestNewApiEndpoints:
             assert resp.status_code == 200
             data = resp.json()
             assert data["zone_id"] == "zone_01"
-            assert data["provenance"] == "forecast"
+            assert data["provenance"] in (DataSource.DIGITAL_TWIN.value, "DIGITAL_TWIN")
             assert len(data["horizons"]) >= 2
             assert "subbasin" in data
 
@@ -246,7 +246,7 @@ class TestNewApiEndpoints:
             assert resp.status_code == 200
             step_data = resp.json()
             assert step_data["steps_executed"] == 2
-            assert step_data["sample"]["source"] == "replayed_historical"
+            assert step_data["sample"]["source"] in (DataSource.REPLAYED_HISTORICAL.value, "REPLAYED_HISTORICAL")
 
             # Stop replay
             resp = client.post("/api/replay/stop")

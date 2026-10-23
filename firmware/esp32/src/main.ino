@@ -35,13 +35,23 @@ const char* TOPIC_STATUS    = "civictwin/v1/zones/zone_01/status";
 const char* TOPIC_ALERTS    = "civictwin/v1/zones/zone_01/alerts";
 
 // Device Identification
+// Note: This Wokwi virtual node is explicitly associated with a single designated simulated
+// study zone: Adyar Basin (zone_01 / zone_adyar). It does not represent physical river deployment.
 const char* DEVICE_ID = "node_01";
 const char* ZONE_ID   = "zone_01";
+
+#ifndef DATA_SOURCE
+#define DATA_SOURCE "WOKWI_SIMULATED"
+#endif
 
 // Sensor Geometry and Pins
 const int   TRIG_PIN            = 5;
 const int   ECHO_PIN            = 18;
 const int   LED_PIN             = 2;
+// Prototype container reference height (cm).
+// Formula assumes a fixed sensor mount above the water surface:
+//   Water depth (cm) = container reference height (cm) - measured distance (cm)
+//   Water level (%)  = 100 * water depth / container reference height
 const float CONTAINER_HEIGHT_CM = 30.0;
 const float SENSOR_MIN_CM       = 2.0;
 const float SENSOR_MAX_CM       = 400.0;
@@ -54,6 +64,8 @@ const unsigned long WIFI_TIMEOUT_MS    = 10000;
 const unsigned long STATUS_INTERVAL_MS = 30000;
 
 // Thresholds and Hysteresis
+// Disclaimer: These are configurable prototype thresholds for laboratory simulation
+// and are NOT officially validated flood warning thresholds for Chennai river basins.
 const float WARN_THRESHOLD_PCT = 70.0;
 const float CRIT_THRESHOLD_PCT = 85.0;
 const float HYSTERESIS_PCT     = 3.0;
@@ -177,11 +189,19 @@ void publishTelemetry(float distance, float waterLevel, float waterPct, const ch
     doc["zone_id"]        = ZONE_ID;
     doc["sequence"]       = sequence;
     doc["timestamp"]      = getISO8601Timestamp();
-    doc["distance_cm"]    = round(distance * 100) / 100.0;
-    doc["water_level_cm"] = round(waterLevel * 100) / 100.0;
-    doc["water_level_pct"]= round(waterPct * 100) / 100.0;
+
+    if (strcmp(sensorStatus, "valid") == 0) {
+        doc["distance_cm"]    = round(distance * 100) / 100.0;
+        doc["water_level_cm"] = round(waterLevel * 100) / 100.0;
+        doc["water_level_pct"]= round(waterPct * 100) / 100.0;
+    } else {
+        // Do not fabricate zero readings for sensor failures or timeouts
+        doc["distance_cm"]    = nullptr;
+        doc["water_level_cm"] = nullptr;
+        doc["water_level_pct"]= nullptr;
+    }
     doc["sensor_status"]  = sensorStatus;
-    doc["source"]         = "wokwi";
+    doc["source"]         = DATA_SOURCE;
 
     char payload[512];
     serializeJson(doc, payload, sizeof(payload));
@@ -278,12 +298,14 @@ void loop() {
 
         float distance = getMedianDistance();
 
+        // Safe handling of invalid echo readings, timeouts, and out-of-range bounds
         if (distance < 0 || distance < SENSOR_MIN_CM || distance > SENSOR_MAX_CM) {
             failedReadings++;
 
             if (failedReadings >= MAX_FAILED) {
-                publishTelemetry(0, 0, 0, "invalid");
-                Serial.printf("[SENSOR] %d consecutive failures\n", failedReadings);
+                // Reject invalid measurement: do NOT publish dummy 0.0 water level
+                publishTelemetry(-1.0, -1.0, -1.0, "invalid");
+                Serial.printf("[SENSOR] %d consecutive failures (out of range/timeout)\n", failedReadings);
             } else if (lastValidLevel >= 0) {
                 float pct = (lastValidLevel / CONTAINER_HEIGHT_CM) * 100.0;
                 evaluateThreshold(pct);
@@ -291,11 +313,15 @@ void loop() {
         } else {
             failedReadings = 0;
 
+            // Water depth (cm) = container reference height (cm) - measured distance (cm)
             float waterLevel = CONTAINER_HEIGHT_CM - distance;
-            if (waterLevel < 0) waterLevel = 0;
+            if (waterLevel < 0.0) waterLevel = 0.0;
             if (waterLevel > CONTAINER_HEIGHT_CM) waterLevel = CONTAINER_HEIGHT_CM;
 
+            // Water level (%) = 100 * water depth / container reference height
             float waterPct = (waterLevel / CONTAINER_HEIGHT_CM) * 100.0;
+            if (waterPct < 0.0) waterPct = 0.0;
+            if (waterPct > 100.0) waterPct = 100.0;
             lastValidLevel = waterLevel;
 
             publishTelemetry(distance, waterLevel, waterPct, "valid");

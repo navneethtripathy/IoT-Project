@@ -87,8 +87,9 @@ class HistoricalReplayController:
         cum_rain = float(row.get("cumulative_rainfall_mm", 0.0))
         timestamp_str = row.get("timestamp_local", "")
 
-        # Water level estimate in cm (scaled from cumulative rainfall with storage cap)
-        # Using 30cm container baseline
+        # Water level proxy in cm (scaled from historical rainfall observations for pipeline replay)
+        # Note: Rainfall is not a direct physical measurement of river stage; this serves as a
+        # calibrated replay stream for resilience testing.
         water_level_cm = min(30.0, max(2.0, (cum_rain / 370.0) * 28.0 + 2.0))
         water_level_pct = (water_level_cm / 30.0) * 100.0
 
@@ -103,7 +104,7 @@ class HistoricalReplayController:
             "water_level_pct": round(water_level_pct, 2),
             "sensor_status": SensorStatus.VALID.value,
             "source": DataSource.REPLAYED_HISTORICAL.value,
-            "quality_flags": ["historical_replay", "cyclone_michaung_2023"],
+            "quality_flags": ["historical_replay", "cyclone_michaung_2023", "rainfall_derived_proxy"],
         }
 
         if self._callback:

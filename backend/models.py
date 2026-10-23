@@ -23,18 +23,22 @@ class SensorStatus(str, enum.Enum):
 
 class DataSource(str, enum.Enum):
     # Canonical provenance tags
-    OBSERVED = "observed"
-    REPLAYED_HISTORICAL = "replayed_historical"
-    FORECAST = "forecast"
-    PYTHON_SIMULATOR = "python_simulator"
-    WOKWI = "wokwi"
-    PHYSICAL_SENSOR = "physical_sensor"
-    RECONSTRUCTED = "reconstructed"
-    DIGITAL_TWIN_SIMULATION = "digital_twin_simulation"
+    WOKWI_SIMULATED = "WOKWI_SIMULATED"
+    PYTHON_SIMULATED = "PYTHON_SIMULATED"
+    OBSERVED = "OBSERVED"
+    REPLAYED_HISTORICAL = "REPLAYED_HISTORICAL"
+    DIGITAL_TWIN = "DIGITAL_TWIN"
+    IMPUTED = "IMPUTED"
+
     # Backwards-compatible aliases
-    PHYSICAL = "physical"
-    SIMULATOR = "simulator"
-    DIGITAL_TWIN = "digital_twin"
+    SIMULATOR = "PYTHON_SIMULATED"
+    PYTHON_SIMULATOR = "PYTHON_SIMULATED"
+    WOKWI = "WOKWI_SIMULATED"
+    RECONSTRUCTED = "IMPUTED"
+    FORECAST = "DIGITAL_TWIN"
+    DIGITAL_TWIN_SIMULATION = "DIGITAL_TWIN"
+    PHYSICAL = "OBSERVED"
+    PHYSICAL_SENSOR = "OBSERVED"
 
 
 class AlertLevel(str, enum.Enum):
@@ -48,8 +52,39 @@ class ZoneType(str, enum.Enum):
     VIRTUAL = "virtual"
 
 
+def normalize_data_source(v) -> DataSource:
+    """Normalize any string or enum value to the canonical DataSource enum."""
+    if isinstance(v, DataSource):
+        return v
+    if isinstance(v, str):
+        normalized = v.strip().upper()
+        mapping = {
+            "WOKWI_SIMULATED": DataSource.WOKWI_SIMULATED,
+            "WOKWI": DataSource.WOKWI_SIMULATED,
+            "PYTHON_SIMULATED": DataSource.PYTHON_SIMULATED,
+            "PYTHON_SIMULATOR": DataSource.PYTHON_SIMULATED,
+            "SIMULATOR": DataSource.PYTHON_SIMULATED,
+            "OBSERVED": DataSource.OBSERVED,
+            "PHYSICAL": DataSource.OBSERVED,
+            "PHYSICAL_SENSOR": DataSource.OBSERVED,
+            "REPLAYED_HISTORICAL": DataSource.REPLAYED_HISTORICAL,
+            "DIGITAL_TWIN": DataSource.DIGITAL_TWIN,
+            "DIGITAL_TWIN_SIMULATION": DataSource.DIGITAL_TWIN,
+            "FORECAST": DataSource.DIGITAL_TWIN,
+            "IMPUTED": DataSource.IMPUTED,
+            "RECONSTRUCTED": DataSource.IMPUTED,
+        }
+        if normalized in mapping:
+            return mapping[normalized]
+        try:
+            return DataSource(normalized)
+        except ValueError:
+            pass
+    return v
+
+
 class TelemetryMessage(BaseModel):
-    """Canonical telemetry payload from a physical sensor or simulator."""
+    """Canonical telemetry payload from a physical sensor, simulator, or digital twin."""
 
     schema_version: str = "1.0"
     device_id: str = Field(..., min_length=1, max_length=64)
@@ -60,8 +95,13 @@ class TelemetryMessage(BaseModel):
     water_level_cm: Optional[float] = None
     water_level_pct: Optional[float] = None
     sensor_status: SensorStatus = SensorStatus.VALID
-    source: DataSource = DataSource.SIMULATOR
+    source: DataSource = DataSource.PYTHON_SIMULATED
     quality_flags: list[str] = Field(default_factory=list)
+
+    @field_validator("source", mode="before")
+    @classmethod
+    def _parse_source(cls, v):
+        return normalize_data_source(v)
 
     @field_validator("timestamp", mode="before")
     @classmethod
@@ -119,10 +159,15 @@ class ZoneState(BaseModel):
     current_water_level_pct: float = 0.0
     alert_level: AlertLevel = AlertLevel.NORMAL
     sensor_status: SensorStatus = SensorStatus.VALID
-    data_source: DataSource = DataSource.SIMULATOR
+    data_source: DataSource = DataSource.DIGITAL_TWIN
     last_update: Optional[datetime] = None
     is_online: bool = True
     readings_count: int = 0
+
+    @field_validator("data_source", mode="before")
+    @classmethod
+    def _parse_data_source(cls, v):
+        return normalize_data_source(v)
 
 
 class Alert(BaseModel):

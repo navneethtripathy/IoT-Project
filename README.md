@@ -2,227 +2,209 @@
 
 A resilient cyber-physical digital twin platform for urban water-level monitoring, simulated flood scenario testing, interpretable early-warning forecasting, and missing-data resilience evaluation grounded in real environmental observations from the **Chennai Metropolitan Basin, Tamil Nadu, India** (Adyar, Cooum, and Kosasthalaiyar sub-basins).
 
-## Geographic Grounding: Chennai Metropolitan Basin
+---
 
-CivicTwin-R integrates real-world telemetry and hydrological spatial data:
-- **Official Monitoring Portal**: Chennai Flood Monitoring & Spatial Decision Support System ([CFM-DSS](https://www.chennaifloodmonitor.tn.gov.in/)), developed under the World Bank PDGF by TNUIFSL, CRA, GCC, WRD, and IIT Madras.
-- **Monitored Sub-Basins**:
-  1. `zone_01` (`zone_adyar`): **Adyar River Basin** (Saidapet transit corridor & Chembarambakkam reservoir outflow).
-  2. `zone_02` (`zone_cooum`): **Cooum River Basin** (Central Urban Drain, Nungambakkam, and Napier Bridge outflow).
-  3. `zone_03` (`zone_kosasthalaiyar`): **Kosasthalaiyar Basin** (North Chennai Industrial Corridor, Poondi upstream, and Ennore Creek).
-- **Verified Environmental Observations**:
-  - 328 Automatic Rain Gauge (ARG) records across Chennai sub-basins.
-  - 5 major reservoir storage capacities (Chembarambakkam, Poondi, RedHills, Cholavaram, Thervoy Kandigai).
-  - 144 hourly points of Cyclone Michaung extreme storm rainfall (Dec 1-6, 2023, 369.8 mm total precipitation).
-- **Explicit Conceptual Model Disclaimer**: The multi-zone twin models catchment mass-balance (inflow minus drainage with rainfall contribution and upstream transfers); it is explicitly labeled as a conceptual lumped model, not an uncalibrated 2D hydrodynamic finite-element simulation.
+## 1. End-to-End Cyber-Physical Architecture & Data Pipeline
 
-## Prerequisites
+The project implements a verifiable end-to-end data pipeline connecting edge sensing, transport, storage, digital-twin physics, and visualization:
 
+```
+[Wokwi ESP32 / Physical ESP32 / Python Simulator]
+                         │
+                         ▼ (JSON Telemetry via Wi-Fi)
+                  [MQTT Broker: Mosquitto]
+                         │ (Topic: civictwin/v1/zones/{zone}/telemetry)
+                         ▼
+             [Ingestion & Validation Service]
+              • Schema validation & sequence check
+              • Duplicate rejection & stale-data flagging
+                         │
+                         ▼
+             [Dual Storage Engine]
+              • InfluxDB 2.x (Mode A: Docker Stack)
+              • SQLite local DB (Mode B: Standalone Fallback)
+                         │
+                         ▼
+         [Digital Twin Model & Scenario Engine]
+          • Discrete-time catchment mass balance
+          • Rate-of-Rise multi-horizon forecasting
+          • 8 hypothetical flood & failure scenarios
+          • Missing-data reconstruction (LOCF & Linear)
+                         │
+                         ▼
+        [FastAPI REST API] & [Node-RED Dashboard]
+          • Interactive Swagger Docs (/docs)
+          • Real-time gauge dials, alerts, and provenance badges
+```
+
+---
+
+## 2. Geographic Grounding: Chennai Study Zones
+
+CivicTwin-R models three distinct hydrological sub-basins within the Chennai Metropolitan Basin:
+1. `zone_01` (`zone_adyar`): **Adyar River Basin** (Saidapet transit corridor & Chembarambakkam reservoir outflow).
+2. `zone_02` (`zone_cooum`): **Cooum River Basin** (Central Urban Drain, Nungambakkam, and Napier Bridge outflow).
+3. `zone_03` (`zone_kosasthalaiyar`): **Kosasthalaiyar Basin** (North Chennai Industrial Corridor, Poondi upstream, and Ennore Creek).
+
+> **Important Study Area Disclaimer:**  
+> These three zones represent **virtual study catchments in the software digital twin**. They demonstrate cyber-physical modeling and resilience analysis; they do **not** imply that physical hardware sensor nodes have been deployed across Chennai's rivers.
+
+---
+
+## 3. Strict Data Provenance Standards
+
+To ensure transparency, every telemetry record, API response, and dashboard badge strictly maintains its origin provenance tag. **Simulated, predicted, replayed, or imputed values are never labeled as live observations:**
+
+| Provenance Tag | Source Description | Role in CivicTwin-R |
+|---|---|---|
+| `WOKWI_SIMULATED` | Virtual ESP32 DevKit and simulated HC-SR04 ultrasonic distance sensor in Wokwi. | Edge simulation mapped specifically to `zone_adyar` (`zone_01`). |
+| `PYTHON_SIMULATED` | Python multi-zone sensor simulator (`backend/simulator.py`). | Synthetic multi-zone sensor generation for testing and CI. |
+| `OBSERVED` | Verified historical records from official monitoring portals. | CFM-DSS rain gauge records and reservoir storage metrics. |
+| `REPLAYED_HISTORICAL` | Historical storm observations replayed through the IoT ingestion pipeline. | Cyclone Michaung Dec 2023 hourly storm series. |
+| `DIGITAL_TWIN` | Physics model states, hypothetical scenario runs, and rate-of-rise forecasts. | Catchment mass-balance calculations and multi-horizon predictions. |
+| `IMPUTED` | Missing readings reconstructed using imputation algorithms. | Evaluated data recovery (LOCF / Linear interpolation) during sensor dropouts. |
+
+---
+
+## 4. Edge Sensor Behavior & Wokwi Simulation
+
+The edge firmware (`firmware/esp32/src/main.ino`) targets an ESP32 microcontroller with an HC-SR04 ultrasonic distance sensor:
+
+- **Wokwi Association:** The Wokwi virtual node (`node_01`) is explicitly associated with a single designated study zone: **Adyar Basin (`zone_01`)**. It does not measure all three basins simultaneously.
+- **Distance Control:** Adjusting the HC-SR04 slider in Wokwi changes the acoustic echo time, directly altering the simulated distance.
+- **Sampling Interval:** Configured to **5 seconds** (`READ_INTERVAL_MS = 5000`).
+- **Container Geometry & Conversion Formula:**
+  The sensor assumes a fixed downward mount above a channel/container with a known reference height:
+  $$\text{Water Depth (cm)} = \text{Container Reference Height (cm)} - \text{Measured Distance (cm)}$$
+  $$\text{Water Level (\%)} = 100 \times \frac{\text{Water Depth (cm)}}{\text{Container Reference Height (cm)}}$$
+  - Default prototype reference height: **30.0 cm** (`CONTAINER_HEIGHT_CM`).
+  - Values are clamped to $[0.0, 30.0]\text{ cm}$ and $[0.0\%, 100.0\%]$.
+- **Safe Invalid Handling:** Echo timeouts or distances outside $[2.0, 400.0]\text{ cm}$ trigger `sensor_status: "invalid"`. Null values are emitted rather than fabricating a false zero-depth reading.
+- **Circuit Pinouts in `diagram.json`:**
+  - `TRIG` $\rightarrow$ GPIO 5
+  - `ECHO` $\rightarrow$ GPIO 18
+  - `Status Alert LED` $\rightarrow$ GPIO 2 (with 220Ω resistor)
+  - Voltage divider note: Physical deployment requires a $2.2\text{k}\Omega / 3.3\text{k}\Omega$ voltage divider on GPIO 18 (steps 5V ECHO down to 3.0V). Not required in Wokwi simulation.
+
+---
+
+## 5. Warning Thresholds & Alert Logic
+
+- **Warning Threshold:** `70.0%`
+- **Critical Threshold:** `85.0%`
+- **Hysteresis Band:** `3.0%` (prevents alert oscillation when levels hover near threshold)
+- **Local LED Alert:** GPIO 2 LED turns ON during warning and critical states, operating independently even if network connectivity drops.
+
+> **Prototype Threshold Disclaimer:**  
+> The 70% and 85% thresholds are software test parameters for evaluating alert mechanics. They are **not** officially validated, certified, or legal flood alert levels for Chennai.
+
+---
+
+## 6. Official Environmental Data & Hydrological Claims
+
+- **CFM-DSS Monitoring Network:** Developed under the World Bank PDGF by TNUIFSL, CRA, GCC, WRD, and IIT Madras ([https://www.chennaifloodmonitor.tn.gov.in/](https://www.chennaifloodmonitor.tn.gov.in/)).
+- **Station Count vs. Record Count:** The CFM-DSS raw dataset contains **328 historical observation records** collected across **117 Automatic Rain Gauge (ARG) stations**.
+- **Rainfall vs. River Level Distinction:** ARG stations measure **precipitation (mm)**, not direct river water depth. In CivicTwin-R, rainfall drives catchment inflow in the mass-balance equations; it is not treated as river water level.
+- **Reservoirs Storage Metrics:** Capacities from Chembarambakkam, Poondi, RedHills, Cholavaram, and Thervoy Kandigai reflect official WRD daily stage-storage reports in Million Cubic Meters (MCM), not automated continuous depth gauges.
+- **Unverified Data Limitations:** No open real-time river stage ultrasonic sensor API is published for Chennai waterways. River levels are simulated via the lumped mass-balance model.
+
+---
+
+## 7. Prerequisites & Installation
+
+### Prerequisites
 - Python 3.11 or higher
 - pip (Python package installer)
 - Git
-- Optional for full integration mode:
-  - Docker and Docker Compose
-  - Node.js (for standalone Node-RED)
+- Optional for full Docker stack: Docker & Docker Compose; Node-RED for dashboard.
 
-## Installation
-
-Clone the repository and install dependencies in editable mode:
-
+### Installation
 ```bash
 git clone <repository_url>
 cd CivicTwin-R
 
-# Create and activate a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install package dependencies
+# Install dependencies in editable mode
 pip install -e ".[dev]"
-
-# Or run the setup automation script
-./scripts/setup.sh
 ```
 
-## Data Ingestion & Replay
+---
 
-CivicTwin-R includes reproducible importers for real environmental observations:
+## 8. Startup & Execution Modes
 
-```bash
-# Ingest official CFM-DSS rain gauges, reservoirs, and Michaung storm series:
-python3 scripts/ingest_chennai_data.py
-# Or via Makefile:
-make ingest
-
-# Replay historical Cyclone Michaung storm observations through the IoT pipeline:
-python3 scripts/replay_historical.py
-# Or via Makefile:
-make replay
-```
-
-Raw data is stored in `data/raw/` and cleaned observations in `data/processed/`. Complete provenance metadata is recorded in `data/data_provenance.md`.
-
-## Configuration
-
-Settings are managed via environment variables defined in `.env` (copied from `.env.example` during setup):
-
-| Variable | Default | Purpose |
-|---|---|---|
-| `STORAGE_BACKEND` | `sqlite` | Storage backend: `sqlite`, `influxdb`, or `memory` |
-| `SQLITE_DB_PATH` | `data/civictwin.db` | Local SQLite database file path |
-| `API_HOST` | `127.0.0.1` | REST API bind address |
-| `API_PORT` | `8000` | REST API port |
-| `MQTT_BROKER_HOST` | `localhost` | MQTT broker host |
-| `MQTT_BROKER_PORT` | `1883` | MQTT broker port |
-| `MQTT_TOPIC_PREFIX`| `civictwin/v1` | Telemetry topic prefix |
-| `INFLUXDB_ENABLED` | `false` | Enable InfluxDB 2.x persistence |
-| `INFLUXDB_URL` | `http://localhost:8086` | InfluxDB API URL |
-| `INFLUXDB_TOKEN` | `""` | InfluxDB authentication token |
-| `TWIN_TIME_STEP_SEC` | `5.0` | Digital twin step interval in seconds |
-| `WATER_LEVEL_WARN_PCT` | `70.0` | Warning threshold percentage |
-| `WATER_LEVEL_CRIT_PCT` | `85.0` | Critical threshold percentage |
-| `WATER_LEVEL_HYSTERESIS_PCT` | `3.0` | Threshold hysteresis band to prevent flutter |
-| `RANDOM_SEED` | `42` | Seed for deterministic simulation runs |
-
-## Startup
-
-CivicTwin-R supports two execution modes:
-
-### Standalone Mode (Zero External Infrastructure)
-
-Runs the sensor simulator, digital twin engine, SQLite persistence, and FastAPI REST API within a single Python runtime:
-
+### Mode B: Standalone Mode (Zero External Infrastructure)
+Runs the sensor simulator, digital twin engine, SQLite persistence, and FastAPI REST API locally within Python:
 ```bash
 ./scripts/start.sh
-# Or using the Makefile:
+# Or via Makefile:
 make run
 ```
 
-### Full Integration Mode (Docker Stack)
-
-Starts Eclipse Mosquitto (MQTT), InfluxDB 2.x, Node-RED, and the FastAPI backend:
-
+### Mode A: Full Integration Mode (Docker Stack)
+Starts Mosquitto MQTT broker, InfluxDB 2.x, Node-RED, and the FastAPI backend:
 ```bash
 docker compose up -d
 ```
 
-## Service Access
+---
 
-When services are running:
+## 9. Service Access & Endpoints
 
 - **REST API Root**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-- **Interactive API Documentation (Swagger)**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **ReDoc Documentation**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
-- **Health Check Endpoint**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
-- **Node-RED Dashboard**: [http://127.0.0.1:1880/ui](http://127.0.0.1:1880/ui) (when Node-RED is running)
-- **Node-RED Editor**: [http://127.0.0.1:1880](http://127.0.0.1:1880)
-
-## API Endpoints
+- **Interactive Swagger Documentation**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **Health Check**: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+- **Node-RED Dashboard**: [http://127.0.0.1:1880/ui](http://127.0.0.1:1880/ui)
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/health` | Service health, active storage backend, fallback status, ingestion stats |
+| `GET` | `/health` | Service health, storage backend, fallback status, ingestion metrics |
 | `GET` | `/api/config` | Safe configuration summary |
-| `GET` | `/api/zones` | List all 3 zones with current water levels, Chennai subbasins, and alert status |
-| `GET` | `/api/zones/{zone_id}` | Detailed telemetry and physics state for a zone (supports aliases like `zone_adyar`) |
-| `GET` | `/api/forecast/{zone_id}` | Multi-horizon Rate-of-Rise forecast (15m, 60m, 180m) with ±1.96 SE confidence bounds |
+| `GET` | `/api/zones` | List all 3 zones with water level, sub-basin info, and provenance |
+| `GET` | `/api/zones/{zone_id}` | Detailed telemetry and physics state for a zone |
+| `GET` | `/api/forecast/{zone_id}` | Multi-horizon Rate-of-Rise forecast (15m, 60m, 180m) with ±1.96 SE bounds |
 | `GET` | `/api/forecast/evaluate` | Time-aware cross-validation comparing forecast model against naive baseline |
 | `GET` | `/api/replay/status` | Current status and progress of historical observation replay |
 | `POST`| `/api/replay/start` | Start streaming historical Cyclone Michaung storm observations |
 | `POST`| `/api/replay/step` | Manually advance historical observation replay by N steps |
 | `POST`| `/api/replay/stop` | Stop historical replay |
-| `POST`| `/api/replay/reset` | Reset historical replay to beginning |
-| `GET` | `/api/telemetry/latest` | Most recent telemetry records |
-| `GET` | `/api/telemetry/history` | Historical records over time window |
+| `GET` | `/api/telemetry/latest` | Most recent telemetry records with explicit provenance |
 | `GET` | `/api/alerts` | Active and historical threshold-crossing alerts |
-| `GET` | `/api/scenarios` | List 8 available flood and resilience scenarios |
-| `GET` | `/api/scenarios/status` | Current scenario step and completion progress |
-| `POST`| `/api/scenarios/{id}/start`| Start executing a scenario |
+| `GET` | `/api/scenarios` | List 8 available flood and resilience scenarios (with simulation disclaimer) |
+| `POST`| `/api/scenarios/{id}/start`| Start executing a hypothetical scenario |
 | `POST`| `/api/scenarios/{id}/stop` | Stop running scenario and restore baseline parameters |
-| `POST`| `/api/scenarios/step` | Manually advance active scenario by N steps |
-| `GET` | `/api/scenarios/results`| Detailed step-by-step history of last scenario run |
 | `GET` | `/api/experiments/results`| Precomputed missing-data reconstruction benchmark data |
-| `GET` | `/api/stats` | System-wide ingestion, storage, and engine stats |
-| `GET` | `/api/data/export` | Export stored telemetry records as JSON or CSV |
 
-## Dashboard Access
+---
 
-The Node-RED flow configuration is stored in `nodered/flows.json`.
+## 10. Node-RED Dashboard
 
-1. Launch Node-RED on port 1880.
-2. Ensure `node-red-dashboard` nodes are installed (`npm install node-red-dashboard` in `~/.node-red`).
-3. Import `nodered/flows.json` through Menu > Import.
-4. Deploy the flow and open [http://127.0.0.1:1880/ui](http://127.0.0.1:1880/ui).
+The dashboard flow configuration is stored in `nodered/flows.json`.
+Import `nodered/flows.json` in Node-RED and navigate to [http://127.0.0.1:1880/ui](http://127.0.0.1:1880/ui).
 
-The dashboard displays:
-- System overview and health status.
-- Real-time gauge dials for Adyar Basin, Cooum Basin, and Kosasthalaiyar.
-- Real vs Synthetic provenance indicators (`[OBSERVED]`, `[REPLAYED_HISTORICAL]`, `[DIGITAL_TWIN]`).
-- Scenario trigger controls (start, stop, step) sending REST commands to the backend.
-- Resilience indicators (sensor dropout, network outage, stale observation flags).
+- **Real-Time Dials:** Gauge dials for Adyar Basin, Cooum Basin, and Kosasthalaiyar.
+- **Status & Provenance Badges:** Every reading shows its source tag (`[WOKWI_SIMULATED]`, `[PYTHON_SIMULATED]`, `[OBSERVED]`, `[REPLAYED_HISTORICAL]`, `[DIGITAL_TWIN]`, `[IMPUTED]`), status (`[ONLINE]`, `[STALE]`, `[INVALID]`, `[OFFLINE]`), and timestamp.
+- **Scenario Laboratory:** Clearly labeled as **Hypothetical Model Simulations** for resilience testing, not actual future measurements.
 
-## Testing
+---
 
-Execute the automated pytest suite (82 unit, integration, and API tests):
+## 11. Testing & Experiments
 
+Run the automated test suite (82+ unit, integration, and API tests):
 ```bash
-make test
-# Or directly:
 python3 -m pytest tests/ -v
+# Or via Makefile:
+make test
 ```
 
-Run experiments and generate reproducible benchmark plots:
-
+Execute the reproducible missing-data reconstruction experiments and generate benchmark plots:
 ```bash
-make experiments
-# Or directly:
 python3 -m experiments.run_experiments
+# Or via Makefile:
+make experiments
 ```
 
-Outputs are written to:
-- `results/tables/reconstruction_results.json` & `.csv`
-- `results/tables/latency_results.json`
-- `results/tables/warning_results.json`
-- `results/tables/scenario_summaries.json`
+Outputs generated in `results/`:
+- `results/tables/reconstruction_results.json` & `.csv` (LOCF vs. Linear interpolation across 5%, 10%, 20%, 30% dropout rates)
 - `results/plots/reconstruction_comparison.png`
 - `results/plots/reconstruction_visual.png`
 - `results/plots/scenario_water_levels.png`
 - `results/plots/sensor_dropout_timeline.png`
-
-Run service connectivity checks:
-
-```bash
-make health
-# Or directly:
-python3 scripts/health_check.py
-```
-
-## Shutdown
-
-To stop background processes and containers:
-
-```bash
-./scripts/stop.sh
-# If Docker was used:
-docker compose down
-```
-
-Stored SQLite data in `data/civictwin.db` persists across restarts. To reset the database, run `make clean`.
-
-## Troubleshooting
-
-### Connection Refused on http://127.0.0.1:8000
-- Ensure the backend is started using `./scripts/start.sh` or `make run`.
-- Verify port 8000 is not occupied by another process: `lsof -i :8000`.
-
-### MQTT Broker Not Connected
-- Standalone mode handles offline MQTT automatically by routing simulated sensor data directly into the ingestion service.
-- For MQTT integration, ensure Mosquitto is active (`mosquitto -c mqtt/mosquitto.conf` or `docker compose up -d mosquitto`).
-
-### Node-RED Dashboard Shows Unknown Nodes
-- Install the dashboard UI palette: `cd ~/.node-red && npm install node-red-dashboard`.
-- Restart Node-RED and redeploy the flow.
-
-### InfluxDB Connection Errors
-- Verify InfluxDB credentials in `.env` (`INFLUXDB_URL`, `INFLUXDB_TOKEN`, `INFLUXDB_ORG`, `INFLUXDB_BUCKET`).
-- If InfluxDB is unavailable, set `STORAGE_BACKEND=sqlite` and `INFLUXDB_ENABLED=false` to use local SQLite storage.

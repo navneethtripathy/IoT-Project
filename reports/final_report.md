@@ -176,16 +176,31 @@ QoS 1 (at-least-once) was chosen as the balance between reliability and overhead
   "device_id": "node_01",
   "zone_id": "zone_01",
   "sequence": 1024,
-  "timestamp": "2026-01-15T10:30:00Z",
+  "timestamp": "2026-10-24T10:30:00Z",
   "distance_cm": 12.4,
   "water_level_cm": 17.6,
   "water_level_pct": 58.7,
   "sensor_status": "valid",
-  "source": "simulator"
+  "source": "WOKWI_SIMULATED"
 }
 ```
 
 The ingestion service adds: `ingestion_timestamp`, `is_duplicate`, `is_stale`, `is_reconstructed`, `reconstruction_method`, `scenario_id`, and enriched `quality_flags`.
+
+### Data Provenance Standardization
+
+The system enforces six canonical provenance tags throughout the pipeline:
+
+| Provenance Tag | Source Description | Usage |
+|---|---|---|
+| `WOKWI_SIMULATED` | Virtual ESP32 and HC-SR04 in Wokwi browser simulation. | Mapped to `zone_adyar` (`zone_01`). |
+| `PYTHON_SIMULATED` | Headless Python multi-zone sensor simulator. | Multi-zone synthetic baseline for tests. |
+| `OBSERVED` | Verified records from official monitoring portals. | CFM-DSS rain gauges and reservoir metrics. |
+| `REPLAYED_HISTORICAL` | Previously recorded environmental observations streamed at controlled speed. | Cyclone Michaung Dec 2023 hourly storm series. |
+| `DIGITAL_TWIN` | Physical mass-balance state, forecasts, and scenario runs. | Catchment model calculations and projections. |
+| `IMPUTED` | Missing readings reconstructed by an imputation method. | Evaluated recovery (LOCF / Linear interpolation). |
+
+> **Rule:** Simulated, predicted, replayed, or imputed values are never labeled as live observations.
 
 ## 9. Digital Twin Model and Assumptions
 
@@ -207,13 +222,17 @@ next_level = clamp(next_level, 0, container_height)
 - Sensor noise modeled as Gaussian with configurable standard deviation
 - This is NOT a validated hydraulic model
 
-### Default Zone Configurations
+### Study Zone Configurations
 
-| Zone | Name | Height (cm) | Baseline (cm) | Drainage | Warn% | Crit% |
-|------|------|-------------|----------------|----------|-------|-------|
-| zone_01 | Riverside Canal | 30 | 5 | 0.5 cm/step | 70% | 85% |
-| zone_02 | Downtown Storm Drain | 25 | 3 | 0.4 cm/step | 70% | 85% |
-| zone_03 | Suburban Retention Basin | 40 | 8 | 0.6 cm/step | 65% | 80% |
+The three monitoring zones represent virtual study areas modeled in the digital twin:
+
+| Zone | Study Sub-Basin | Height (cm) | Baseline (cm) | Drainage | Warn% | Crit% |
+|------|-----------------|-------------|----------------|----------|-------|-------|
+| zone_01 | Adyar Basin (Saidapet Corridor) | 30 | 5 | 0.5 cm/step | 70% | 85% |
+| zone_02 | Cooum Basin (Central Urban Drain) | 25 | 3 | 0.4 cm/step | 70% | 85% |
+| zone_03 | Kosasthalaiyar Basin (Ennore Corridor) | 40 | 8 | 0.6 cm/step | 65% | 80% |
+
+*Note: These study areas are modeled within the software digital twin; they do not imply physical hardware deployment in Chennai waterways. Thresholds (70% warn, 85% crit) are prototype testing parameters, not official government flood alert lines.*
 
 ## 10. Data Collection and Simulation Strategy
 
@@ -357,12 +376,12 @@ At higher missing rates (20–30%), linear interpolation still achieves MAE belo
 | Messages sent | 300 |
 | Messages received | 300 |
 | Delivery rate | 100.0% |
-| Mean latency | 0.0062 ms |
-| Median latency | 0.0055 ms |
-| P95 latency | 0.0075 ms |
-| Max latency | 0.0616 ms |
+| Mean latency | 0.0275 ms |
+| Median latency | 0.0271 ms |
+| P95 latency | 0.0396 ms |
+| Max latency | 0.1124 ms |
 
-**Note:** These measurements represent Python processing time from message creation through validation, enrichment, and SQLite storage. They do NOT include MQTT network latency, broker processing, or WiFi transmission time. Real end-to-end latency with a physical sensor and network would be significantly higher (estimated 50–500 ms depending on network conditions).
+**Note:** These measurements represent Python processing time from message creation through validation, enrichment, and SQLite storage, reproduced by `experiments/run_experiments.py`. They do NOT include MQTT network latency, broker processing, or WiFi transmission time. Real end-to-end latency with a physical sensor and network would be significantly higher (estimated 50–500 ms depending on network conditions).
 
 ### 15.3 Warning Behavior (Heavy Rainfall Scenario)
 

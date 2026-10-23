@@ -103,7 +103,7 @@ class SensorSimulator:
                 water_level_cm=reading.observed_level_cm,
                 water_level_pct=reading.observed_level_pct,
                 sensor_status=status,
-                source=DataSource.SIMULATOR,
+                source=DataSource.PYTHON_SIMULATED,
                 quality_flags=reading.quality_flags,
             )
 
