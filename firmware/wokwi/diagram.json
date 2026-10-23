@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "author": "Team #5 — CivicTwin-R",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultrasonic1",
+      "top": -120,
+      "left": 80,
+      "attrs": {
+        "distance": "15"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -50,
+      "left": -60,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -30,
+      "left": -100,
+      "attrs": {
+        "resistance": "220"
+      }
+    }
+  ],
+  "connections": [
+    ["esp:5", "ultrasonic1:TRIG", "green", ["v-20", "h40"]],
+    ["esp:18", "ultrasonic1:ECHO", "blue", ["v-30", "h60"]],
+    ["esp:VIN", "ultrasonic1:VCC", "red", ["v-40", "h80"]],
+    ["esp:GND.2", "ultrasonic1:GND", "black", ["v-10", "h20"]],
+    ["esp:2", "r1:1", "orange", ["v-10"]],
+    ["r1:2", "led1:A", "orange", []],
+    ["led1:C", "esp:GND.1", "black", []]
+  ]
+}

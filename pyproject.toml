@@ -1,0 +1,39 @@
+[project]
+name = "civictwin-r"
+version = "1.0.0"
+description = "CivicTwin-R: A Resilient Cyber-Physical Digital Twin for Urban Flood Monitoring and Scenario Planning"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Team #5"},
+]
+
+dependencies = [
+    "fastapi>=0.115.0,<1.0",
+    "uvicorn[standard]>=0.30.0,<1.0",
+    "paho-mqtt>=2.1.0,<3.0",
+    "influxdb-client>=1.40.0,<2.0",
+    "pandas>=2.2.0,<3.0",
+    "numpy>=2.0.0,<3.0",
+    "scipy>=1.14.0,<2.0",
+    "matplotlib>=3.9.0,<4.0",
+    "python-dotenv>=1.0.0,<2.0",
+    "aiofiles>=24.0.0,<25.0",
+    "pydantic>=2.8.0,<3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0,<9.0",
+    "pytest-asyncio>=0.24.0,<1.0",
+    "httpx>=0.27.0,<1.0",
+    "ruff>=0.6.0,<1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "backend/tests", "digital_twin/tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100

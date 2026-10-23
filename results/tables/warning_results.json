@@ -1,0 +1,43 @@
+{
+  "scenario": "heavy_rainfall",
+  "warn_threshold_pct": 70.0,
+  "crit_threshold_pct": 85.0,
+  "zones": {
+    "zone_01": {
+      "true_warn_crossings": 1,
+      "true_crit_crossings": 1,
+      "detected_warnings": 15,
+      "detected_criticals": 87,
+      "first_warn_step": 70,
+      "first_crit_step": 74,
+      "false_alerts": 0,
+      "missed_alerts": 0,
+      "prev_alert": "normal",
+      "prev_true_pct": 0.33
+    },
+    "zone_02": {
+      "true_warn_crossings": 1,
+      "true_crit_crossings": 1,
+      "detected_warnings": 16,
+      "detected_criticals": 84,
+      "first_warn_step": 81,
+      "first_crit_step": 86,
+      "false_alerts": 0,
+      "missed_alerts": 0,
+      "prev_alert": "normal",
+      "prev_true_pct": 0.2
+    },
+    "zone_03": {
+      "true_warn_crossings": 1,
+      "true_crit_crossings": 1,
+      "detected_warnings": 26,
+      "detected_criticals": 37,
+      "first_warn_step": 138,
+      "first_crit_step": 153,
+      "false_alerts": 0,
+      "missed_alerts": 0,
+      "prev_alert": "normal",
+      "prev_true_pct": 0.2
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[wokwi]
+version = 1
+firmware = "../esp32/src/main.ino"
+elf = ""
+
+# Network forwarding (requires Wokwi desktop client or VS Code extension)
+# Uncomment if using local Mosquitto broker:
+# [[net.forward]]
+# from = "localhost:1883"
+# to = "host.wokwi.internal:1883"

@@ -1,0 +1,88 @@
+# CivicTwin-R Docker Compose
+# Runs Mosquitto, InfluxDB, Node-RED, and the Python backend locally.
+#
+# Prerequisites: Docker and Docker Compose installed.
+# Usage:
+#   docker-compose up -d        # Start all services
+#   docker-compose down         # Stop all services
+#   docker-compose logs -f      # View logs
+#
+# NOTE: Docker is optional. The backend runs standalone with SQLite
+# fallback when Docker services are unavailable.
+
+services:
+
+  # ── MQTT Broker ──────────────────────────────────────
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: civictwin-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    restart: unless-stopped
+
+  # ── Time-Series Database ─────────────────────────────
+  influxdb:
+    image: influxdb:2.7
+    container_name: civictwin-influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=civictwin_local
+      - DOCKER_INFLUXDB_INIT_ORG=civictwin
+      - DOCKER_INFLUXDB_INIT_BUCKET=telemetry
+      - DOCKER_INFLUXDB_INIT_RETENTION=7d
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN:-civictwin-dev-token}
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    restart: unless-stopped
+
+  # ── Node-RED Dashboard ───────────────────────────────
+  nodered:
+    image: nodered/node-red:4.0
+    container_name: civictwin-nodered
+    ports:
+      - "1880:1880"
+    volumes:
+      - nodered_data:/data
+      - ./nodered/flows.json:/data/flows.json:ro
+    environment:
+      - TZ=UTC
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+  # ── Python Backend ───────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: civictwin-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MQTT_BROKER_HOST=mosquitto
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-civictwin-dev-token}
+      - INFLUXDB_ENABLED=true
+      - STORAGE_BACKEND=sqlite
+      - API_HOST=0.0.0.0
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    depends_on:
+      - mosquitto
+      - influxdb
+    restart: unless-stopped
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:
+  influxdb_data:
+  nodered_data:

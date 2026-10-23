@@ -1,0 +1,12 @@
+{
+  "measurement_type": "software_pipeline_latency",
+  "note": "Measures Python processing time only. Does NOT include real network or MQTT latency.",
+  "messages_sent": 300,
+  "messages_received": 300,
+  "delivery_rate": 1.0,
+  "mean_latency_ms": 0.0062,
+  "median_latency_ms": 0.0055,
+  "p95_latency_ms": 0.0075,
+  "max_latency_ms": 0.0616,
+  "min_latency_ms": 0.0051
+}

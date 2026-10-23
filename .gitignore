@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+.venv/
+env/
+
+# Environment
+.env
+*.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+package-lock.json
+
+# Generated data (keep structure, ignore large outputs)
+data/generated/*.csv
+data/generated/*.json
+results/plots/*.png
+results/plots/*.svg
+results/tables/*.csv
+results/logs/*.log
+
+# Docker
+*.pid
+
+# Compiled firmware
+firmware/esp32/.pio/
+firmware/esp32/build/
+
+# Reports (binary)
+reports/*.pdf
+reports/*.docx

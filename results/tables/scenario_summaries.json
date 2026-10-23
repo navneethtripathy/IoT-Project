@@ -1,0 +1,250 @@
+[
+  {
+    "scenario_id": "normal",
+    "scenario_name": "Normal Conditions",
+    "total_steps": 200,
+    "zones": {
+      "zone_01": {
+        "max_level_pct": 15.33,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 0,
+        "network_dropouts": 0,
+        "total_steps": 200
+      },
+      "zone_02": {
+        "max_level_pct": 10.6,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 9,
+        "network_dropouts": 0,
+        "total_steps": 200
+      },
+      "zone_03": {
+        "max_level_pct": 18.7,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 18,
+        "network_dropouts": 8,
+        "total_steps": 200
+      }
+    }
+  },
+  {
+    "scenario_id": "heavy_rainfall",
+    "scenario_name": "Heavy Rainfall",
+    "total_steps": 300,
+    "zones": {
+      "zone_01": {
+        "max_level_pct": 100.0,
+        "alert_steps_warning": 15,
+        "alert_steps_critical": 87,
+        "sensor_failures": 0,
+        "network_dropouts": 0,
+        "total_steps": 300
+      },
+      "zone_02": {
+        "max_level_pct": 100.0,
+        "alert_steps_warning": 16,
+        "alert_steps_critical": 84,
+        "sensor_failures": 13,
+        "network_dropouts": 0,
+        "total_steps": 300
+      },
+      "zone_03": {
+        "max_level_pct": 100.0,
+        "alert_steps_warning": 26,
+        "alert_steps_critical": 37,
+        "sensor_failures": 28,
+        "network_dropouts": 13,
+        "total_steps": 300
+      }
+    }
+  },
+  {
+    "scenario_id": "blocked_drain",
+    "scenario_name": "Blocked Drain",
+    "total_steps": 250,
+    "zones": {
+      "zone_01": {
+        "max_level_pct": 100.0,
+        "alert_steps_warning": 20,
+        "alert_steps_critical": 105,
+        "sensor_failures": 0,
+        "network_dropouts": 0,
+        "total_steps": 250
+      },
+      "zone_02": {
+        "max_level_pct": 10.6,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 13,
+        "network_dropouts": 0,
+        "total_steps": 250
+      },
+      "zone_03": {
+        "max_level_pct": 18.7,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 23,
+        "network_dropouts": 11,
+        "total_steps": 250
+      }
+    }
+  },
+  {
+    "scenario_id": "sudden_rise",
+    "scenario_name": "Sudden Water Rise",
+    "total_steps": 200,
+    "zones": {
+      "zone_01": {
+        "max_level_pct": 15.33,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 0,
+        "network_dropouts": 0,
+        "total_steps": 200
+      },
+      "zone_02": {
+        "max_level_pct": 100.0,
+        "alert_steps_warning": 21,
+        "alert_steps_critical": 30,
+        "sensor_failures": 9,
+        "network_dropouts": 0,
+        "total_steps": 200
+      },
+      "zone_03": {
+        "max_level_pct": 18.7,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 18,
+        "network_dropouts": 8,
+        "total_steps": 200
+      }
+    }
+  },
+  {
+    "scenario_id": "sensor_dropout",
+    "scenario_name": "Sensor Dropout",
+    "total_steps": 250,
+    "zones": {
+      "zone_01": {
+        "max_level_pct": 15.33,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 68,
+        "network_dropouts": 0,
+        "total_steps": 250
+      },
+      "zone_02": {
+        "max_level_pct": 10.6,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 13,
+        "network_dropouts": 0,
+        "total_steps": 250
+      },
+      "zone_03": {
+        "max_level_pct": 18.7,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 23,
+        "network_dropouts": 11,
+        "total_steps": 250
+      }
+    }
+  },
+  {
+    "scenario_id": "noisy_sensor",
+    "scenario_name": "Noisy Sensor",
+    "total_steps": 200,
+    "zones": {
+      "zone_01": {
+        "max_level_pct": 15.33,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 0,
+        "network_dropouts": 0,
+        "total_steps": 200
+      },
+      "zone_02": {
+        "max_level_pct": 10.6,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 9,
+        "network_dropouts": 0,
+        "total_steps": 200
+      },
+      "zone_03": {
+        "max_level_pct": 18.7,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 18,
+        "network_dropouts": 8,
+        "total_steps": 200
+      }
+    }
+  },
+  {
+    "scenario_id": "network_outage",
+    "scenario_name": "Network Outage & Recovery",
+    "total_steps": 250,
+    "zones": {
+      "zone_01": {
+        "max_level_pct": 15.33,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 0,
+        "network_dropouts": 80,
+        "total_steps": 250
+      },
+      "zone_02": {
+        "max_level_pct": 10.6,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 13,
+        "network_dropouts": 0,
+        "total_steps": 250
+      },
+      "zone_03": {
+        "max_level_pct": 18.7,
+        "alert_steps_warning": 0,
+        "alert_steps_critical": 0,
+        "sensor_failures": 23,
+        "network_dropouts": 11,
+        "total_steps": 250
+      }
+    }
+  },
+  {
+    "scenario_id": "multi_zone_stress",
+    "scenario_name": "Multi-Zone Stress Test",
+    "total_steps": 350,
+    "zones": {
+      "zone_01": {
+        "max_level_pct": 100.0,
+        "alert_steps_warning": 15,
+        "alert_steps_critical": 142,
+        "sensor_failures": 0,
+        "network_dropouts": 60,
+        "total_steps": 350
+      },
+      "zone_02": {
+        "max_level_pct": 100.0,
+        "alert_steps_warning": 14,
+        "alert_steps_critical": 145,
+        "sensor_failures": 16,
+        "network_dropouts": 0,
+        "total_steps": 350
+      },
+      "zone_03": {
+        "max_level_pct": 100.0,
+        "alert_steps_warning": 21,
+        "alert_steps_critical": 73,
+        "sensor_failures": 87,
+        "network_dropouts": 16,
+        "total_steps": 350
+      }
+    }
+  }
+]
