@@ -58,15 +58,25 @@ class ZoneModel:
 
     zone_id: str
     zone_name: str
+    subbasin: str = "Chennai Basin"
     container_height_cm: float = 30.0
     baseline_level_cm: float = 5.0
     inflow_rate: float = 0.0
     drainage_capacity: float = 0.5
+    rainfall_input_mm: float = 0.0
+    runoff_coefficient: float = 0.05
+    upstream_inflow_cm: float = 0.0
+    upstream_zone_id: Optional[str] = None
+    upstream_transfer_coeff: float = 0.0
     warn_threshold_pct: float = 70.0
     crit_threshold_pct: float = 85.0
     sensor_reliability: float = 1.0
     network_availability: float = 1.0
     noise_stddev_cm: float = 0.0
+    conceptual_topology: str = (
+        "Conceptual lumped water-balance model informed by Chennai sub-basin boundaries; "
+        "not an uncalibrated 2D hydrodynamic simulation."
+    )
 
     current_level_cm: float = field(init=False, default=0.0)
     step_count: int = field(init=False, default=0)
@@ -86,7 +96,8 @@ class ZoneModel:
         scale = dt_sec / BASE_DT_SEC
 
         effective_drain = min(self.drainage_capacity * scale, self.current_level_cm)
-        inflow = self.inflow_rate * scale
+        rainfall_inflow = (self.rainfall_input_mm * self.runoff_coefficient) * scale
+        inflow = (self.inflow_rate + self.upstream_inflow_cm) * scale + rainfall_inflow
         self.current_level_cm += inflow - effective_drain
         self.current_level_cm = max(0.0, min(self.current_level_cm, self.container_height_cm))
         self.step_count += 1
@@ -186,31 +197,47 @@ class DigitalTwinEngine:
             readings.append(reading)
         return readings
 
+    ZONE_ALIASES = {
+        "zone_adyar": "zone_01",
+        "zone_cooum": "zone_02",
+        "zone_kosasthalaiyar": "zone_03",
+    }
+
+    def _resolve_id(self, zone_id: str) -> str:
+        return self.ZONE_ALIASES.get(zone_id, zone_id)
+
     def get_zone_state(self, zone_id: str) -> Optional[dict]:
-        zone = self._zones.get(zone_id)
+        target_id = self._resolve_id(zone_id)
+        zone = self._zones.get(target_id)
         if not zone:
             return None
         return {
             "zone_id": zone.zone_id,
             "zone_name": zone.zone_name,
+            "subbasin": zone.subbasin,
             "current_level_cm": round(zone.current_level_cm, 2),
             "current_level_pct": round(zone.level_pct, 2),
             "container_height_cm": zone.container_height_cm,
             "inflow_rate": zone.inflow_rate,
             "drainage_capacity": zone.drainage_capacity,
+            "rainfall_input_mm": zone.rainfall_input_mm,
+            "upstream_inflow_cm": zone.upstream_inflow_cm,
             "step_count": zone.step_count,
+            "conceptual_topology": zone.conceptual_topology,
         }
 
     def get_all_states(self) -> list[dict]:
         return [self.get_zone_state(zid) for zid in self._zones if self.get_zone_state(zid)]
 
     def get_history(self, zone_id: str) -> list[dict]:
-        return [r.to_dict() for r in self._history.get(zone_id, [])]
+        target_id = self._resolve_id(zone_id)
+        return [r.to_dict() for r in self._history.get(target_id, [])]
 
     def apply_scenario_params(self, zone_id: str, **params):
-        zone = self._zones.get(zone_id)
+        target_id = self._resolve_id(zone_id)
+        zone = self._zones.get(target_id)
         if not zone:
-            logger.warning("Zone '%s' not found for parameter update", zone_id)
+            logger.warning("Zone '%s' (resolved '%s') not found for parameter update", zone_id, target_id)
             return
 
         for key, value in params.items():
@@ -224,7 +251,8 @@ def create_default_zones() -> list[ZoneModel]:
     return [
         ZoneModel(
             zone_id="zone_01",
-            zone_name="Riverside Canal Sensor",
+            zone_name="Adyar Basin (Saidapet / Chembarambakkam Corridor)",
+            subbasin="Adyar",
             container_height_cm=30.0,
             baseline_level_cm=5.0,
             inflow_rate=0.1,
@@ -237,7 +265,8 @@ def create_default_zones() -> list[ZoneModel]:
         ),
         ZoneModel(
             zone_id="zone_02",
-            zone_name="Downtown Storm Drain",
+            zone_name="Cooum Basin (Nungambakkam / Central Urban Drain)",
+            subbasin="Cooum",
             container_height_cm=25.0,
             baseline_level_cm=3.0,
             inflow_rate=0.05,
@@ -250,7 +279,8 @@ def create_default_zones() -> list[ZoneModel]:
         ),
         ZoneModel(
             zone_id="zone_03",
-            zone_name="Suburban Retention Basin",
+            zone_name="Kosasthalaiyar Basin (North Chennai / Ennore Corridor)",
+            subbasin="Kosasthalaiyar",
             container_height_cm=40.0,
             baseline_level_cm=8.0,
             inflow_rate=0.08,

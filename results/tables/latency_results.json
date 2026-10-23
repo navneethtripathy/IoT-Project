@@ -6,7 +6,7 @@
   "delivery_rate": 1.0,
   "mean_latency_ms": 0.0133,
   "median_latency_ms": 0.0131,
-  "p95_latency_ms": 0.0197,
-  "max_latency_ms": 0.0239,
-  "min_latency_ms": 0.0068
+  "p95_latency_ms": 0.0195,
+  "max_latency_ms": 0.0215,
+  "min_latency_ms": 0.0069
 }

@@ -1,0 +1,2948 @@
+{
+  "source": "Chennai Flood Monitoring and Spatial DSS (CFM-DSS)",
+  "url": "https://www.chennaifloodmonitor.tn.gov.in/HomePage/Dashboard",
+  "retrieved_at": "2026-10-23T16:45:50.338457+00:00",
+  "arg_count": 328,
+  "reservoir_count": 5,
+  "aws_count": 38,
+  "arg_records": [
+    {
+      "argid": "CHN06Z068W19",
+      "subbasin": "Adyar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "CHN13Z183W44",
+      "subbasin": "Adyar",
+      "date": "2026-10-18T00:00:00",
+      "rainfall": 0.8,
+      "previous_rainfall": 1.2,
+      "time_of_measurement": "2026-10-18T15:30:00"
+    },
+    {
+      "argid": "CHN04Z040W15",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN05Z058W16",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTWALVIS17",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN07Z086W25",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN03Z022W11",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN02Z016W6",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLMADKAR8",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.8,
+      "previous_rainfall": 0.8,
+      "time_of_measurement": "2026-10-23T11:30:00"
+    },
+    {
+      "argid": "CHN03Z024W13",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN08Z107W31",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.4,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN15ZRFW53",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-11-01T00:00:00",
+      "rainfall": 1.2,
+      "previous_rainfall": 1.2,
+      "time_of_measurement": "2025-11-01T06:30:00"
+    },
+    {
+      "argid": "CHN11Z150W30",
+      "subbasin": null,
+      "date": null,
+      "rainfall": null,
+      "previous_rainfall": null,
+      "time_of_measurement": null
+    },
+    {
+      "argid": "CHN15Z198W51",
+      "subbasin": "Cheyyar",
+      "date": "2025-03-19T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-03-19T13:30:00"
+    },
+    {
+      "argid": "CGLCHEPAL22",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T14:30:00"
+    },
+    {
+      "argid": "CHN08Z094W27",
+      "subbasin": "Kovalam",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "CHN11Z150W37",
+      "subbasin": "Lower",
+      "date": "2026-10-18T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-18T10:30:00"
+    },
+    {
+      "argid": "CHN10Z140W35",
+      "subbasin": "Vegavati",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.4,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "ARG0070",
+      "subbasin": null,
+      "date": "2026-08-31T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-31T05:30:00"
+    },
+    {
+      "argid": "ARG0067",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0071",
+      "subbasin": null,
+      "date": "2025-10-04T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-10-04T16:30:00"
+    },
+    {
+      "argid": "KPMKANSIR8",
+      "subbasin": "Cheyyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLTAMCHI6",
+      "subbasin": null,
+      "date": "2026-10-19T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-19T16:30:00"
+    },
+    {
+      "argid": "ARG0076",
+      "subbasin": null,
+      "date": "2026-09-07T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-09-07T09:30:00"
+    },
+    {
+      "argid": "ARG0024",
+      "subbasin": null,
+      "date": "2026-07-16T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-16T07:30:00"
+    },
+    {
+      "argid": "ARG0008",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.2,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0010",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "TLRTIUMAN15",
+      "subbasin": "Kiliyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0026",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.2,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLTHRTHI29",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLTAMMED17",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRTIRVEN33",
+      "subbasin": "Ongur",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0017",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRUTHPEN19",
+      "subbasin": "Kiliyar",
+      "date": "2026-10-21T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-21T06:30:00"
+    },
+    {
+      "argid": "ARG0016",
+      "subbasin": null,
+      "date": "2026-10-13T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-13T11:30:00"
+    },
+    {
+      "argid": "ARG0004",
+      "subbasin": null,
+      "date": "2025-10-04T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-10-04T16:30:00"
+    },
+    {
+      "argid": "TLRTIUTIU28",
+      "subbasin": "Ongur",
+      "date": "2026-10-07T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-07T08:30:00"
+    },
+    {
+      "argid": "West_Tambaram_SIT",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CHN01Z003W1",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-10-28T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-10-28T04:30:00"
+    },
+    {
+      "argid": "CHN02Z015W4",
+      "subbasin": "Cooum",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "ARG0034",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "VELKATKAT7",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0014",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "VELKATMEL10",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0015",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.6,
+      "previous_rainfall": 0.6,
+      "time_of_measurement": "2026-10-23T15:30:00"
+    },
+    {
+      "argid": "ARG0018",
+      "subbasin": null,
+      "date": "2025-10-04T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-10-04T16:30:00"
+    },
+    {
+      "argid": "YMCA_Nandanam",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CGLMADPER24",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLMADMAD12",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN02Z019W10",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLPALPAM23",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.4,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN02Z016W5",
+      "subbasin": "Cooum",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "CHN01Z012W3",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN01Z010W2",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-08-26T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-26T11:30:00"
+    },
+    {
+      "argid": "CHN08Z102WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHEMBARMPAKM",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "SATHYABAMA_UTY_ARG",
+      "subbasin": "Kovalam",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CHN08Z095WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "Anna_University",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CHN_TARAMANI",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_10-Kodambakkam",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "ARG_Cheyyur",
+      "subbasin": "Ongur",
+      "date": "2024-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2024-10-23T11:30:00"
+    },
+    {
+      "argid": "ARG_RIMC LAB ARG",
+      "subbasin": "Cooum",
+      "date": "2024-08-30T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2024-08-30T14:30:00"
+    },
+    {
+      "argid": "CGLMADATC1",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLCHYSOO27",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-23T10:30:00"
+    },
+    {
+      "argid": "ARG_SAIRAM_Institution",
+      "subbasin": "Adyar",
+      "date": "2024-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2024-10-23T11:30:00"
+    },
+    {
+      "argid": "CGLMADATC2",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLMADJAM7",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLCHYCHE5",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN02Z017W8",
+      "subbasin": "Cooum",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "CHN05Z061W17",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN13Z174W43",
+      "subbasin": "Lower",
+      "date": "2026-10-06T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-06T13:30:00"
+    },
+    {
+      "argid": "CHN13Z170W42",
+      "subbasin": "Adyar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "CHN08Z095W28",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN15Z196W50",
+      "subbasin": "Lower",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLMADOON19",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "Area_14-Perungudi",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CHN02Z019W9",
+      "subbasin": "Cooum",
+      "date": "2026-07-10T00:00:00",
+      "rainfall": 3.2,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-10T03:30:00"
+    },
+    {
+      "argid": "CHN07Z091W26",
+      "subbasin": "Kovalam",
+      "date": "2026-10-18T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-18T06:30:00"
+    },
+    {
+      "argid": "CHN11Z148W36",
+      "subbasin": "Cooum",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "CHN07Z079W21",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN14Z185W45",
+      "subbasin": "Kiliyar",
+      "date": "2024-12-06T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2024-12-06T14:30:00"
+    },
+    {
+      "argid": "CHN14Z190W47",
+      "subbasin": "Kiliyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN07Z084W23",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN12Z167W41",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.8,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN07Z085W24",
+      "subbasin": "Adyar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "CHN06Z077W20",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN03Z023W12",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN14Z188W46",
+      "subbasin": "Kiliyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN10Z128W33",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "Goodwill_School_Villivakkam",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "ARG_R.K.Pet",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CHN12Z163W40",
+      "subbasin": "Adyar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "CHN10Z132W34",
+      "subbasin": "Lower",
+      "date": "2026-10-11T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-11T17:30:00"
+    },
+    {
+      "argid": "CHN08Z098W29",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "KPMKANPAR7",
+      "subbasin": "Poiney",
+      "date": "2026-10-22T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-22T12:30:00"
+    },
+    {
+      "argid": "TLRGUMGUM7",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRTIRPOO21",
+      "subbasin": "Lower",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTSHOBAN4",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-04-01T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-04-01T00:30:00"
+    },
+    {
+      "argid": "RPTWALRAN13",
+      "subbasin": "Adyar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "TLRRKPERU5",
+      "subbasin": "Lower",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRPONRED25",
+      "subbasin": "Lower",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTNEMNEM8",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRPONGNA6",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRGUMPOO24",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTKALMAM7",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "KPMUTHUTH18",
+      "subbasin": "Cheyyar",
+      "date": "2026-06-01T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-06-01T11:30:00"
+    },
+    {
+      "argid": "KPMKANKAN1",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "KPMSRISRP12",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.4,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "KPMWALTHE15",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTARCARC3",
+      "subbasin": "Gummudipoondi",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "KPMWALWAL19",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTARAPAL9",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRAVAAVA1",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-18T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-18T06:30:00"
+    },
+    {
+      "argid": "TLRGUMELA4",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRPONKAT12",
+      "subbasin": "Araniyar",
+      "date": "2026-10-18T00:00:00",
+      "rainfall": 2.4,
+      "previous_rainfall": 3.6,
+      "time_of_measurement": "2026-10-18T15:30:00"
+    },
+    {
+      "argid": "RPTKALKAL5",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRGUMMAD14",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-06-01T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-06-01T11:30:00"
+    },
+    {
+      "argid": "KPMKANKAN2",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTSHOSHO14",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTARCPUD12",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRAVAMOR17",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTARCTHI15",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLPALPAL21",
+      "subbasin": "Cooum",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "RPTARAPAR11",
+      "subbasin": "Gummudipoondi",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "KPMUTHUTH17",
+      "subbasin": "Poiney",
+      "date": "2026-10-19T00:00:00",
+      "rainfall": 0.4,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-19T13:30:00"
+    },
+    {
+      "argid": "TLRAVATHR26",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T12:30:00"
+    },
+    {
+      "argid": "TLRPONTHI27",
+      "subbasin": "Lower",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T16:30:00"
+    },
+    {
+      "argid": "TLRPONKAT11",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRTIUKAN9",
+      "subbasin": "Kiliyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRTIUCHE2",
+      "subbasin": "Ongur",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0039",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0027",
+      "subbasin": null,
+      "date": "2026-03-14T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-03-14T13:30:00"
+    },
+    {
+      "argid": "CGLCHECHE4",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN04Z042WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN11Z152WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.4,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN12Z0P1WG",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "TLRUTHKAN10",
+      "subbasin": "Kiliyar",
+      "date": "2026-08-07T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-07T17:30:00"
+    },
+    {
+      "argid": "ARG0009",
+      "subbasin": null,
+      "date": "2026-08-18T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-18T10:30:00"
+    },
+    {
+      "argid": "RPTARAARA1",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRTIRVEL31",
+      "subbasin": "Lower",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN12Z0P2WG",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 14.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0072",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0001",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN12Z156WG",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.2,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN13Z175WG",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN13Z173WG",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN13Z178WG",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T15:30:00"
+    },
+    {
+      "argid": "CHN14Z169WG",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CGLCHYSIT26",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLCHECHE3",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-18T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-18T06:30:00"
+    },
+    {
+      "argid": "CHN03Z027W14",
+      "subbasin": "Adyar",
+      "date": "2026-10-20T00:00:00",
+      "rainfall": 0.4,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-20T22:30:00"
+    },
+    {
+      "argid": "KPMSRISUN13",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRTIUCHE3",
+      "subbasin": "Ongur",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0025",
+      "subbasin": null,
+      "date": "2026-07-16T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-16T08:30:00"
+    },
+    {
+      "argid": "CHN12Z157W39",
+      "subbasin": "Adyar",
+      "date": "2026-08-05T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-05T11:30:00"
+    },
+    {
+      "argid": "CGLCHYKOD9",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T17:30:00"
+    },
+    {
+      "argid": "ARG0019",
+      "subbasin": null,
+      "date": null,
+      "rainfall": null,
+      "previous_rainfall": null,
+      "time_of_measurement": null
+    },
+    {
+      "argid": "ARG0002",
+      "subbasin": null,
+      "date": "2026-07-16T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-16T08:30:00"
+    },
+    {
+      "argid": "TLRTIUPOO22",
+      "subbasin": "Kiliyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLCHYLAT10",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0023",
+      "subbasin": null,
+      "date": "2025-10-04T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-10-04T16:30:00"
+    },
+    {
+      "argid": "CGLCHESIN25",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN07Z084WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN07Z086WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "KPMUTHKUN4",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN10Z139WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.2,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN10Z129WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.2,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CGLMADVAI30",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-14T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-14T08:30:00"
+    },
+    {
+      "argid": "CHN01Z002WG",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN01Z011WG",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN06Z065WG",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "Area_13-Adyar",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_1-Thiruvottiyur",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_2-Manali",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_3-Madhavaram",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_4-Tondiarpet",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_5-Royapuram",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_6-Thiru_Vi_Ka_Nagar",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_7-Anna_Nagar",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "ARG0044",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0060",
+      "subbasin": null,
+      "date": "2026-01-25T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-01-25T14:30:00"
+    },
+    {
+      "argid": "ARG0052",
+      "subbasin": null,
+      "date": "2026-03-20T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-03-20T12:30:00"
+    },
+    {
+      "argid": "Area_9-Teynampet",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "KPMKUNKUN3",
+      "subbasin": "Cheyyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.8,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN06Z065W18",
+      "subbasin": "Adyar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "TLRPONKOL13",
+      "subbasin": "Araniyar",
+      "date": "2026-09-05T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-09-05T07:30:00"
+    },
+    {
+      "argid": "ARG0064",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0053",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0041",
+      "subbasin": null,
+      "date": "2026-10-21T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-21T03:30:00"
+    },
+    {
+      "argid": "ARG0050",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0058",
+      "subbasin": null,
+      "date": "2026-02-14T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-02-14T12:30:00"
+    },
+    {
+      "argid": "ARG0051",
+      "subbasin": null,
+      "date": null,
+      "rainfall": null,
+      "previous_rainfall": null,
+      "time_of_measurement": null
+    },
+    {
+      "argid": "ARG0066",
+      "subbasin": null,
+      "date": "2026-07-16T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-16T08:30:00"
+    },
+    {
+      "argid": "CHN15Z200WG",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0057",
+      "subbasin": null,
+      "date": "2026-08-08T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-08T13:30:00"
+    },
+    {
+      "argid": "ARG0040",
+      "subbasin": null,
+      "date": "2026-08-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.2,
+      "time_of_measurement": "2026-08-10T19:30:00"
+    },
+    {
+      "argid": "CHN02Z021WG",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN03Z030WG",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN03Z022WG",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN05Z053WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN06Z067WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN07Z081WG",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN07Z085WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0043",
+      "subbasin": null,
+      "date": "2026-07-02T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-02T17:30:00"
+    },
+    {
+      "argid": "ARG0062",
+      "subbasin": null,
+      "date": "2026-10-19T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-19T13:30:00"
+    },
+    {
+      "argid": "ARG0048",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0056",
+      "subbasin": null,
+      "date": "2026-07-16T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-16T08:30:00"
+    },
+    {
+      "argid": "ARG0047",
+      "subbasin": null,
+      "date": "2025-10-04T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-10-04T16:30:00"
+    },
+    {
+      "argid": "ARG0055",
+      "subbasin": null,
+      "date": "2026-10-21T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.2,
+      "time_of_measurement": "2026-10-21T03:30:00"
+    },
+    {
+      "argid": "CHN15Z197WG",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "Poondi",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "ARG0049",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0061",
+      "subbasin": null,
+      "date": "2026-10-14T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-14T08:30:00"
+    },
+    {
+      "argid": "CHN14Z184WG",
+      "subbasin": "Kovalam",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "HINDUSTAN_UTY",
+      "subbasin": "Kovalam",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Redhills",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "ARG_NIOT_Pallikaranai",
+      "subbasin": "Kovalam",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "RPTNEMKAV6",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0059",
+      "subbasin": null,
+      "date": "2025-10-04T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.2,
+      "time_of_measurement": "2025-10-04T16:30:00"
+    },
+    {
+      "argid": "ARG0045",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.2,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0065",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN11Z155W38",
+      "subbasin": "Cooum",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "ARG0074",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0075",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN09Z111W32",
+      "subbasin": "Kovalam",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "ARG0069",
+      "subbasin": null,
+      "date": "2026-10-18T00:00:00",
+      "rainfall": 0.2,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-18T17:30:00"
+    },
+    {
+      "argid": "ARG_LMOIS_Kolapakkam",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CHN08Z107W30",
+      "subbasin": "Adyar",
+      "date": "2024-11-13T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2024-11-13T15:30:00"
+    },
+    {
+      "argid": "ARG0073",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0077",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN07Z083W22",
+      "subbasin": "Adyar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "Area_11-Valasaravakkam",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Area_12-Alandur",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CHN09Z120WG",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN02Z017W7",
+      "subbasin": "Cooum",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "KPMKANSIR9",
+      "subbasin": "Cheyyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN09Z110WG",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.3,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ACS_Medical_College",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "MRC_Nagar",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "TLRGUMPOO23",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0068",
+      "subbasin": null,
+      "date": "2026-10-22T00:00:00",
+      "rainfall": 0.4,
+      "previous_rainfall": 0.6,
+      "time_of_measurement": "2026-10-22T10:30:00"
+    },
+    {
+      "argid": "ARG0078",
+      "subbasin": null,
+      "date": "2026-10-07T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-07T07:30:00"
+    },
+    {
+      "argid": "CGLMADLEN11",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN10Z134WG",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN11Z146WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN11Z144WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN11Z148WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.3,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN11Z149WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN14Z188WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN15Z195W49",
+      "subbasin": "Cheyyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0005",
+      "subbasin": null,
+      "date": "2026-06-19T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-06-19T22:30:00"
+    },
+    {
+      "argid": "TLRUTHVEL30",
+      "subbasin": "Adyar",
+      "date": "2026-10-11T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-11T15:30:00"
+    },
+    {
+      "argid": "RPTSHOVEL16",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN14Z192WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN2Z018W1G",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN05Z058WG",
+      "subbasin": "Cooum",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN05Z060WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN01Z005WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "Area_8-Anna_Nagar",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "CHN02Z015WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN02Z017WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "PUZHAL_ARG",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "ARG0022",
+      "subbasin": null,
+      "date": "2026-07-16T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-16T07:30:00"
+    },
+    {
+      "argid": "ARG0006",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRTIRVEL32",
+      "subbasin": "Ongur",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTWALWAL18",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0054",
+      "subbasin": null,
+      "date": "2026-04-15T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-04-15T15:30:00"
+    },
+    {
+      "argid": "Area_15-Sholinghanallur",
+      "subbasin": "Kovalam",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Chembarambakkam",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "Cholavaram",
+      "subbasin": "Kosasthalayar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "ARG_Poonamallee",
+      "subbasin": "Cooum",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "ARG_Sairam_College",
+      "subbasin": "Adyar",
+      "date": "2025-05-10T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2025-05-10T08:30:00"
+    },
+    {
+      "argid": "KPMUTHTHI16",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-20T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-20T04:30:00"
+    },
+    {
+      "argid": "CHN02Z018WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "KPMWALMAG6",
+      "subbasin": "Poiney",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN02Z019WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "TLRTIUKAN8",
+      "subbasin": "Kiliyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLTHRNEL18",
+      "subbasin": null,
+      "date": "2026-08-08T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-08T00:30:00"
+    },
+    {
+      "argid": "CGLTHRMAN15",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "KPMSRITHA14",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRTIRMAP16",
+      "subbasin": "Ongur",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0042",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "TLRPONPON20",
+      "subbasin": "Adyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0011",
+      "subbasin": null,
+      "date": "2026-10-13T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-13T11:30:00"
+    },
+    {
+      "argid": "RPTNEMPAN10",
+      "subbasin": "Araniyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN15Z192W48",
+      "subbasin": "Kiliyar",
+      "date": "2026-05-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-05-23T05:30:00"
+    },
+    {
+      "argid": "TLRPALPAL18",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-04-01T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-04-01T00:30:00"
+    },
+    {
+      "argid": "TLRUTHUTH29",
+      "subbasin": "Kovalam",
+      "date": "2026-10-20T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-20T20:30:00"
+    },
+    {
+      "argid": "ARG0038",
+      "subbasin": null,
+      "date": "2026-08-28T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-28T17:30:00"
+    },
+    {
+      "argid": "KPMSRIMAD5",
+      "subbasin": "Cheyyar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "RPTARAARK2",
+      "subbasin": "Gummudipoondi",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "KPMSRISRP11",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLTHITHI28",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN15Z199W52",
+      "subbasin": "Kosasthalayar",
+      "date": "2026-10-17T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-17T23:30:00"
+    },
+    {
+      "argid": "ARG0012",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN04Z043WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0033",
+      "subbasin": null,
+      "date": "2026-06-13T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-06-13T05:30:00"
+    },
+    {
+      "argid": "CHN01Z003WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0063",
+      "subbasin": null,
+      "date": "2026-03-24T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-03-24T06:30:00"
+    },
+    {
+      "argid": "ARG0021",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0013",
+      "subbasin": null,
+      "date": "2026-04-15T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-04-15T15:30:00"
+    },
+    {
+      "argid": "CGLTHIMAM13",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLTAMMED16",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0035",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.2,
+      "previous_rainfall": 0.2,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CGLVANMAM14",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CGLTHRPAI20",
+      "subbasin": null,
+      "date": "2026-10-15T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-15T22:30:00"
+    },
+    {
+      "argid": "ARG0046",
+      "subbasin": null,
+      "date": "2026-07-16T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-07-16T08:30:00"
+    },
+    {
+      "argid": "ARG0037",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "CHN14Z194WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN14Z196WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN15Z195WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN14Z188W1",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN14Z191WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN14Z190W1",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN14Z189WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "CHN14Z190WG",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0032",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0030",
+      "subbasin": null,
+      "date": "2026-10-13T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.2,
+      "time_of_measurement": "2026-10-13T09:30:00"
+    },
+    {
+      "argid": "ARG0020",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T20:30:00"
+    },
+    {
+      "argid": "ARG0007",
+      "subbasin": null,
+      "date": "2026-02-19T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-02-19T16:30:00"
+    },
+    {
+      "argid": "VELKATTHI19",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0028",
+      "subbasin": null,
+      "date": "2026-10-23T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T21:30:00"
+    },
+    {
+      "argid": "ARG0029",
+      "subbasin": null,
+      "date": "2026-08-19T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-19T07:30:00"
+    },
+    {
+      "argid": "VELKATMEL9",
+      "subbasin": null,
+      "date": null,
+      "rainfall": null,
+      "previous_rainfall": null,
+      "time_of_measurement": null
+    },
+    {
+      "argid": "ARG0036",
+      "subbasin": null,
+      "date": "2026-08-19T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-08-19T06:30:00"
+    },
+    {
+      "argid": "ARG0031",
+      "subbasin": null,
+      "date": "2026-10-21T00:00:00",
+      "rainfall": 0.2,
+      "previous_rainfall": 0.2,
+      "time_of_measurement": "2026-10-21T00:30:00"
+    },
+    {
+      "argid": "ARG0003",
+      "subbasin": null,
+      "date": "2026-10-02T00:00:00",
+      "rainfall": 0.0,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-02T00:30:00"
+    }
+  ],
+  "reservoir_records": [
+    {
+      "Id": 0,
+      "TankId": "RD001",
+      "Upstream_Tank_1": null,
+      "Upstream_Tank_2": null,
+      "Downstream_tank_1": null,
+      "Downstream_tank_2": null,
+      "Storage_capacity_live": 68.32791,
+      "Storage_capacity_dead": 0.07,
+      "Storage_capacity_gross": 93.446,
+      "Water_spread_area_at_ftl": null,
+      "Water_spread_area_at_at_deepest": null,
+      "Water_depth_gross_ftl_bed_level": null,
+      "Water_depth_gross_ftl_deepest_s": null,
+      "Length_of_bun": null,
+      "Top_of_bund_level": null,
+      "Apron_level_downsteram": null,
+      "Apron_level_upsteram": null,
+      "Ftl": null,
+      "Mwl": null,
+      "WaterlevelVsStorage": null,
+      "WaterlevelVsSpread": null,
+      "Deepest_bed_level_in_front_of_s": null
+    },
+    {
+      "Id": 0,
+      "TankId": "Cho001",
+      "Upstream_Tank_1": null,
+      "Upstream_Tank_2": null,
+      "Downstream_tank_1": null,
+      "Downstream_tank_2": null,
+      "Storage_capacity_live": 4.07759,
+      "Storage_capacity_dead": 1.547,
+      "Storage_capacity_gross": 30.611,
+      "Water_spread_area_at_ftl": null,
+      "Water_spread_area_at_at_deepest": null,
+      "Water_depth_gross_ftl_bed_level": null,
+      "Water_depth_gross_ftl_deepest_s": null,
+      "Length_of_bun": null,
+      "Top_of_bund_level": null,
+      "Apron_level_downsteram": null,
+      "Apron_level_upsteram": null,
+      "Ftl": null,
+      "Mwl": null,
+      "WaterlevelVsStorage": null,
+      "WaterlevelVsSpread": null,
+      "Deepest_bed_level_in_front_of_s": null
+    },
+    {
+      "Id": 0,
+      "TankId": "TK-001",
+      "Upstream_Tank_1": null,
+      "Upstream_Tank_2": null,
+      "Downstream_tank_1": null,
+      "Downstream_tank_2": null,
+      "Storage_capacity_live": 6.90925,
+      "Storage_capacity_dead": 0.0,
+      "Storage_capacity_gross": 14.1584,
+      "Water_spread_area_at_ftl": null,
+      "Water_spread_area_at_at_deepest": null,
+      "Water_depth_gross_ftl_bed_level": null,
+      "Water_depth_gross_ftl_deepest_s": null,
+      "Length_of_bun": null,
+      "Top_of_bund_level": null,
+      "Apron_level_downsteram": null,
+      "Apron_level_upsteram": null,
+      "Ftl": null,
+      "Mwl": null,
+      "WaterlevelVsStorage": null,
+      "WaterlevelVsSpread": null,
+      "Deepest_bed_level_in_front_of_s": null
+    },
+    {
+      "Id": 0,
+      "TankId": "TNCH-07-T0726",
+      "Upstream_Tank_1": null,
+      "Upstream_Tank_2": null,
+      "Downstream_tank_1": null,
+      "Downstream_tank_2": null,
+      "Storage_capacity_live": 42.44655,
+      "Storage_capacity_dead": 0.0,
+      "Storage_capacity_gross": 103.215,
+      "Water_spread_area_at_ftl": null,
+      "Water_spread_area_at_at_deepest": null,
+      "Water_depth_gross_ftl_bed_level": null,
+      "Water_depth_gross_ftl_deepest_s": null,
+      "Length_of_bun": null,
+      "Top_of_bund_level": null,
+      "Apron_level_downsteram": null,
+      "Apron_level_upsteram": null,
+      "Ftl": null,
+      "Mwl": null,
+      "WaterlevelVsStorage": null,
+      "WaterlevelVsSpread": null,
+      "Deepest_bed_level_in_front_of_s": null
+    },
+    {
+      "Id": 0,
+      "TankId": "Po001",
+      "Upstream_Tank_1": null,
+      "Upstream_Tank_2": null,
+      "Downstream_tank_1": null,
+      "Downstream_tank_2": null,
+      "Storage_capacity_live": 13.81849,
+      "Storage_capacity_dead": 5.0,
+      "Storage_capacity_gross": 91.492,
+      "Water_spread_area_at_ftl": null,
+      "Water_spread_area_at_at_deepest": null,
+      "Water_depth_gross_ftl_bed_level": null,
+      "Water_depth_gross_ftl_deepest_s": null,
+      "Length_of_bun": null,
+      "Top_of_bund_level": null,
+      "Apron_level_downsteram": null,
+      "Apron_level_upsteram": null,
+      "Ftl": null,
+      "Mwl": null,
+      "WaterlevelVsStorage": null,
+      "WaterlevelVsSpread": null,
+      "Deepest_bed_level_in_front_of_s": null
+    }
+  ],
+  "aws_records": [
+    {
+      "awsid": "AWS0009",
+      "datetime": "2026-07-18T23:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0005",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0004",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.2
+    },
+    {
+      "awsid": "AWS0010",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0007",
+      "datetime": null,
+      "rainfall": null
+    },
+    {
+      "awsid": "AWS0008",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0013",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "TLRGUMGUM75",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "RPTNEMKAV58",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "CGLTHRKEL10",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "TLRTIUTIR77",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_Chennai_RIMC_Lab",
+      "datetime": "2024-10-21T10:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_KanchipuramISRO",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_KVK_Tirur",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_Kalavai",
+      "datetime": "2024-07-06T22:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_Jaya_Engineering_College",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_RANIPET",
+      "datetime": "2024-10-23T10:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_KVK_Kattapakkam",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_Tiruttani_PTO_ISRO",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_Mahabalipuram",
+      "datetime": "2024-10-23T10:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_EnnorePort",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0003",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.4
+    },
+    {
+      "awsid": "AWS_Madhavaram_AMFU",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_VIT_CHENNAI",
+      "datetime": "2024-10-23T10:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0001",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0002",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_MeenambakkamISRO",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0006",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0012",
+      "datetime": "2026-10-16T06:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "RPTARCPUD56",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "TLRRKPRKP76",
+      "datetime": "2026-10-06T12:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS_Chennai_Nungambakkam",
+      "datetime": "2025-05-10T08:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "KPMWALWAL34",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "CGLCHYLAT9",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0014",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "AWS0011",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "KPMSRISRI32",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    },
+    {
+      "awsid": "TLRUTHUTH78",
+      "datetime": "2026-10-23T21:30:00",
+      "rainfall": 0.0
+    }
+  ]
+}

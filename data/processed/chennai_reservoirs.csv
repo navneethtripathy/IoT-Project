@@ -1,0 +1,6 @@
+tank_id,reservoir_name,storage_capacity_live_mcm,storage_capacity_gross_mcm,storage_capacity_dead_mcm,storage_fill_pct,unit,source,provenance
+RD001,RedHills,68.328,93.446,0.07,73.12,million_cubic_meters_MCM,observed,CFM-DSS_LakeOperationSystem
+Cho001,Cholavaram,4.078,30.611,1.547,13.32,million_cubic_meters_MCM,observed,CFM-DSS_LakeOperationSystem
+TK-001,Thervoy Kandigai,6.909,14.158,0.0,48.8,million_cubic_meters_MCM,observed,CFM-DSS_LakeOperationSystem
+TNCH-07-T0726,Chembarambakkam,42.447,103.215,0.0,41.12,million_cubic_meters_MCM,observed,CFM-DSS_LakeOperationSystem
+Po001,Poondi,13.818,91.492,5.0,15.1,million_cubic_meters_MCM,observed,CFM-DSS_LakeOperationSystem

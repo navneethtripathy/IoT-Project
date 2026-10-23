@@ -55,6 +55,16 @@ class StorageBackend(abc.ABC):
     def count(self, zone_id: Optional[str] = None) -> int:
         """Count stored records."""
 
+    @property
+    def backend_type(self) -> str:
+        """Name of the active storage engine."""
+        return "abstract"
+
+    @property
+    def is_fallback(self) -> bool:
+        """True if operating as an automatic fallback."""
+        return False
+
     def close(self):
         """Clean up resources."""
         pass
@@ -89,8 +99,9 @@ class SQLiteStorage(StorageBackend):
         ON telemetry(zone_id, event_timestamp);
     """
 
-    def __init__(self, db_path: str):
+    def __init__(self, db_path: str, is_fallback: bool = False):
         self._db_path = db_path
+        self._is_fallback = is_fallback
         Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
         self._conn = sqlite3.connect(db_path, check_same_thread=False)
@@ -98,7 +109,15 @@ class SQLiteStorage(StorageBackend):
         self._conn.execute(self._CREATE_TABLE)
         self._conn.execute(self._CREATE_INDEX)
         self._conn.commit()
-        logger.info("SQLite storage initialized at: %s", db_path)
+        logger.info("SQLite storage initialized at: %s (fallback=%s)", db_path, is_fallback)
+
+    @property
+    def backend_type(self) -> str:
+        return "sqlite"
+
+    @property
+    def is_fallback(self) -> bool:
+        return self._is_fallback
 
     def store(self, record: IngestedTelemetry) -> bool:
         with self._lock:
@@ -280,6 +299,14 @@ class MemoryStorage(StorageBackend):
             writer.writerows(data)
         return len(data)
 
+    @property
+    def backend_type(self) -> str:
+        return "memory"
+
+    @property
+    def is_fallback(self) -> bool:
+        return False
+
     def count(self, zone_id: Optional[str] = None) -> int:
         with self._lock:
             if zone_id:
@@ -294,22 +321,22 @@ def create_storage(backend: Optional[str] = None) -> StorageBackend:
     backend = backend or config.STORAGE_BACKEND
 
     if backend == "sqlite":
-        return SQLiteStorage(config.SQLITE_DB_PATH)
+        return SQLiteStorage(config.SQLITE_DB_PATH, is_fallback=False)
     elif backend == "memory":
         return MemoryStorage()
     elif backend == "influxdb":
         if not config.INFLUXDB_ENABLED:
             logger.warning("InfluxDB configured but INFLUXDB_ENABLED=false; using SQLite fallback")
-            return SQLiteStorage(config.SQLITE_DB_PATH)
+            return SQLiteStorage(config.SQLITE_DB_PATH, is_fallback=True)
         try:
             from backend.storage_influx import InfluxDBStorage
             return InfluxDBStorage()
         except ImportError:
             logger.warning("influxdb-client missing; using SQLite fallback")
-            return SQLiteStorage(config.SQLITE_DB_PATH)
+            return SQLiteStorage(config.SQLITE_DB_PATH, is_fallback=True)
         except Exception as e:
             logger.warning("InfluxDB connection failed (%s); using SQLite fallback", e)
-            return SQLiteStorage(config.SQLITE_DB_PATH)
+            return SQLiteStorage(config.SQLITE_DB_PATH, is_fallback=True)
     else:
         logger.warning("Unknown storage backend '%s'; using memory storage", backend)
         return MemoryStorage()

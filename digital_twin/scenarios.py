@@ -52,17 +52,17 @@ SCENARIOS: dict[str, ScenarioDefinition] = {
             ScenarioPhase(
                 start_step=50, end_step=150, zone_id="zone_01",
                 params={"inflow_rate": 1.5},
-                description="Heavy inflow to Riverside Canal",
+                description="Heavy inflow to Adyar Basin",
             ),
             ScenarioPhase(
                 start_step=60, end_step=160, zone_id="zone_02",
                 params={"inflow_rate": 1.2},
-                description="Heavy inflow to Downtown Storm Drain",
+                description="Heavy inflow to Cooum Basin",
             ),
             ScenarioPhase(
                 start_step=70, end_step=170, zone_id="zone_03",
                 params={"inflow_rate": 1.0},
-                description="Heavy inflow to Suburban Retention Basin",
+                description="Heavy inflow to Kosasthalaiyar Basin",
             ),
         ],
     ),

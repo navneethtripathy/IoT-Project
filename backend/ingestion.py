@@ -106,7 +106,8 @@ class IngestionService:
         is_stale = False
         with self._lock:
             last_ts = self._last_timestamps.get(device_key)
-            if last_ts and (ingestion_ts - msg.timestamp) > STALE_TIMEOUT:
+            is_replay = msg.source in (DataSource.REPLAYED_HISTORICAL, "replayed_historical")
+            if not is_replay and last_ts and (ingestion_ts - msg.timestamp) > STALE_TIMEOUT:
                 is_stale = True
                 self._stats["messages_stale"] += 1
             self._last_timestamps[device_key] = msg.timestamp

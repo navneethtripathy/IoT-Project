@@ -17,11 +17,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 def check_url(name: str, url: str) -> bool:
     try:
-        req = urllib.request.Request(url, method="GET")
+        req = urllib.request.Request(url, method="GET", headers={"User-Agent": "CivicTwin-HealthCheck/1.0"})
         with urllib.request.urlopen(req, timeout=5) as resp:
-            data = json.loads(resp.read())
-            status = data.get("status", "ok")
-            print(f"[OK] {name} ({url}) - status: {status}")
+            content_type = resp.headers.get("content-type", "")
+            raw = resp.read()
+            status_text = "reachable"
+            if "application/json" in content_type:
+                try:
+                    data = json.loads(raw)
+                    status_text = data.get("status", "ok")
+                except Exception:
+                    pass
+            print(f"[OK] {name} ({url}) - status: {status_text} (HTTP {resp.status})")
             return True
     except urllib.error.URLError as e:
         print(f"[UNAVAILABLE] {name} ({url}) - reason: {e.reason}")

@@ -24,6 +24,8 @@ from backend.ingestion import IngestionService, MQTTIngestionClient
 from backend.simulator import SensorSimulator
 from digital_twin.model import DigitalTwinEngine, create_default_zones
 from digital_twin.scenarios import ScenarioController, list_scenarios, SCENARIOS
+from digital_twin.forecast import BaselineForecaster, evaluate_forecaster_time_aware
+from scripts.replay_historical import HistoricalReplayController
 
 logging.basicConfig(
     level=getattr(logging, config.LOG_LEVEL, logging.INFO),
@@ -37,11 +39,13 @@ mqtt_client: Optional[MQTTIngestionClient] = None
 simulator: Optional[SensorSimulator] = None
 twin_engine: Optional[DigitalTwinEngine] = None
 scenario_ctrl: Optional[ScenarioController] = None
+replay_ctrl: Optional[HistoricalReplayController] = None
+forecaster = BaselineForecaster()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global storage, ingestion, mqtt_client, simulator, twin_engine, scenario_ctrl
+    global storage, ingestion, mqtt_client, simulator, twin_engine, scenario_ctrl, replay_ctrl
 
     logger.info("Initializing CivicTwin-R backend services")
 
@@ -66,10 +70,14 @@ async def lifespan(app: FastAPI):
     )
     simulator.start()
 
+    replay_ctrl = HistoricalReplayController(callback=ingestion.process_message)
+
     logger.info("CivicTwin-R backend initialized and ready")
     yield
 
     logger.info("Stopping CivicTwin-R backend services")
+    if replay_ctrl:
+        replay_ctrl.stop()
     if simulator:
         simulator.stop()
     if mqtt_client:
@@ -96,10 +104,14 @@ app.add_middleware(
 
 @app.get("/health")
 def health():
+    active_storage = storage.backend_type if storage else "none"
+    is_fallback = storage.is_fallback if storage else False
     return {
         "status": "healthy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "storage": config.STORAGE_BACKEND,
+        "storage": active_storage,
+        "storage_configured": config.STORAGE_BACKEND,
+        "storage_fallback_active": is_fallback,
         "mqtt_connected": mqtt_client.is_connected if mqtt_client else False,
         "simulator_running": simulator is not None,
         "records_stored": storage.count() if storage else 0,
@@ -314,7 +326,9 @@ def get_experiment_results():
 def get_stats():
     return {
         "storage": {
-            "backend": config.STORAGE_BACKEND,
+            "backend": storage.backend_type if storage else "none",
+            "configured": config.STORAGE_BACKEND,
+            "fallback_active": storage.is_fallback if storage else False,
             "total_records": storage.count() if storage else 0,
         },
         "ingestion": ingestion.get_health() if ingestion else {},
@@ -343,3 +357,121 @@ def export_data(zone_id: Optional[str] = None, format: str = "json"):
         for zone_records in all_data.values():
             records.extend(zone_records)
     return {"records": records, "count": len(records)}
+
+
+@app.get("/api/forecast/evaluate")
+def evaluate_forecast(zone_id: Optional[str] = "zone_01"):
+    if not storage:
+        raise HTTPException(503, "Storage not initialized")
+    if not twin_engine:
+        raise HTTPException(503, "Digital twin engine not initialized")
+
+    target_id = twin_engine._resolve_id(zone_id or "zone_01")
+    state = twin_engine.get_zone_state(target_id)
+    height = state.get("container_height_cm", 30.0) if state else 30.0
+
+    history = storage.query_latest(target_id, limit=200)
+    series = [r.get("water_level_cm", 0.0) for r in reversed(history) if r.get("water_level_cm") is not None]
+    if len(series) < 20:
+        eval_engine = DigitalTwinEngine(seed=config.RANDOM_SEED)
+        for z in create_default_zones():
+            eval_engine.add_zone(z)
+        ctrl = ScenarioController(eval_engine)
+        ctrl.load_scenario("heavy_rainfall")
+        series = []
+        while not ctrl.is_complete:
+            data = ctrl.step(dt_sec=5.0)
+            for d in data:
+                if d["zone_id"] == target_id:
+                    series.append(d["true_level_cm"])
+        classification = "synthetic"
+    else:
+        classification = "observed"
+
+    eval_15m = evaluate_forecaster_time_aware(series, height, horizon_steps=3, zone_id=target_id, data_classification=classification)
+    eval_60m = evaluate_forecaster_time_aware(series, height, horizon_steps=12, zone_id=target_id, data_classification=classification)
+
+    return {
+        "zone_id": target_id,
+        "evaluation_horizons": [eval_15m.to_dict(), eval_60m.to_dict()],
+        "baseline_comparison": "Naive Persistence (Constant Water Level)",
+        "methodology": "Time-aware split; strictly zero future-data leakage.",
+        "disclaimer": "Decision-support indicator; not an official flood warning substitute.",
+    }
+
+
+@app.get("/api/forecast/{zone_id}")
+def get_forecast(zone_id: str):
+    if not storage:
+        raise HTTPException(503, "Storage not initialized")
+    if not twin_engine:
+        raise HTTPException(503, "Digital twin engine not initialized")
+
+    state = twin_engine.get_zone_state(zone_id)
+    if not state:
+        raise HTTPException(404, f"Zone '{zone_id}' not found")
+
+    target_id = twin_engine._resolve_id(zone_id)
+    history = storage.query_latest(target_id, limit=20)
+    levels = [r.get("water_level_cm", 0.0) for r in reversed(history) if r.get("water_level_cm") is not None]
+    if not levels and state:
+        levels = [state.get("current_level_cm", 0.0)]
+
+    height = state.get("container_height_cm", 30.0)
+    forecast = forecaster.forecast_zone(
+        zone_id=target_id,
+        recent_levels_cm=levels,
+        container_height_cm=height,
+    )
+    res = forecast.to_dict()
+    res["zone_name"] = state.get("zone_name", "")
+    res["subbasin"] = state.get("subbasin", "")
+    return res
+
+
+@app.get("/api/replay/status")
+def get_replay_status():
+    if not replay_ctrl:
+        raise HTTPException(503, "Replay controller not initialized")
+    return replay_ctrl.get_status()
+
+
+@app.post("/api/replay/start")
+def start_replay(interval_sec: float = Query(1.0, ge=0.1, le=10.0)):
+    if not replay_ctrl:
+        raise HTTPException(503, "Replay controller not initialized")
+    replay_ctrl.start(interval_sec=interval_sec)
+    return {"status": "started", "replay": replay_ctrl.get_status()}
+
+
+@app.post("/api/replay/step")
+def step_replay(steps: int = Query(1, ge=1, le=50)):
+    if not replay_ctrl:
+        raise HTTPException(503, "Replay controller not initialized")
+    replayed = []
+    for _ in range(steps):
+        p = replay_ctrl.step()
+        if p is None:
+            break
+        replayed.append(p)
+    return {
+        "steps_executed": len(replayed),
+        "replay": replay_ctrl.get_status(),
+        "sample": replayed[-1] if replayed else None,
+    }
+
+
+@app.post("/api/replay/stop")
+def stop_replay():
+    if not replay_ctrl:
+        raise HTTPException(503, "Replay controller not initialized")
+    replay_ctrl.stop()
+    return {"status": "stopped", "replay": replay_ctrl.get_status()}
+
+
+@app.post("/api/replay/reset")
+def reset_replay():
+    if not replay_ctrl:
+        raise HTTPException(503, "Replay controller not initialized")
+    replay_ctrl.reset()
+    return {"status": "reset", "replay": replay_ctrl.get_status()}

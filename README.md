@@ -1,6 +1,20 @@
-# CivicTwin-R
+# CivicTwin-R: Real-Data Grounded Urban Flood Digital Twin
 
-Cyber-physical digital twin platform for urban water-level monitoring, simulated flood scenario testing, and missing-data resilience evaluation.
+A resilient cyber-physical digital twin platform for urban water-level monitoring, simulated flood scenario testing, interpretable early-warning forecasting, and missing-data resilience evaluation grounded in real environmental observations from the **Chennai Metropolitan Basin, Tamil Nadu, India** (Adyar, Cooum, and Kosasthalaiyar sub-basins).
+
+## Geographic Grounding: Chennai Metropolitan Basin
+
+CivicTwin-R integrates real-world telemetry and hydrological spatial data:
+- **Official Monitoring Portal**: Chennai Flood Monitoring & Spatial Decision Support System ([CFM-DSS](https://www.chennaifloodmonitor.tn.gov.in/)), developed under the World Bank PDGF by TNUIFSL, CRA, GCC, WRD, and IIT Madras.
+- **Monitored Sub-Basins**:
+  1. `zone_01` (`zone_adyar`): **Adyar River Basin** (Saidapet transit corridor & Chembarambakkam reservoir outflow).
+  2. `zone_02` (`zone_cooum`): **Cooum River Basin** (Central Urban Drain, Nungambakkam, and Napier Bridge outflow).
+  3. `zone_03` (`zone_kosasthalaiyar`): **Kosasthalaiyar Basin** (North Chennai Industrial Corridor, Poondi upstream, and Ennore Creek).
+- **Verified Environmental Observations**:
+  - 328 Automatic Rain Gauge (ARG) records across Chennai sub-basins.
+  - 5 major reservoir storage capacities (Chembarambakkam, Poondi, RedHills, Cholavaram, Thervoy Kandigai).
+  - 144 hourly points of Cyclone Michaung extreme storm rainfall (Dec 1-6, 2023, 369.8 mm total precipitation).
+- **Explicit Conceptual Model Disclaimer**: The multi-zone twin models catchment mass-balance (inflow minus drainage with rainfall contribution and upstream transfers); it is explicitly labeled as a conceptual lumped model, not an uncalibrated 2D hydrodynamic finite-element simulation.
 
 ## Prerequisites
 
@@ -29,6 +43,24 @@ pip install -e ".[dev]"
 # Or run the setup automation script
 ./scripts/setup.sh
 ```
+
+## Data Ingestion & Replay
+
+CivicTwin-R includes reproducible importers for real environmental observations:
+
+```bash
+# Ingest official CFM-DSS rain gauges, reservoirs, and Michaung storm series:
+python3 scripts/ingest_chennai_data.py
+# Or via Makefile:
+make ingest
+
+# Replay historical Cyclone Michaung storm observations through the IoT pipeline:
+python3 scripts/replay_historical.py
+# Or via Makefile:
+make replay
+```
+
+Raw data is stored in `data/raw/` and cleaned observations in `data/processed/`. Complete provenance metadata is recorded in `data/data_provenance.md`.
 
 ## Configuration
 
@@ -89,10 +121,17 @@ When services are running:
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/health` | Service health, storage count, ingestion statistics |
+| `GET` | `/health` | Service health, active storage backend, fallback status, ingestion stats |
 | `GET` | `/api/config` | Safe configuration summary |
-| `GET` | `/api/zones` | List all 3 zones with current water levels and alert status |
-| `GET` | `/api/zones/{zone_id}` | Detailed telemetry and physics state for a zone |
+| `GET` | `/api/zones` | List all 3 zones with current water levels, Chennai subbasins, and alert status |
+| `GET` | `/api/zones/{zone_id}` | Detailed telemetry and physics state for a zone (supports aliases like `zone_adyar`) |
+| `GET` | `/api/forecast/{zone_id}` | Multi-horizon Rate-of-Rise forecast (15m, 60m, 180m) with ±1.96 SE confidence bounds |
+| `GET` | `/api/forecast/evaluate` | Time-aware cross-validation comparing forecast model against naive baseline |
+| `GET` | `/api/replay/status` | Current status and progress of historical observation replay |
+| `POST`| `/api/replay/start` | Start streaming historical Cyclone Michaung storm observations |
+| `POST`| `/api/replay/step` | Manually advance historical observation replay by N steps |
+| `POST`| `/api/replay/stop` | Stop historical replay |
+| `POST`| `/api/replay/reset` | Reset historical replay to beginning |
 | `GET` | `/api/telemetry/latest` | Most recent telemetry records |
 | `GET` | `/api/telemetry/history` | Historical records over time window |
 | `GET` | `/api/alerts` | Active and historical threshold-crossing alerts |
@@ -117,13 +156,14 @@ The Node-RED flow configuration is stored in `nodered/flows.json`.
 
 The dashboard displays:
 - System overview and health status.
-- Real-time gauge dials for Riverside Canal, Downtown Storm Drain, and Suburban Retention Basin.
+- Real-time gauge dials for Adyar Basin, Cooum Basin, and Kosasthalaiyar.
+- Real vs Synthetic provenance indicators (`[OBSERVED]`, `[REPLAYED_HISTORICAL]`, `[DIGITAL_TWIN]`).
 - Scenario trigger controls (start, stop, step) sending REST commands to the backend.
 - Resilience indicators (sensor dropout, network outage, stale observation flags).
 
 ## Testing
 
-Execute the automated pytest suite (63 unit, integration, and API tests):
+Execute the automated pytest suite (82 unit, integration, and API tests):
 
 ```bash
 make test

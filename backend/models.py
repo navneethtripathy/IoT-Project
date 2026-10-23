@@ -22,11 +22,19 @@ class SensorStatus(str, enum.Enum):
 
 
 class DataSource(str, enum.Enum):
-    PHYSICAL = "physical"
+    # Canonical provenance tags
+    OBSERVED = "observed"
+    REPLAYED_HISTORICAL = "replayed_historical"
+    FORECAST = "forecast"
+    PYTHON_SIMULATOR = "python_simulator"
     WOKWI = "wokwi"
+    PHYSICAL_SENSOR = "physical_sensor"
+    RECONSTRUCTED = "reconstructed"
+    DIGITAL_TWIN_SIMULATION = "digital_twin_simulation"
+    # Backwards-compatible aliases
+    PHYSICAL = "physical"
     SIMULATOR = "simulator"
     DIGITAL_TWIN = "digital_twin"
-    RECONSTRUCTED = "reconstructed"
 
 
 class AlertLevel(str, enum.Enum):

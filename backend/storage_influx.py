@@ -48,6 +48,14 @@ class InfluxDBStorage(StorageBackend):
         self._query_api = self._client.query_api()
         logger.info("InfluxDB storage initialized for org='%s', bucket='%s'", self._org, self._bucket)
 
+    @property
+    def backend_type(self) -> str:
+        return "influxdb"
+
+    @property
+    def is_fallback(self) -> bool:
+        return False
+
     def store(self, record: IngestedTelemetry) -> bool:
         from influxdb_client import Point
 

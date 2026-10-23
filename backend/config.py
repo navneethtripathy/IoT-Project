@@ -60,13 +60,15 @@ STALE_READING_TIMEOUT_SEC: float = 30.0
 
 # Paths
 DATA_DIR = _PROJECT_ROOT / "data"
+RAW_DIR = DATA_DIR / "raw"
+PROCESSED_DIR = DATA_DIR / "processed"
 GENERATED_DIR = DATA_DIR / "generated"
 RESULTS_DIR = _PROJECT_ROOT / "results"
 PLOTS_DIR = RESULTS_DIR / "plots"
 TABLES_DIR = RESULTS_DIR / "tables"
 LOGS_DIR = RESULTS_DIR / "logs"
 
-for d in [GENERATED_DIR, PLOTS_DIR, TABLES_DIR, LOGS_DIR]:
+for d in [RAW_DIR, PROCESSED_DIR, GENERATED_DIR, PLOTS_DIR, TABLES_DIR, LOGS_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
 
