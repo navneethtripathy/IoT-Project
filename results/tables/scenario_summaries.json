@@ -16,7 +16,7 @@
         "max_level_pct": 10.6,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 9,
+        "sensor_failures": 8,
         "network_dropouts": 0,
         "total_steps": 200
       },
@@ -24,8 +24,8 @@
         "max_level_pct": 18.7,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 18,
-        "network_dropouts": 8,
+        "sensor_failures": 21,
+        "network_dropouts": 15,
         "total_steps": 200
       }
     }
@@ -47,7 +47,7 @@
         "max_level_pct": 100.0,
         "alert_steps_warning": 16,
         "alert_steps_critical": 84,
-        "sensor_failures": 13,
+        "sensor_failures": 12,
         "network_dropouts": 0,
         "total_steps": 300
       },
@@ -55,8 +55,8 @@
         "max_level_pct": 100.0,
         "alert_steps_warning": 26,
         "alert_steps_critical": 37,
-        "sensor_failures": 28,
-        "network_dropouts": 13,
+        "sensor_failures": 29,
+        "network_dropouts": 22,
         "total_steps": 300
       }
     }
@@ -78,7 +78,7 @@
         "max_level_pct": 10.6,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 13,
+        "sensor_failures": 11,
         "network_dropouts": 0,
         "total_steps": 250
       },
@@ -86,8 +86,8 @@
         "max_level_pct": 18.7,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 23,
-        "network_dropouts": 11,
+        "sensor_failures": 26,
+        "network_dropouts": 19,
         "total_steps": 250
       }
     }
@@ -109,7 +109,7 @@
         "max_level_pct": 100.0,
         "alert_steps_warning": 21,
         "alert_steps_critical": 30,
-        "sensor_failures": 9,
+        "sensor_failures": 8,
         "network_dropouts": 0,
         "total_steps": 200
       },
@@ -117,8 +117,8 @@
         "max_level_pct": 18.7,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 18,
-        "network_dropouts": 8,
+        "sensor_failures": 21,
+        "network_dropouts": 15,
         "total_steps": 200
       }
     }
@@ -132,7 +132,7 @@
         "max_level_pct": 15.33,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 68,
+        "sensor_failures": 74,
         "network_dropouts": 0,
         "total_steps": 250
       },
@@ -140,7 +140,7 @@
         "max_level_pct": 10.6,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 13,
+        "sensor_failures": 11,
         "network_dropouts": 0,
         "total_steps": 250
       },
@@ -148,8 +148,8 @@
         "max_level_pct": 18.7,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 23,
-        "network_dropouts": 11,
+        "sensor_failures": 26,
+        "network_dropouts": 19,
         "total_steps": 250
       }
     }
@@ -171,7 +171,7 @@
         "max_level_pct": 10.6,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 9,
+        "sensor_failures": 8,
         "network_dropouts": 0,
         "total_steps": 200
       },
@@ -179,8 +179,8 @@
         "max_level_pct": 18.7,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 18,
-        "network_dropouts": 8,
+        "sensor_failures": 21,
+        "network_dropouts": 15,
         "total_steps": 200
       }
     }
@@ -202,7 +202,7 @@
         "max_level_pct": 10.6,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 13,
+        "sensor_failures": 11,
         "network_dropouts": 0,
         "total_steps": 250
       },
@@ -210,8 +210,8 @@
         "max_level_pct": 18.7,
         "alert_steps_warning": 0,
         "alert_steps_critical": 0,
-        "sensor_failures": 23,
-        "network_dropouts": 11,
+        "sensor_failures": 26,
+        "network_dropouts": 19,
         "total_steps": 250
       }
     }
@@ -233,7 +233,7 @@
         "max_level_pct": 100.0,
         "alert_steps_warning": 14,
         "alert_steps_critical": 145,
-        "sensor_failures": 16,
+        "sensor_failures": 17,
         "network_dropouts": 0,
         "total_steps": 350
       },
@@ -241,8 +241,8 @@
         "max_level_pct": 100.0,
         "alert_steps_warning": 21,
         "alert_steps_critical": 73,
-        "sensor_failures": 87,
-        "network_dropouts": 16,
+        "sensor_failures": 90,
+        "network_dropouts": 24,
         "total_steps": 350
       }
     }

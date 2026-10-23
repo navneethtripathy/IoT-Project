@@ -1,19 +1,9 @@
 """
 CivicTwin-R — Scenario Definitions and Controller
 
-Defines configurable flood-monitoring scenarios that modify zone parameters
-over a scripted timeline. Each scenario is deterministic (given the same seed)
-and produces a labelled output dataset.
-
-Scenarios:
-    1. normal          — Baseline conditions, no disruptions.
-    2. heavy_rainfall  — Rapid inflow increase simulating heavy rain.
-    3. blocked_drain   — Reduced drainage capacity.
-    4. sudden_rise     — Step-change water-level jump.
-    5. sensor_dropout  — Intermittent sensor failures.
-    6. noisy_sensor    — Increased measurement noise and bias.
-    7. network_outage  — Simulated connectivity loss and recovery.
-    8. multi_zone_stress — Multiple zones under stress simultaneously.
+Defines repeatable flood and resilience test scenarios across zones.
+Each scenario modifies zone parameters (inflow, drainage, sensor/network reliability)
+across specified timeline phases.
 """
 
 from __future__ import annotations
@@ -22,15 +12,13 @@ import logging
 from dataclasses import dataclass, field
 from typing import Optional
 
-from digital_twin.model import DigitalTwinEngine, ZoneModel
+from digital_twin.model import DigitalTwinEngine
 
 logger = logging.getLogger("civictwin.twin.scenarios")
 
 
 @dataclass
 class ScenarioPhase:
-    """A single phase within a scenario timeline."""
-
     start_step: int
     end_step: int
     zone_id: str
@@ -40,8 +28,6 @@ class ScenarioPhase:
 
 @dataclass
 class ScenarioDefinition:
-    """Complete scenario specification."""
-
     scenario_id: str
     name: str
     description: str
@@ -49,21 +35,18 @@ class ScenarioDefinition:
     phases: list[ScenarioPhase] = field(default_factory=list)
 
 
-# ── Predefined Scenarios ─────────────────────────────────
-
 SCENARIOS: dict[str, ScenarioDefinition] = {
     "normal": ScenarioDefinition(
         scenario_id="normal",
         name="Normal Conditions",
-        description="Baseline monitoring — stable inflow, full drainage, reliable sensors.",
+        description="Baseline monitoring with stable inflow and full drainage capacity.",
         total_steps=200,
-        phases=[],  # No parameter changes
+        phases=[],
     ),
     "heavy_rainfall": ScenarioDefinition(
         scenario_id="heavy_rainfall",
         name="Heavy Rainfall",
-        description="Simulates a sudden increase in water inflow across zones, "
-                    "representing a heavy rainfall event.",
+        description="Increased water inflow simulating sudden storm runoff across zones.",
         total_steps=300,
         phases=[
             ScenarioPhase(
@@ -86,7 +69,7 @@ SCENARIOS: dict[str, ScenarioDefinition] = {
     "blocked_drain": ScenarioDefinition(
         scenario_id="blocked_drain",
         name="Blocked Drain",
-        description="Drainage capacity drops sharply in zone_01, simulating a blocked drain.",
+        description="Sharp drop in drainage capacity simulating debris blockage.",
         total_steps=250,
         phases=[
             ScenarioPhase(
@@ -99,77 +82,76 @@ SCENARIOS: dict[str, ScenarioDefinition] = {
     "sudden_rise": ScenarioDefinition(
         scenario_id="sudden_rise",
         name="Sudden Water Rise",
-        description="Abrupt large inflow spike in zone_02, simulating flash-flood conditions.",
+        description="Large inflow step-change simulating localized flash-flood conditions.",
         total_steps=200,
         phases=[
             ScenarioPhase(
                 start_step=30, end_step=50, zone_id="zone_02",
                 params={"inflow_rate": 3.0},
-                description="Flash inflow spike",
+                description="Flash inflow surge",
             ),
             ScenarioPhase(
                 start_step=50, end_step=200, zone_id="zone_02",
                 params={"inflow_rate": 0.2},
-                description="Inflow subsides",
+                description="Runoff tapering",
             ),
         ],
     ),
     "sensor_dropout": ScenarioDefinition(
         scenario_id="sensor_dropout",
         name="Sensor Dropout",
-        description="Zone_01 sensor reliability drops to simulate intermittent sensor failures.",
+        description="Intermittent sensor measurement dropouts followed by restoration.",
         total_steps=250,
         phases=[
             ScenarioPhase(
                 start_step=50, end_step=150, zone_id="zone_01",
                 params={"sensor_reliability": 0.3},
-                description="Sensor becomes unreliable (30% success rate)",
+                description="Sensor reliability degraded to 30%",
             ),
             ScenarioPhase(
                 start_step=150, end_step=250, zone_id="zone_01",
                 params={"sensor_reliability": 1.0},
-                description="Sensor restored",
+                description="Sensor reliability restored",
             ),
         ],
     ),
     "noisy_sensor": ScenarioDefinition(
         scenario_id="noisy_sensor",
         name="Noisy Sensor",
-        description="Increased measurement noise on zone_02 sensor.",
+        description="High Gaussian measurement noise added to sensor observations.",
         total_steps=200,
         phases=[
             ScenarioPhase(
                 start_step=30, end_step=170, zone_id="zone_02",
                 params={"noise_stddev_cm": 2.0},
-                description="High sensor noise (±2cm stddev)",
+                description="High measurement variance (stddev=2.0cm)",
             ),
         ],
     ),
     "network_outage": ScenarioDefinition(
         scenario_id="network_outage",
         name="Network Outage & Recovery",
-        description="Zone_01 loses network connectivity, then recovers.",
+        description="Temporary telemetry transport loss and subsequent automatic recovery.",
         total_steps=250,
         phases=[
             ScenarioPhase(
                 start_step=60, end_step=140, zone_id="zone_01",
                 params={"network_availability": 0.0},
-                description="Complete network loss",
+                description="Total network communication loss",
             ),
             ScenarioPhase(
                 start_step=140, end_step=250, zone_id="zone_01",
                 params={"network_availability": 1.0},
-                description="Network recovered",
+                description="Network link restored",
             ),
         ],
     ),
     "multi_zone_stress": ScenarioDefinition(
         scenario_id="multi_zone_stress",
         name="Multi-Zone Stress Test",
-        description="Simultaneous heavy rainfall, sensor failures, and network issues across zones.",
+        description="Simultaneous rainfall spikes, drainage reduction, and communication dropouts.",
         total_steps=350,
         phases=[
-            # Heavy rain on all zones
             ScenarioPhase(
                 start_step=50, end_step=200, zone_id="zone_01",
                 params={"inflow_rate": 1.8},
@@ -178,20 +160,18 @@ SCENARIOS: dict[str, ScenarioDefinition] = {
             ScenarioPhase(
                 start_step=60, end_step=210, zone_id="zone_02",
                 params={"inflow_rate": 1.5, "drainage_capacity": 0.1},
-                description="Heavy rainfall + blocked drain - Zone 2",
+                description="Rainfall + restricted drainage - Zone 2",
             ),
             ScenarioPhase(
                 start_step=70, end_step=180, zone_id="zone_03",
                 params={"inflow_rate": 1.2, "sensor_reliability": 0.4},
-                description="Heavy rainfall + sensor issues - Zone 3",
+                description="Rainfall + sensor dropouts - Zone 3",
             ),
-            # Network outage on zone_01
             ScenarioPhase(
                 start_step=100, end_step=160, zone_id="zone_01",
                 params={"network_availability": 0.0},
                 description="Network outage - Zone 1",
             ),
-            # Recovery
             ScenarioPhase(
                 start_step=200, end_step=350, zone_id="zone_01",
                 params={"inflow_rate": 0.1, "network_availability": 1.0},
@@ -213,21 +193,13 @@ SCENARIOS: dict[str, ScenarioDefinition] = {
 
 
 class ScenarioController:
-    """
-    Executes scenarios by applying phase parameters at the correct steps.
-
-    Usage:
-        controller = ScenarioController(engine)
-        controller.load_scenario("heavy_rainfall")
-        while not controller.is_complete:
-            readings = controller.step()
-    """
+    """Manages active scenario execution and restores parameters on completion/stop."""
 
     def __init__(self, engine: DigitalTwinEngine):
         self._engine = engine
         self._scenario: Optional[ScenarioDefinition] = None
         self._current_step: int = 0
-        self._active_params: dict[str, dict] = {}  # zone_id -> original params
+        self._active_params: dict[str, dict] = {}
         self._results: list[dict] = []
         self._is_running: bool = False
 
@@ -256,7 +228,6 @@ class ScenarioController:
         return min(100.0, (self._current_step / self._scenario.total_steps) * 100.0)
 
     def load_scenario(self, scenario_id: str) -> bool:
-        """Load a scenario definition and reset the engine."""
         if scenario_id not in SCENARIOS:
             logger.error("Unknown scenario: %s", scenario_id)
             return False
@@ -267,7 +238,6 @@ class ScenarioController:
         self._is_running = True
         self._active_params = {}
 
-        # Save original zone parameters for restoration
         for zone_id, zone in self._engine.zones.items():
             self._active_params[zone_id] = {
                 "inflow_rate": zone.inflow_rate,
@@ -282,32 +252,20 @@ class ScenarioController:
         return True
 
     def step(self, dt_sec: float = 5.0) -> list[dict]:
-        """Execute one simulation step, applying scenario phases as needed."""
         if not self._scenario or self.is_complete:
             return []
 
         self._current_step += 1
 
-        # Apply or revert phase parameters
         for phase in self._scenario.phases:
             if self._current_step == phase.start_step:
-                logger.debug(
-                    "Step %d: Applying phase '%s' to %s",
-                    self._current_step, phase.description, phase.zone_id,
-                )
                 self._engine.apply_scenario_params(phase.zone_id, **phase.params)
             elif self._current_step == phase.end_step:
-                # Restore original params
                 original = self._active_params.get(phase.zone_id, {})
                 restore_params = {k: original[k] for k in phase.params if k in original}
                 if restore_params:
-                    logger.debug(
-                        "Step %d: Reverting phase '%s' on %s",
-                        self._current_step, phase.description, phase.zone_id,
-                    )
                     self._engine.apply_scenario_params(phase.zone_id, **restore_params)
 
-        # Run simulation step
         readings = self._engine.step_all(dt_sec)
         step_data = []
         for r in readings:
@@ -319,25 +277,21 @@ class ScenarioController:
 
         if self.is_complete:
             self._is_running = False
-            logger.info("Scenario '%s' completed", self._scenario.scenario_id)
+            logger.info("Scenario '%s' execution finished", self._scenario.scenario_id)
 
         return step_data
 
     def stop(self):
-        """Stop the current scenario and restore original parameters."""
         if self._scenario and self._is_running:
-            # Restore all original params
             for zone_id, orig in self._active_params.items():
                 self._engine.apply_scenario_params(zone_id, **orig)
             self._is_running = False
             logger.info("Scenario '%s' stopped at step %d", self._scenario.scenario_id, self._current_step)
 
     def get_results(self) -> list[dict]:
-        """Return all recorded results for the current/last scenario."""
         return list(self._results)
 
     def get_summary(self) -> dict:
-        """Return a summary of the scenario run."""
         if not self._scenario:
             return {"status": "no_scenario_loaded"}
 
@@ -354,7 +308,6 @@ class ScenarioController:
 
 
 def list_scenarios() -> list[dict]:
-    """List all available scenario definitions."""
     return [
         {
             "scenario_id": s.scenario_id,

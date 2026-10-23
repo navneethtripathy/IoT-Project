@@ -2,12 +2,7 @@
 CivicTwin-R — Storage Abstraction Layer
 
 Provides a unified interface for persisting and querying telemetry data.
-Supports three backends:
-  - SQLite  (default, zero-dependency local fallback)
-  - InfluxDB 2.x (preferred for time-series at scale)
-  - In-memory (for unit tests and quick demos)
-
-The active backend is selected via STORAGE_BACKEND env var.
+Supports SQLite, InfluxDB 2.x, and in-memory storage.
 """
 
 from __future__ import annotations
@@ -22,12 +17,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from backend.models import IngestedTelemetry, DataSource, SensorStatus
+from backend.models import IngestedTelemetry
 
 logger = logging.getLogger("civictwin.storage")
 
-
-# ── Abstract Interface ───────────────────────────────────
 
 class StorageBackend(abc.ABC):
     """Abstract base for all storage backends."""
@@ -67,10 +60,8 @@ class StorageBackend(abc.ABC):
         pass
 
 
-# ── SQLite Backend ───────────────────────────────────────
-
 class SQLiteStorage(StorageBackend):
-    """SQLite-based storage — reliable local fallback requiring no external service."""
+    """SQLite-based storage implementation."""
 
     _CREATE_TABLE = """
     CREATE TABLE IF NOT EXISTS telemetry (
@@ -101,13 +92,13 @@ class SQLiteStorage(StorageBackend):
     def __init__(self, db_path: str):
         self._db_path = db_path
         Path(db_path).parent.mkdir(parents=True, exist_ok=True)
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
         self._conn = sqlite3.connect(db_path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute(self._CREATE_TABLE)
         self._conn.execute(self._CREATE_INDEX)
         self._conn.commit()
-        logger.info("SQLite storage initialized: %s", db_path)
+        logger.info("SQLite storage initialized at: %s", db_path)
 
     def store(self, record: IngestedTelemetry) -> bool:
         with self._lock:
@@ -159,7 +150,11 @@ class SQLiteStorage(StorageBackend):
             return self._rows_to_dicts(cur.fetchall())
 
     def query_range(
-        self, zone_id: str, start: datetime, end: datetime, limit: int = 1000
+        self,
+        zone_id: str,
+        start: datetime,
+        end: datetime,
+        limit: int = 1000,
     ) -> list[dict]:
         with self._lock:
             cur = self._conn.execute(
@@ -172,74 +167,78 @@ class SQLiteStorage(StorageBackend):
 
     def query_all_latest(self, limit_per_zone: int = 1) -> dict[str, list[dict]]:
         with self._lock:
-            cur = self._conn.execute("SELECT DISTINCT zone_id FROM telemetry")
-            zones = [r["zone_id"] for r in cur.fetchall()]
-        result = {}
-        for z in zones:
-            result[z] = self.query_latest(z, limit_per_zone)
-        return result
+            cur = self._conn.execute(
+                """SELECT DISTINCT zone_id FROM telemetry"""
+            )
+            zones = [row["zone_id"] for row in cur.fetchall()]
+            result = {}
+            for zid in zones:
+                c2 = self._conn.execute(
+                    """SELECT * FROM telemetry WHERE zone_id = ?
+                       ORDER BY event_timestamp DESC LIMIT ?""",
+                    (zid, limit_per_zone),
+                )
+                result[zid] = self._rows_to_dicts(c2.fetchall())
+            return result
 
     def export_csv(self, path: Path, zone_id: Optional[str] = None) -> int:
         with self._lock:
             if zone_id:
                 cur = self._conn.execute(
-                    "SELECT * FROM telemetry WHERE zone_id = ? ORDER BY event_timestamp",
+                    "SELECT * FROM telemetry WHERE zone_id = ? ORDER BY event_timestamp ASC",
                     (zone_id,),
                 )
             else:
                 cur = self._conn.execute(
-                    "SELECT * FROM telemetry ORDER BY event_timestamp"
+                    "SELECT * FROM telemetry ORDER BY event_timestamp ASC"
                 )
-            rows = cur.fetchall()
+            rows = self._rows_to_dicts(cur.fetchall())
 
         if not rows:
             return 0
 
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(rows[0].keys())
-            for r in rows:
-                writer.writerow(tuple(r))
+            writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+            writer.writeheader()
+            writer.writerows(rows)
         return len(rows)
 
     def count(self, zone_id: Optional[str] = None) -> int:
         with self._lock:
             if zone_id:
                 cur = self._conn.execute(
-                    "SELECT COUNT(*) as c FROM telemetry WHERE zone_id = ?",
+                    "SELECT COUNT(*) FROM telemetry WHERE zone_id = ?",
                     (zone_id,),
                 )
             else:
-                cur = self._conn.execute("SELECT COUNT(*) as c FROM telemetry")
-            return cur.fetchone()["c"]
+                cur = self._conn.execute("SELECT COUNT(*) FROM telemetry")
+            return cur.fetchone()[0]
 
     def close(self):
-        self._conn.close()
+        with self._lock:
+            self._conn.close()
 
-
-# ── In-Memory Backend ────────────────────────────────────
 
 class MemoryStorage(StorageBackend):
-    """In-memory storage for testing and quick demos. Data is lost on restart."""
+    """In-memory storage implementation for testing and ephemeral execution."""
 
     def __init__(self):
         self._records: list[IngestedTelemetry] = []
-        self._seen: set[tuple[str, int]] = set()
-        self._lock = threading.Lock()
-        logger.info("In-memory storage initialized")
+        self._lock = threading.RLock()
 
     def store(self, record: IngestedTelemetry) -> bool:
-        key = (record.device_id, record.sequence)
         with self._lock:
-            if key in self._seen:
-                return False
-            self._seen.add(key)
+            for r in self._records:
+                if r.device_id == record.device_id and r.sequence == record.sequence:
+                    return False
             self._records.append(record)
-        return True
+            return True
 
     def _to_dict(self, r: IngestedTelemetry) -> dict:
-        return r.model_dump(mode="json")
+        d = r.model_dump(mode="json")
+        d["event_timestamp"] = d.get("timestamp")
+        return d
 
     def query_latest(self, zone_id: str, limit: int = 1) -> list[dict]:
         with self._lock:
@@ -259,8 +258,9 @@ class MemoryStorage(StorageBackend):
             return [self._to_dict(r) for r in matched[:limit]]
 
     def query_all_latest(self, limit_per_zone: int = 1) -> dict[str, list[dict]]:
-        zones = {r.zone_id for r in self._records}
-        return {z: self.query_latest(z, limit_per_zone) for z in zones}
+        with self._lock:
+            zones = {r.zone_id for r in self._records}
+            return {z: self.query_latest(z, limit_per_zone) for z in zones}
 
     def export_csv(self, path: Path, zone_id: Optional[str] = None) -> int:
         with self._lock:
@@ -273,7 +273,7 @@ class MemoryStorage(StorageBackend):
             return 0
 
         path.parent.mkdir(parents=True, exist_ok=True)
-        data = [r.model_dump(mode="json") for r in records]
+        data = [self._to_dict(r) for r in records]
         with open(path, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=data[0].keys())
             writer.writeheader()
@@ -287,10 +287,8 @@ class MemoryStorage(StorageBackend):
             return len(self._records)
 
 
-# ── Factory ──────────────────────────────────────────────
-
 def create_storage(backend: Optional[str] = None) -> StorageBackend:
-    """Create the appropriate storage backend based on configuration."""
+    """Create the storage backend matching configuration."""
     from backend import config
 
     backend = backend or config.STORAGE_BACKEND
@@ -301,19 +299,17 @@ def create_storage(backend: Optional[str] = None) -> StorageBackend:
         return MemoryStorage()
     elif backend == "influxdb":
         if not config.INFLUXDB_ENABLED:
-            logger.warning(
-                "InfluxDB selected but INFLUXDB_ENABLED=false; falling back to SQLite"
-            )
+            logger.warning("InfluxDB configured but INFLUXDB_ENABLED=false; using SQLite fallback")
             return SQLiteStorage(config.SQLITE_DB_PATH)
         try:
             from backend.storage_influx import InfluxDBStorage
             return InfluxDBStorage()
         except ImportError:
-            logger.warning("influxdb-client not available; falling back to SQLite")
+            logger.warning("influxdb-client missing; using SQLite fallback")
             return SQLiteStorage(config.SQLITE_DB_PATH)
         except Exception as e:
-            logger.warning("InfluxDB connection failed (%s); falling back to SQLite", e)
+            logger.warning("InfluxDB connection failed (%s); using SQLite fallback", e)
             return SQLiteStorage(config.SQLITE_DB_PATH)
     else:
-        logger.warning("Unknown storage backend '%s'; using memory", backend)
+        logger.warning("Unknown storage backend '%s'; using memory storage", backend)
         return MemoryStorage()

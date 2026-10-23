@@ -2,10 +2,8 @@
 """
 CivicTwin-R — Demo Data Generator
 
-Generates a complete sample dataset from the digital twin engine
-without requiring MQTT, InfluxDB, or any external service.
-
-Output: data/generated/demo_dataset.csv and demo_dataset.json
+Generates a deterministically seeded sample dataset from the digital twin engine.
+Saves outputs to data/generated/demo_dataset.csv and demo_dataset.json.
 """
 
 import csv
@@ -20,32 +18,28 @@ from backend import config
 
 
 def main():
-    print("╔══════════════════════════════════════════╗")
-    print("║  CivicTwin-R — Demo Data Generator       ║")
-    print("╚══════════════════════════════════════════╝")
+    print("Generating CivicTwin-R demo dataset...")
 
     output_dir = config.GENERATED_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
 
     data = create_demo_dataset(steps=300, seed=config.RANDOM_SEED)
-    print(f"Generated {len(data)} telemetry messages over 300 steps")
+    print(f"Generated {len(data)} telemetry records over 300 simulation steps.")
 
-    # Save JSON
     json_path = output_dir / "demo_dataset.json"
     with open(json_path, "w") as f:
         json.dump(data, f, indent=2, default=str)
-    print(f"Saved: {json_path}")
+    print(f"JSON export: {json_path}")
 
-    # Save CSV
     csv_path = output_dir / "demo_dataset.csv"
     if data:
         with open(csv_path, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=data[0].keys())
             writer.writeheader()
             writer.writerows(data)
-        print(f"Saved: {csv_path}")
+        print(f"CSV export:  {csv_path}")
 
-    print("Done.")
+    print("Generation complete.")
 
 
 if __name__ == "__main__":

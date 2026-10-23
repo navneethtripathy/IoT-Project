@@ -32,7 +32,7 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "backend/tests", "digital_twin/tests"]
-asyncio_mode = "auto"
+addopts = "-W ignore::DeprecationWarning -W ignore::pytest.PytestConfigWarning"
 
 [tool.ruff]
 target-version = "py311"

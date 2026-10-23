@@ -1,10 +1,8 @@
 """
 CivicTwin-R — MQTT Ingestion Service
 
-Subscribes to telemetry and status topics, validates messages, detects
-duplicates and stale readings, and persists to the configured storage backend.
-
-Can run standalone or be started from the FastAPI application.
+Subscribes to telemetry topics, validates schemas, detects duplicates and stale
+readings, evaluates threshold hysteresis, and persists to the active storage backend.
 """
 
 from __future__ import annotations
@@ -12,7 +10,6 @@ from __future__ import annotations
 import json
 import logging
 import threading
-import time
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Callable
 
@@ -24,23 +21,18 @@ from backend import config
 
 logger = logging.getLogger("civictwin.ingestion")
 
-# Stale reading threshold
 STALE_TIMEOUT = timedelta(seconds=config.STALE_READING_TIMEOUT_SEC)
 
 
 class IngestionService:
-    """
-    Validates, deduplicates, and processes incoming MQTT telemetry messages.
-
-    This service can operate with or without a live MQTT connection.
-    In offline mode, messages can be fed directly via process_message().
-    """
+    """Validates, deduplicates, and processes incoming MQTT telemetry messages."""
 
     def __init__(self, storage):
         self._storage = storage
-        self._seen_sequences: dict[str, int] = {}  # device_id -> last sequence
-        self._last_timestamps: dict[str, datetime] = {}  # device_id -> last ts
+        self._seen_sequences: dict[str, int] = {}
+        self._last_timestamps: dict[str, datetime] = {}
         self._zone_status: dict[str, dict] = {}
+        self._zone_alert_states: dict[str, AlertLevel] = {}
         self._alerts: list[Alert] = []
         self._stats = {
             "messages_received": 0,
@@ -51,7 +43,7 @@ class IngestionService:
             "messages_stored": 0,
         }
         self._callbacks: list[Callable] = []
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
         logger.info("IngestionService initialized")
 
     @property
@@ -70,11 +62,9 @@ class IngestionService:
             return dict(self._zone_status)
 
     def add_callback(self, cb: Callable):
-        """Register a callback to be invoked on each valid ingested message."""
         self._callbacks.append(cb)
 
     def process_raw(self, topic: str, payload: bytes) -> Optional[IngestedTelemetry]:
-        """Process a raw MQTT message (topic + payload bytes)."""
         with self._lock:
             self._stats["messages_received"] += 1
 
@@ -89,14 +79,8 @@ class IngestionService:
         return self.process_message(data)
 
     def process_message(self, data: dict) -> Optional[IngestedTelemetry]:
-        """
-        Validate and process a telemetry message dict.
-
-        Returns the ingested record on success, None on failure.
-        """
         ingestion_ts = datetime.now(timezone.utc)
 
-        # ── Schema validation ──────────────────────────
         try:
             msg = TelemetryMessage(**data)
         except Exception as e:
@@ -105,7 +89,6 @@ class IngestionService:
                 self._stats["messages_invalid"] += 1
             return None
 
-        # ── Duplicate detection ────────────────────────
         device_key = msg.device_id
         is_duplicate = False
         with self._lock:
@@ -113,16 +96,13 @@ class IngestionService:
             if msg.sequence <= last_seq:
                 self._stats["messages_duplicate"] += 1
                 is_duplicate = True
-                logger.debug(
-                    "Duplicate: %s seq=%d (last=%d)", device_key, msg.sequence, last_seq
-                )
+                logger.debug("Duplicate rejected: %s seq=%d (last=%d)", device_key, msg.sequence, last_seq)
             else:
                 self._seen_sequences[device_key] = msg.sequence
 
         if is_duplicate:
             return None
 
-        # ── Stale detection ────────────────────────────
         is_stale = False
         with self._lock:
             last_ts = self._last_timestamps.get(device_key)
@@ -131,7 +111,6 @@ class IngestionService:
                 self._stats["messages_stale"] += 1
             self._last_timestamps[device_key] = msg.timestamp
 
-        # ── Quality flags ──────────────────────────────
         quality_flags = list(msg.quality_flags)
         if is_stale:
             quality_flags.append("stale")
@@ -140,9 +119,8 @@ class IngestionService:
         if msg.water_level_pct is not None and (msg.water_level_pct < 0 or msg.water_level_pct > 100):
             quality_flags.append("out_of_range")
 
-        # ── Create ingested record ─────────────────────
         msg_data = msg.model_dump()
-        msg_data.pop("quality_flags", None)  # We override with enriched flags
+        msg_data.pop("quality_flags", None)
         record = IngestedTelemetry(
             **msg_data,
             ingestion_timestamp=ingestion_ts,
@@ -151,37 +129,35 @@ class IngestionService:
             quality_flags=quality_flags,
         )
 
-        # ── Persist ────────────────────────────────────
         stored = self._storage.store(record)
         with self._lock:
             self._stats["messages_valid"] += 1
             if stored:
                 self._stats["messages_stored"] += 1
 
-        # ── Update zone status ─────────────────────────
+        self._check_thresholds(record)
         self._update_zone_status(record)
 
-        # ── Check thresholds ───────────────────────────
-        self._check_thresholds(record)
-
-        # ── Notify callbacks ───────────────────────────
         for cb in self._callbacks:
             try:
                 cb(record)
             except Exception:
-                logger.exception("Callback error")
+                logger.exception("Ingestion callback error")
 
         return record
 
     def _update_zone_status(self, record: IngestedTelemetry):
-        """Track the latest status for each zone."""
         with self._lock:
+            alert_level = self._zone_alert_states.get(record.zone_id, AlertLevel.NORMAL)
             self._zone_status[record.zone_id] = {
                 "zone_id": record.zone_id,
                 "device_id": record.device_id,
                 "sensor_status": record.sensor_status.value,
                 "water_level_pct": record.water_level_pct,
                 "water_level_cm": record.water_level_cm,
+                "current_level_pct": record.water_level_pct,
+                "current_level_cm": record.water_level_cm,
+                "alert_level": alert_level.value,
                 "source": record.source.value,
                 "last_update": record.ingestion_timestamp.isoformat(),
                 "is_stale": record.is_stale,
@@ -189,60 +165,75 @@ class IngestionService:
             }
 
     def _check_thresholds(self, record: IngestedTelemetry):
-        """Evaluate water-level thresholds and generate alerts."""
         if record.water_level_pct is None:
             return
         if record.sensor_status in (SensorStatus.INVALID, SensorStatus.OFFLINE):
             return
 
         pct = record.water_level_pct
-        alert_level = AlertLevel.NORMAL
+        zone_id = record.zone_id
+        warn_th = config.WATER_LEVEL_WARN_PCT
+        crit_th = config.WATER_LEVEL_CRIT_PCT
+        hyst = config.WATER_LEVEL_HYSTERESIS_PCT
 
-        if pct >= config.WATER_LEVEL_CRIT_PCT:
-            alert_level = AlertLevel.CRITICAL
-        elif pct >= config.WATER_LEVEL_WARN_PCT:
-            alert_level = AlertLevel.WARNING
+        with self._lock:
+            current_state = self._zone_alert_states.get(zone_id, AlertLevel.NORMAL)
+            new_state = current_state
 
-        if alert_level != AlertLevel.NORMAL:
-            alert = Alert(
-                alert_id=f"alert_{record.zone_id}_{record.sequence}",
-                zone_id=record.zone_id,
-                device_id=record.device_id,
-                alert_level=alert_level,
-                water_level_pct=pct,
-                threshold_pct=(
-                    config.WATER_LEVEL_CRIT_PCT
-                    if alert_level == AlertLevel.CRITICAL
-                    else config.WATER_LEVEL_WARN_PCT
-                ),
-                message=f"Zone {record.zone_id}: water level at {pct:.1f}% "
-                        f"({alert_level.value})",
-            )
-            with self._lock:
+            if current_state == AlertLevel.NORMAL:
+                if pct >= crit_th:
+                    new_state = AlertLevel.CRITICAL
+                elif pct >= warn_th:
+                    new_state = AlertLevel.WARNING
+            elif current_state == AlertLevel.WARNING:
+                if pct >= crit_th:
+                    new_state = AlertLevel.CRITICAL
+                elif pct < (warn_th - hyst):
+                    new_state = AlertLevel.NORMAL
+            elif current_state == AlertLevel.CRITICAL:
+                if pct < (crit_th - hyst):
+                    if pct >= warn_th:
+                        new_state = AlertLevel.WARNING
+                    else:
+                        new_state = AlertLevel.NORMAL
+
+            self._zone_alert_states[zone_id] = new_state
+
+            if new_state != current_state:
+                alert = Alert(
+                    alert_id=f"alert_{zone_id}_{record.sequence}",
+                    zone_id=zone_id,
+                    device_id=record.device_id,
+                    alert_level=new_state,
+                    water_level_pct=round(pct, 2),
+                    threshold_pct=(
+                        crit_th if new_state == AlertLevel.CRITICAL
+                        else warn_th if new_state == AlertLevel.WARNING
+                        else 0.0
+                    ),
+                    message=(
+                        f"Zone {zone_id}: water level at {pct:.1f}% ({new_state.value})"
+                        if new_state != AlertLevel.NORMAL
+                        else f"Zone {zone_id}: water level normal ({pct:.1f}%)"
+                    ),
+                )
                 self._alerts.append(alert)
-                # Keep only last 100 alerts
                 if len(self._alerts) > 100:
                     self._alerts = self._alerts[-100:]
-            logger.warning("ALERT: %s", alert.message)
+                logger.warning("ALERT transition [%s]: %s -> %s (level=%.1f%%)",
+                               zone_id, current_state.value, new_state.value, pct)
 
     def get_health(self) -> dict:
-        """Return service health and statistics."""
         return {
             "status": "running",
             "stats": self.stats,
             "zones_tracked": len(self._zone_status),
-            "active_alerts": sum(
-                1 for a in self._alerts if not a.acknowledged
-            ),
+            "active_alerts": sum(1 for a in self._alerts if not a.acknowledged),
         }
 
 
 class MQTTIngestionClient:
-    """
-    MQTT client that connects to the broker and feeds messages into
-    the IngestionService. Handles connection, reconnection, and
-    subscription management.
-    """
+    """MQTT client subscribing to telemetry topics and routing to IngestionService."""
 
     def __init__(self, ingestion: IngestionService):
         self._ingestion = ingestion
@@ -251,7 +242,6 @@ class MQTTIngestionClient:
         self._topic_prefix = config.MQTT_TOPIC_PREFIX
 
     def start(self) -> bool:
-        """Start the MQTT client and subscribe to topics."""
         try:
             import paho.mqtt.client as mqtt
 
@@ -269,17 +259,13 @@ class MQTTIngestionClient:
 
             self._client.connect_async(config.MQTT_BROKER_HOST, config.MQTT_BROKER_PORT)
             self._client.loop_start()
-            logger.info(
-                "MQTT client connecting to %s:%d",
-                config.MQTT_BROKER_HOST, config.MQTT_BROKER_PORT,
-            )
+            logger.info("MQTT client connecting to %s:%d", config.MQTT_BROKER_HOST, config.MQTT_BROKER_PORT)
             return True
         except Exception as e:
             logger.warning("MQTT client start failed: %s", e)
             return False
 
     def stop(self):
-        """Stop the MQTT client."""
         if self._client:
             self._client.loop_stop()
             self._client.disconnect()
@@ -293,12 +279,11 @@ class MQTTIngestionClient:
     def _on_connect(self, client, userdata, flags, reason_code, properties=None):
         if reason_code == 0:
             self._connected = True
-            # Subscribe to all zone telemetry
             topic = f"{self._topic_prefix}/zones/+/telemetry"
             client.subscribe(topic, qos=config.MQTT_QOS)
             logger.info("MQTT connected, subscribed to %s", topic)
         else:
-            logger.error("MQTT connection failed: %s", reason_code)
+            logger.error("MQTT connection failed with code %s", reason_code)
 
     def _on_disconnect(self, client, userdata, flags, reason_code, properties=None):
         self._connected = False

@@ -60,9 +60,7 @@ def ensure_dirs():
     PLOTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-# ══════════════════════════════════════════════════════════
 # EXPERIMENT 1: Missing-Data Reconstruction
-# ══════════════════════════════════════════════════════════
 
 def experiment_reconstruction() -> list[dict]:
     """
@@ -125,9 +123,7 @@ def experiment_reconstruction() -> list[dict]:
     return all_results
 
 
-# ══════════════════════════════════════════════════════════
 # EXPERIMENT 2: Scenario Simulations
-# ══════════════════════════════════════════════════════════
 
 def experiment_scenarios() -> dict:
     """Run all scenarios and record zone-level statistics."""
@@ -195,9 +191,7 @@ def experiment_scenarios() -> dict:
     return {"scenarios": scenario_summaries}
 
 
-# ══════════════════════════════════════════════════════════
 # EXPERIMENT 3: Latency Measurement
-# ══════════════════════════════════════════════════════════
 
 def experiment_latency() -> dict:
     """
@@ -270,9 +264,7 @@ def experiment_latency() -> dict:
     return result
 
 
-# ══════════════════════════════════════════════════════════
 # EXPERIMENT 4: Warning Behavior
-# ══════════════════════════════════════════════════════════
 
 def experiment_warnings() -> dict:
     """
@@ -360,9 +352,7 @@ def experiment_warnings() -> dict:
     return results
 
 
-# ══════════════════════════════════════════════════════════
 # PLOTTING
-# ══════════════════════════════════════════════════════════
 
 def generate_plots(recon_results: list[dict], scenario_results: dict):
     """Generate report-ready plots from experiment results."""
@@ -554,9 +544,7 @@ def generate_plots(recon_results: list[dict], scenario_results: dict):
     logger.info("Plot saved: sensor_dropout_timeline.png")
 
 
-# ══════════════════════════════════════════════════════════
 # UTILITIES
-# ══════════════════════════════════════════════════════════
 
 def save_json(data, filename: str):
     path = RESULTS_DIR / filename
@@ -576,9 +564,7 @@ def save_csv(data: list[dict], filename: str):
     logger.info("Saved: %s", path)
 
 
-# ══════════════════════════════════════════════════════════
 # MAIN
-# ══════════════════════════════════════════════════════════
 
 def main():
     logger.info("╔══════════════════════════════════════════╗")

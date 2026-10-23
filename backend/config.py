@@ -2,14 +2,12 @@
 CivicTwin-R — Shared Configuration Module
 
 Loads settings from environment variables (.env file) with safe defaults.
-No credentials are hardcoded; all secrets come from the environment.
 """
 
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# ── Load .env from project root ─────────────────────────
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _ENV_FILE = _PROJECT_ROOT / ".env"
 if _ENV_FILE.exists():
@@ -17,49 +15,50 @@ if _ENV_FILE.exists():
 else:
     load_dotenv(_PROJECT_ROOT / ".env.example")
 
-# ── MQTT ─────────────────────────────────────────────────
+# MQTT
 MQTT_BROKER_HOST: str = os.getenv("MQTT_BROKER_HOST", "localhost")
 MQTT_BROKER_PORT: int = int(os.getenv("MQTT_BROKER_PORT", "1883"))
 MQTT_USERNAME: str = os.getenv("MQTT_USERNAME", "")
 MQTT_PASSWORD: str = os.getenv("MQTT_PASSWORD", "")
 MQTT_CLIENT_ID: str = os.getenv("MQTT_CLIENT_ID", "civictwin_backend")
 MQTT_TOPIC_PREFIX: str = os.getenv("MQTT_TOPIC_PREFIX", "civictwin/v1")
-MQTT_QOS: int = 1  # At-least-once delivery
+MQTT_QOS: int = 1
 
-# ── InfluxDB ─────────────────────────────────────────────
+# InfluxDB
 INFLUXDB_URL: str = os.getenv("INFLUXDB_URL", "http://localhost:8086")
 INFLUXDB_TOKEN: str = os.getenv("INFLUXDB_TOKEN", "")
 INFLUXDB_ORG: str = os.getenv("INFLUXDB_ORG", "civictwin")
 INFLUXDB_BUCKET: str = os.getenv("INFLUXDB_BUCKET", "telemetry")
 INFLUXDB_ENABLED: bool = os.getenv("INFLUXDB_ENABLED", "false").lower() == "true"
 
-# ── Storage ──────────────────────────────────────────────
-STORAGE_BACKEND: str = os.getenv("STORAGE_BACKEND", "sqlite")  # influxdb | sqlite | memory
+# Storage
+STORAGE_BACKEND: str = os.getenv("STORAGE_BACKEND", "sqlite")
 SQLITE_DB_PATH: str = os.getenv("SQLITE_DB_PATH", str(_PROJECT_ROOT / "data" / "civictwin.db"))
 
-# ── API ──────────────────────────────────────────────────
+# API
 API_HOST: str = os.getenv("API_HOST", "127.0.0.1")
 API_PORT: int = int(os.getenv("API_PORT", "8000"))
 API_DEBUG: bool = os.getenv("API_DEBUG", "true").lower() == "true"
 LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
 
-# ── Digital Twin ─────────────────────────────────────────
+# Digital Twin
 TWIN_TIME_STEP_SEC: float = float(os.getenv("TWIN_TIME_STEP_SEC", "5"))
 TWIN_DEFAULT_SCENARIO: str = os.getenv("TWIN_DEFAULT_SCENARIO", "normal")
 RANDOM_SEED: int = int(os.getenv("RANDOM_SEED", "42"))
 
-# ── Node-RED ─────────────────────────────────────────────
+# Node-RED
 NODERED_PORT: int = int(os.getenv("NODERED_PORT", "1880"))
 
-# ── Sensor Defaults ──────────────────────────────────────
-SENSOR_MAX_DISTANCE_CM: float = 400.0   # HC-SR04 max range
-SENSOR_MIN_DISTANCE_CM: float = 2.0     # HC-SR04 min range
-CONTAINER_HEIGHT_CM: float = 30.0       # Default container/channel height
-WATER_LEVEL_WARN_PCT: float = 70.0      # Warning threshold (%)
-WATER_LEVEL_CRIT_PCT: float = 85.0      # Critical threshold (%)
-STALE_READING_TIMEOUT_SEC: float = 30.0 # Seconds before a reading is stale
+# Sensor Defaults
+SENSOR_MAX_DISTANCE_CM: float = 400.0
+SENSOR_MIN_DISTANCE_CM: float = 2.0
+CONTAINER_HEIGHT_CM: float = 30.0
+WATER_LEVEL_WARN_PCT: float = 70.0
+WATER_LEVEL_CRIT_PCT: float = 85.0
+WATER_LEVEL_HYSTERESIS_PCT: float = float(os.getenv("WATER_LEVEL_HYSTERESIS_PCT", "3.0"))
+STALE_READING_TIMEOUT_SEC: float = 30.0
 
-# ── Paths ────────────────────────────────────────────────
+# Paths
 DATA_DIR = _PROJECT_ROOT / "data"
 GENERATED_DIR = DATA_DIR / "generated"
 RESULTS_DIR = _PROJECT_ROOT / "results"
@@ -67,7 +66,6 @@ PLOTS_DIR = RESULTS_DIR / "plots"
 TABLES_DIR = RESULTS_DIR / "tables"
 LOGS_DIR = RESULTS_DIR / "logs"
 
-# Ensure output directories exist
 for d in [GENERATED_DIR, PLOTS_DIR, TABLES_DIR, LOGS_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
@@ -84,4 +82,5 @@ def summary() -> dict:
         "random_seed": RANDOM_SEED,
         "sensor_warn_pct": WATER_LEVEL_WARN_PCT,
         "sensor_crit_pct": WATER_LEVEL_CRIT_PCT,
+        "sensor_hysteresis_pct": WATER_LEVEL_HYSTERESIS_PCT,
     }

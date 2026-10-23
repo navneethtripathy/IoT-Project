@@ -2,7 +2,6 @@
 CivicTwin-R — Canonical Data Models
 
 Pydantic models for telemetry messages, zone state, alerts, and experiment results.
-These models are shared across ingestion, storage, digital twin, and API layers.
 """
 
 from __future__ import annotations
@@ -13,8 +12,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-
-# ── Enumerations ─────────────────────────────────────────
 
 class SensorStatus(str, enum.Enum):
     VALID = "valid"
@@ -43,10 +40,8 @@ class ZoneType(str, enum.Enum):
     VIRTUAL = "virtual"
 
 
-# ── Telemetry Message ────────────────────────────────────
-
 class TelemetryMessage(BaseModel):
-    """Canonical telemetry payload from a sensor or simulator."""
+    """Canonical telemetry payload from a physical sensor or simulator."""
 
     schema_version: str = "1.0"
     device_id: str = Field(..., min_length=1, max_length=64)
@@ -76,7 +71,7 @@ class TelemetryMessage(BaseModel):
 
 
 class IngestedTelemetry(TelemetryMessage):
-    """Telemetry enriched with ingestion metadata."""
+    """Telemetry record with ingestion metadata."""
 
     ingestion_timestamp: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
@@ -88,10 +83,8 @@ class IngestedTelemetry(TelemetryMessage):
     scenario_id: Optional[str] = None
 
 
-# ── Zone Configuration ───────────────────────────────────
-
 class ZoneConfig(BaseModel):
-    """Configuration for a monitoring zone (physical or virtual)."""
+    """Static and default dynamic parameters for a monitoring zone."""
 
     zone_id: str
     zone_name: str
@@ -104,12 +97,12 @@ class ZoneConfig(BaseModel):
     warn_threshold_pct: float = 70.0
     crit_threshold_pct: float = 85.0
     sensor_interval_sec: float = 5.0
-    sensor_reliability: float = 1.0  # 0.0 to 1.0
-    network_availability: float = 1.0  # 0.0 to 1.0
+    sensor_reliability: float = 1.0
+    network_availability: float = 1.0
 
 
 class ZoneState(BaseModel):
-    """Current runtime state of a monitoring zone."""
+    """Runtime status for a monitoring zone."""
 
     zone_id: str
     zone_name: str
@@ -124,10 +117,8 @@ class ZoneState(BaseModel):
     readings_count: int = 0
 
 
-# ── Alert ────────────────────────────────────────────────
-
 class Alert(BaseModel):
-    """A threshold-crossing alert event."""
+    """Alert event generated upon threshold crossing or clearing."""
 
     alert_id: str
     zone_id: str
@@ -142,10 +133,8 @@ class Alert(BaseModel):
     acknowledged: bool = False
 
 
-# ── Experiment Results ───────────────────────────────────
-
 class ReconstructionResult(BaseModel):
-    """Result of a missing-data reconstruction experiment."""
+    """Performance metrics for missing-data reconstruction."""
 
     scenario_id: str
     method: str
@@ -159,7 +148,7 @@ class ReconstructionResult(BaseModel):
 
 
 class LatencyResult(BaseModel):
-    """Measured latency statistics."""
+    """Pipeline processing time metrics."""
 
     scenario_id: str
     messages_sent: int
@@ -172,7 +161,7 @@ class LatencyResult(BaseModel):
 
 
 class ExperimentSummary(BaseModel):
-    """Overall experiment run summary."""
+    """Summary of experiment execution across scenarios."""
 
     experiment_id: str
     started_at: datetime

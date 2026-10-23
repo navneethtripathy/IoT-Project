@@ -38,6 +38,12 @@ results/plots/*.svg
 results/tables/*.csv
 results/logs/*.log
 
+# Database
+*.db
+*.sqlite
+*.sqlite3
+data/*.db
+
 # Docker
 *.pid
 

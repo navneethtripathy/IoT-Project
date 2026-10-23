@@ -2,7 +2,8 @@
 """
 CivicTwin-R — Health Check Script
 
-Checks connectivity to all CivicTwin-R services and reports status.
+Validates availability and responsiveness of configured services:
+FastAPI REST API, Node-RED dashboard, InfluxDB, and Mosquitto MQTT broker.
 """
 
 import json
@@ -19,59 +20,45 @@ def check_url(name: str, url: str) -> bool:
         req = urllib.request.Request(url, method="GET")
         with urllib.request.urlopen(req, timeout=5) as resp:
             data = json.loads(resp.read())
-            print(f"  ✅ {name}: {url} — OK")
-            if "status" in data:
-                print(f"     Status: {data['status']}")
+            status = data.get("status", "ok")
+            print(f"[OK] {name} ({url}) - status: {status}")
             return True
     except urllib.error.URLError as e:
-        print(f"  ❌ {name}: {url} — {e.reason}")
+        print(f"[UNAVAILABLE] {name} ({url}) - reason: {e.reason}")
         return False
     except Exception as e:
-        print(f"  ❌ {name}: {url} — {e}")
+        print(f"[ERROR] {name} ({url}) - {e}")
         return False
 
 
-def check_mqtt() -> bool:
+def check_mqtt(host: str = "localhost", port: int = 1883) -> bool:
     try:
         import paho.mqtt.client as mqtt
         client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="healthcheck")
-        client.connect("localhost", 1883, keepalive=5)
+        client.connect(host, port, keepalive=5)
         client.disconnect()
-        print("  ✅ MQTT Broker: localhost:1883 — OK")
+        print(f"[OK] MQTT Broker ({host}:{port}) - reachable")
         return True
     except Exception as e:
-        print(f"  ❌ MQTT Broker: localhost:1883 — {e}")
+        print(f"[UNAVAILABLE] MQTT Broker ({host}:{port}) - {e}")
         return False
 
 
 def main():
-    print("╔══════════════════════════════════════════╗")
-    print("║  CivicTwin-R — Health Check              ║")
-    print("╚══════════════════════════════════════════╝\n")
+    print("CivicTwin-R service health status:\n")
 
     results = {}
+    results["backend"] = check_url("FastAPI API", "http://127.0.0.1:8000/health")
+    results["nodered"] = check_url("Node-RED UI", "http://127.0.0.1:1880")
+    results["influxdb"] = check_url("InfluxDB 2.x", "http://127.0.0.1:8086/health")
+    results["mqtt"] = check_mqtt("localhost", 1883)
 
-    print("Backend API:")
-    results["backend"] = check_url("FastAPI", "http://127.0.0.1:8000/health")
-
-    print("\nNode-RED:")
-    results["nodered"] = check_url("Node-RED", "http://127.0.0.1:1880")
-
-    print("\nInfluxDB:")
-    results["influxdb"] = check_url("InfluxDB", "http://127.0.0.1:8086/health")
-
-    print("\nMQTT:")
-    results["mqtt"] = check_mqtt()
-
-    print("\n" + "=" * 45)
     healthy = sum(1 for v in results.values() if v)
     total = len(results)
-    print(f"Result: {healthy}/{total} services healthy")
+    print(f"\nResult: {healthy}/{total} services active.")
 
-    if healthy < total:
-        print("\nNote: Not all services need to be running.")
-        print("The backend works standalone with SQLite (Mode B).")
-        print("Run 'make run' to start the backend without Docker.")
+    if not results["backend"]:
+        print("\nNote: Backend is offline. Run 'make run' or './scripts/start.sh' to start standalone mode.")
 
     return 0 if results["backend"] else 1
 

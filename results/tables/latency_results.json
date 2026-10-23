@@ -4,9 +4,9 @@
   "messages_sent": 300,
   "messages_received": 300,
   "delivery_rate": 1.0,
-  "mean_latency_ms": 0.0062,
-  "median_latency_ms": 0.0055,
-  "p95_latency_ms": 0.0075,
-  "max_latency_ms": 0.0616,
-  "min_latency_ms": 0.0051
+  "mean_latency_ms": 0.0133,
+  "median_latency_ms": 0.0131,
+  "p95_latency_ms": 0.0197,
+  "max_latency_ms": 0.0239,
+  "min_latency_ms": 0.0068
 }

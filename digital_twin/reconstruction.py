@@ -1,20 +1,10 @@
 """
 CivicTwin-R — Missing-Data Reconstruction Module
 
-Implements and evaluates baseline methods for reconstructing missing
-sensor readings. These are simple, well-known methods used as baselines;
-no novelty is claimed.
-
+Implements and evaluates baseline methods for reconstructing missing sensor observations.
 Methods:
-    1. LOCF  — Last Observation Carried Forward
-    2. LINEAR — Linear interpolation between available points
-
-Evaluation:
-    - Ground-truth series is generated, then readings are masked at
-      controlled rates using deterministic seeds.
-    - Reconstruction is applied only to masked positions.
-    - MAE and RMSE are computed on the masked (held-out) positions only.
-    - No data leakage: reconstruction algorithms see only unmasked values.
+    - LOCF (Last Observation Carried Forward)
+    - Linear Interpolation
 """
 
 from __future__ import annotations
@@ -25,14 +15,12 @@ import random
 from dataclasses import dataclass
 from typing import Optional
 
-import numpy as np
-
 logger = logging.getLogger("civictwin.twin.reconstruction")
 
 
 @dataclass
 class ReconstructionEvaluation:
-    """Evaluation result for a reconstruction method on one experiment."""
+    """Evaluation result for a reconstruction method on a dataset."""
 
     method: str
     missing_rate: float
@@ -47,15 +35,8 @@ class ReconstructionEvaluation:
     mask: list[bool]
 
 
-# ── Reconstruction Methods ───────────────────────────────
-
 def locf(series: list[Optional[float]]) -> list[Optional[float]]:
-    """
-    Last Observation Carried Forward.
-
-    Replaces None values with the most recent non-None value.
-    Leading Nones remain None (no prior observation to carry).
-    """
+    """Last Observation Carried Forward. Leading Nones remain None."""
     result = list(series)
     last_valid: Optional[float] = None
     for i, v in enumerate(result):
@@ -67,28 +48,19 @@ def locf(series: list[Optional[float]]) -> list[Optional[float]]:
 
 
 def linear_interpolation(series: list[Optional[float]]) -> list[Optional[float]]:
-    """
-    Linear interpolation between available data points.
-
-    Fills missing values by linear interpolation between the nearest
-    available values before and after the gap. Extrapolation is not
-    performed — leading/trailing Nones remain None.
-    """
+    """Linear interpolation between available observations without extrapolation."""
     result = list(series)
-    n = len(result)
-
-    # Find indices of non-None values
     valid_indices = [i for i, v in enumerate(result) if v is not None]
 
     if len(valid_indices) < 2:
-        return locf(series)  # Fall back to LOCF if too few points
+        return locf(series)
 
     for idx in range(len(valid_indices) - 1):
         start_i = valid_indices[idx]
         end_i = valid_indices[idx + 1]
 
         if end_i - start_i <= 1:
-            continue  # No gap
+            continue
 
         start_val = result[start_i]
         end_val = result[end_i]
@@ -101,8 +73,6 @@ def linear_interpolation(series: list[Optional[float]]) -> list[Optional[float]]
     return result
 
 
-# ── Masking and Evaluation ───────────────────────────────
-
 def create_missing_mask(
     length: int,
     missing_rate: float,
@@ -110,25 +80,12 @@ def create_missing_mask(
     min_gap: int = 1,
     max_gap: int = 5,
 ) -> list[bool]:
-    """
-    Create a deterministic missing-data mask.
-
-    Returns a list of booleans where True = missing (masked).
-    Uses gap-based masking to create realistic contiguous dropout patterns.
-
-    Args:
-        length: Total number of data points.
-        missing_rate: Fraction of points to mask (0.0 to 1.0).
-        seed: Random seed for reproducibility.
-        min_gap: Minimum length of a contiguous missing gap.
-        max_gap: Maximum length of a contiguous missing gap.
-    """
+    """Generates a reproducible contiguous-dropout mask."""
     rng = random.Random(seed)
     mask = [False] * length
     target_missing = int(length * missing_rate)
     missing_count = 0
 
-    # Don't mask first or last few points (boundary protection)
     start_safe = max(2, int(length * 0.02))
     end_safe = length - start_safe
 
@@ -155,7 +112,6 @@ def apply_mask(
     ground_truth: list[float],
     mask: list[bool],
 ) -> list[Optional[float]]:
-    """Apply a missing-data mask to a ground-truth series."""
     return [None if m else v for v, m in zip(ground_truth, mask)]
 
 
@@ -164,13 +120,7 @@ def evaluate_reconstruction(
     reconstructed: list[Optional[float]],
     mask: list[bool],
 ) -> dict:
-    """
-    Compute error metrics on held-out (masked) positions only.
-
-    Returns MAE, RMSE, max error, and the count of evaluated points.
-    Only positions where mask=True AND reconstructed value is not None
-    are included in the evaluation.
-    """
+    """Computes MAE and RMSE strictly on held-out positions."""
     errors = []
     for gt, recon, is_missing in zip(ground_truth, reconstructed, mask):
         if is_missing and recon is not None:
@@ -202,19 +152,6 @@ def run_reconstruction_experiment(
     seed: int = 42,
     methods: Optional[list[str]] = None,
 ) -> list[ReconstructionEvaluation]:
-    """
-    Run a complete reconstruction experiment.
-
-    1. Mask ground-truth at the given rate.
-    2. Reconstruct with each method.
-    3. Evaluate against hidden values.
-
-    Args:
-        ground_truth: Complete series of known values.
-        missing_rate: Fraction to mask (e.g., 0.1 for 10%).
-        seed: Random seed for reproducibility.
-        methods: List of method names to test. Default: ["locf", "linear"].
-    """
     if methods is None:
         methods = ["locf", "linear"]
 
@@ -223,7 +160,6 @@ def run_reconstruction_experiment(
     missing_count = sum(mask)
 
     results = []
-
     method_funcs = {
         "locf": locf,
         "linear": linear_interpolation,
@@ -260,11 +196,6 @@ def run_multi_rate_experiment(
     rates: Optional[list[float]] = None,
     seed: int = 42,
 ) -> list[ReconstructionEvaluation]:
-    """
-    Run reconstruction experiments at multiple missing-data rates.
-
-    Default rates: 5%, 10%, 20%, 30%.
-    """
     if rates is None:
         rates = [0.05, 0.10, 0.20, 0.30]
 

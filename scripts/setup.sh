@@ -1,43 +1,33 @@
 #!/bin/bash
 # CivicTwin-R — Setup Script
-# Installs Python dependencies and prepares the environment.
-
 set -e
 
-echo "╔══════════════════════════════════════════╗"
-echo "║  CivicTwin-R — Setup                     ║"
-echo "╚══════════════════════════════════════════╝"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$ROOT_DIR"
 
-# Check Python
+echo "CivicTwin-R environment setup"
+
 if command -v python3 &>/dev/null; then
     PYTHON=python3
 elif command -v python &>/dev/null; then
     PYTHON=python
 else
-    echo "❌ Python not found. Please install Python 3.11+"
+    echo "Error: Python not found. Install Python 3.11+." >&2
     exit 1
 fi
 
-echo "Using: $($PYTHON --version)"
+echo "Python version: $($PYTHON --version)"
 
-# Create .env from template if not exists
 if [ ! -f .env ]; then
     cp .env.example .env
-    echo "✅ Created .env from .env.example"
+    echo "Created .env configuration from .env.example."
 fi
 
-# Install dependencies
-echo "Installing Python dependencies..."
+echo "Installing project and dependencies..."
 $PYTHON -m pip install -e ".[dev]"
 
-# Create data directories
-mkdir -p data/generated data/sample results/tables results/plots results/logs
+mkdir -p data/generated results/tables results/plots results/logs
 
-echo ""
-echo "✅ Setup complete!"
-echo ""
-echo "Quick start:"
-echo "  make run          # Start the backend API"
-echo "  make test         # Run tests"
-echo "  make experiments  # Run experiments and generate plots"
-echo "  make help         # Show all available commands"
+echo "Setup completed successfully."
+echo "Execute 'make run' or './scripts/start.sh' to launch."
