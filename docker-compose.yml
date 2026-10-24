@@ -1,86 +1,144 @@
-# CivicTwin-R Docker Compose
-# Runs Mosquitto, InfluxDB, Node-RED, and the Python backend locally.
+# CivicTwin-R — Docker Compose (macOS / Docker Desktop)
 #
-# Prerequisites: Docker and Docker Compose installed.
-# Usage:
-#   docker-compose up -d        # Start all services
-#   docker-compose down         # Stop all services
-#   docker-compose logs -f      # View logs
+# Runs four services locally:
+#   1. mosquitto  — MQTT broker (ports 1883 TCP + 9001 WebSocket)
+#   2. influxdb   — InfluxDB 2.x time-series database (port 8086)
+#   3. nodered    — Node-RED dashboard (port 1880)
+#   4. backend    — CivicTwin-R Python/FastAPI backend (port 8000)
 #
-# NOTE: Docker is optional. The backend runs standalone with SQLite
-# fallback when Docker services are unavailable.
+# NETWORKING NOTES
+# ─────────────────────────────────────────────────────────────────────
+# • Containers communicate with each other using service names as
+#   hostnames (e.g. "mosquitto", "influxdb", "backend").
+# • Your Mac host accesses all services via localhost:<port>.
+# • Node-RED runs inside a container and therefore must reach the
+#   backend via http://backend:8000, NOT http://127.0.0.1:8000.
+#   The flows.json has been updated accordingly.
+# • Wokwi runs in your browser and cannot reach container-internal
+#   hostnames. See the Wokwi section in docs/installation.md for
+#   the correct broker address to use.
+#
+# USAGE
+# ─────────────────────────────────────────────────────────────────────
+#   cp .env.example .env          # first time only
+#   docker compose up -d --build  # start (or rebuild) all services
+#   docker compose ps             # check status
+#   docker compose logs -f        # stream logs
+#   docker compose down           # stop (data volumes are preserved)
+#   docker compose down -v        # stop AND delete all stored data
 
 services:
 
-  # ── MQTT Broker ──────────────────────────────────────
+  # ── 1. MQTT Broker ────────────────────────────────────────────────
   mosquitto:
     image: eclipse-mosquitto:2.0
     container_name: civictwin-mosquitto
     ports:
-      - "1883:1883"
-      - "9001:9001"
+      - "1883:1883"   # MQTT TCP — reachable from Mac and LAN
+      - "9001:9001"   # MQTT WebSocket — for browser-based clients
     volumes:
-      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
-  # ── Time-Series Database ─────────────────────────────
+  # ── 2. InfluxDB 2.x ───────────────────────────────────────────────
+  # INFLUXDB_INIT_MODE=setup only runs the first time (when the data
+  # volume is empty). On subsequent starts it is safely ignored.
   influxdb:
     image: influxdb:2.7
     container_name: civictwin-influxdb
     ports:
-      - "8086:8086"
+      - "8086:8086"   # InfluxDB UI + API — reachable from Mac
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
       - DOCKER_INFLUXDB_INIT_PASSWORD=civictwin_local
-      - DOCKER_INFLUXDB_INIT_ORG=civictwin
-      - DOCKER_INFLUXDB_INIT_BUCKET=telemetry
-      - DOCKER_INFLUXDB_INIT_RETENTION=7d
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-civictwin}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-telemetry}
+      - DOCKER_INFLUXDB_INIT_RETENTION=30d
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN:-civictwin-dev-token}
     volumes:
       - influxdb_data:/var/lib/influxdb2
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
-  # ── Node-RED Dashboard ───────────────────────────────
+  # ── 3. Node-RED Dashboard ─────────────────────────────────────────
+  # The flows.json uses http://backend:8000 to reach the FastAPI
+  # backend (service name resolution inside Docker's network).
+  # Your Mac browser opens the dashboard at http://localhost:1880/ui.
   nodered:
     image: nodered/node-red:4.0
     container_name: civictwin-nodered
     ports:
-      - "1880:1880"
+      - "1880:1880"   # Node-RED editor + dashboard
     volumes:
       - nodered_data:/data
       - ./nodered/flows.json:/data/flows.json:ro
     environment:
       - TZ=UTC
     depends_on:
-      - mosquitto
+      mosquitto:
+        condition: service_healthy
+      backend:
+        condition: service_started
     restart: unless-stopped
 
-  # ── Python Backend ───────────────────────────────────
+  # ── 4. CivicTwin-R Python Backend ─────────────────────────────────
+  # Runs the FastAPI application, subscribes to Mosquitto for MQTT
+  # telemetry, and writes to SQLite (always) and InfluxDB (when
+  # INFLUXDB_ENABLED=true and the InfluxDB service is healthy).
+  #
+  # Why run in Docker (not standalone on the Mac)?
+  # Node-RED polls http://backend:8000 using Docker's internal DNS.
+  # If the backend ran only on the Mac, Node-RED would need
+  # http://host.docker.internal:8000 and that address is
+  # non-portable. Keeping backend in Docker is the simplest option.
   backend:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: civictwin-backend
     ports:
-      - "8000:8000"
+      - "8000:8000"   # FastAPI — reachable from Mac at localhost:8000
     environment:
+      # ── MQTT: use the Docker service name, not localhost ──────────
       - MQTT_BROKER_HOST=mosquitto
+      - MQTT_BROKER_PORT=1883
+      # ── InfluxDB: use the Docker service name ─────────────────────
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-civictwin-dev-token}
-      - INFLUXDB_ENABLED=true
-      - STORAGE_BACKEND=sqlite
+      - INFLUXDB_ORG=${INFLUXDB_ORG:-civictwin}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET:-telemetry}
+      - INFLUXDB_ENABLED=${INFLUXDB_ENABLED:-true}
+      # ── Storage: SQLite active; InfluxDB written in parallel ───────
+      - STORAGE_BACKEND=${STORAGE_BACKEND:-sqlite}
+      # ── API: bind to all interfaces inside the container ──────────
       - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RANDOM_SEED=${RANDOM_SEED:-42}
     volumes:
+      # Mount host data/ and results/ so exports survive container restart
       - ./data:/app/data
       - ./results:/app/results
     depends_on:
-      - mosquitto
-      - influxdb
+      mosquitto:
+        condition: service_healthy
+      influxdb:
+        condition: service_healthy
     restart: unless-stopped
 
+# ── Named volumes (data persists across docker compose down) ─────────
 volumes:
   mosquitto_data:
   mosquitto_log:

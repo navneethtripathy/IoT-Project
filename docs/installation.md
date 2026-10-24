@@ -1,90 +1,282 @@
-# CivicTwin-R — Installation Guide
+# CivicTwin-R — Installation & Local Demo Guide
 
-## Prerequisites
+## Two operating modes
 
-| Requirement | Version | Notes |
-|-------------|---------|-------|
-| Python | 3.11+ | 3.12 or 3.14 tested |
-| pip | 22+ | Package installer |
-| Git | 2.x | Version control |
-| Node.js | 18+ | For Node-RED (optional) |
-| Docker | 24+ | For full stack (optional) |
+| Mode | When to use | MQTT | Storage | Dashboard |
+|------|-------------|------|---------|-----------|
+| **A — Docker** | Full demonstration with Node-RED dashboard | Mosquitto container | SQLite + InfluxDB | Node-RED on port 1880 |
+| **B — Standalone Mac** | Quick dev/test without Docker | No broker (simulator only) | SQLite | FastAPI docs only |
 
-## Quick Start (Mode B — No Docker)
+---
 
-This is the fastest way to get CivicTwin-R running. It uses SQLite for
-storage and runs the sensor simulator directly without MQTT.
+## Mode A — Docker Desktop (recommended for the demo)
+
+### Prerequisites
+
+| Tool | Version | Check |
+|------|---------|-------|
+| Docker Desktop | 4.x+ | `docker --version` |
+| Docker Compose | V2 (bundled) | `docker compose version` |
+| Git | 2.x | `git --version` |
+
+> **Important:** Start Docker Desktop and wait for the whale icon in the menu bar to stop animating before running any commands.
+
+---
+
+### Step 1 — Open Terminal in the project root
 
 ```bash
-# 1. Clone or navigate to the project
-cd CivicTwin-R
+cd "/Users/neilnickson/Documents/iot/iot project/IoT-Project"
+```
 
-# 2. Create .env from template
+### Step 2 — Create your local `.env` file
+
+```bash
 cp .env.example .env
+```
 
-# 3. Install Python dependencies
+The defaults in `.env.example` work out of the box for local Docker development.
+The only value you may want to change is `INFLUXDB_TOKEN` — use any non-empty string;
+the same value must appear in both `INFLUXDB_TOKEN` and `DOCKER_INFLUXDB_INIT_ADMIN_TOKEN`
+(the Compose file passes `$INFLUXDB_TOKEN` to both, so they stay in sync automatically).
+
+### Step 3 — Start all services
+
+```bash
+docker compose up -d --build
+```
+
+`--build` rebuilds the backend image when source code has changed.
+Omit it on subsequent starts if you have not changed Python code:
+
+```bash
+docker compose up -d
+```
+
+### Step 4 — Verify service status
+
+```bash
+docker compose ps
+```
+
+Expected output (all four services `running` or `healthy`):
+
+```
+NAME                    IMAGE                        STATUS
+civictwin-mosquitto     eclipse-mosquitto:2.0        running (healthy)
+civictwin-influxdb      influxdb:2.7                 running (healthy)
+civictwin-backend       civictwin-r-backend          running
+civictwin-nodered       nodered/node-red:4.0         running
+```
+
+> InfluxDB and Mosquitto have health checks. The backend and Node-RED
+> wait for them before starting, so allow ~30 seconds on the first run.
+
+### Step 5 — Verify individual services
+
+**Backend API health:**
+```bash
+curl http://localhost:8000/health
+```
+Expected: `{"status":"healthy",...}`
+
+**InfluxDB ping:**
+```bash
+curl http://localhost:8086/ping
+```
+Expected: HTTP 204 (no output, exit 0)
+
+**Mosquitto — publish a test message:**
+```bash
+# Requires mosquitto-clients installed on your Mac (brew install mosquitto)
+mosquitto_pub -h localhost -p 1883 -t "civictwin/v1/test" -m "hello"
+```
+
+**Node-RED editor:**
+Open [http://localhost:1880](http://localhost:1880) in your browser.
+
+**Node-RED dashboard:**
+Open [http://localhost:1880/ui](http://localhost:1880/ui) in your browser.
+
+**FastAPI interactive docs:**
+Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser.
+
+**InfluxDB UI:**
+Open [http://localhost:8086](http://localhost:8086) in your browser.
+Login: username `admin`, password `civictwin_local`.
+
+### Step 6 — Verify InfluxDB is receiving telemetry
+
+After the backend has been running for 30+ seconds with the simulator active:
+
+1. Open the InfluxDB UI at [http://localhost:8086](http://localhost:8086)
+2. Go to **Data Explorer**
+3. Select bucket `telemetry`, measurement `telemetry`
+4. If points appear, InfluxDB write is working
+
+Alternatively via the CLI (requires `influx` CLI or `curl`):
+```bash
+curl -H "Authorization: Token civictwin-dev-token" \
+     "http://localhost:8086/api/v2/query?org=civictwin" \
+     --data-urlencode 'q=from(bucket:"telemetry") |> range(start:-5m) |> limit(n:3)' \
+     -H "Content-Type: application/vnd.flux"
+```
+
+> If no points appear yet, InfluxDB write is still initialising. Check
+> `docker compose logs backend` for `InfluxDB storage initialized` or
+> `InfluxDB connection failed` messages.
+
+### Step 7 — View logs
+
+```bash
+docker compose logs -f              # all services
+docker compose logs -f backend      # backend only
+docker compose logs -f mosquitto    # broker only
+```
+
+### Step 8 — Install Node-RED dashboard plugin (first run only)
+
+The flows require the `node-red-dashboard` package.
+On first start, open the Node-RED editor at [http://localhost:1880](http://localhost:1880) and check:
+
+1. Go to **Menu (≡) → Manage Palette → Install**
+2. Search for `node-red-dashboard`
+3. Install `node-red-dashboard` (for Node-RED 3.x) **or** `@flowfuse/node-red-dashboard` (for Node-RED 4.x)
+4. Click **Deploy**
+5. Open [http://localhost:1880/ui](http://localhost:1880/ui)
+
+### Step 9 — Stop services safely (data is preserved)
+
+```bash
+docker compose down
+```
+
+This stops and removes containers but **keeps all Docker volumes** intact
+(`mosquitto_data`, `influxdb_data`, `nodered_data`).
+Restart at any time with `docker compose up -d`.
+
+> **Do NOT run** `docker compose down -v` unless you intentionally want
+> to delete all stored MQTT messages, InfluxDB time-series data, and
+> Node-RED settings.
+
+---
+
+## Connecting Wokwi to the MQTT Broker
+
+### Why `localhost` does not work in Wokwi
+
+Wokwi runs in your browser as a sandboxed simulation. The ESP32 firmware
+uses `MQTT_BROKER = "localhost"`, but inside the Wokwi sandbox `localhost`
+resolves to Wokwi's own servers — **not** your Mac or any Docker container.
+
+### Option A — Use your Mac's LAN IP address (recommended)
+
+1. Find your Mac's local IP:
+   ```bash
+   ipconfig getifaddr en0
+   # or for Wi-Fi: ipconfig getifaddr en1
+   ```
+   Example result: `192.168.1.105`
+
+2. In `firmware/esp32/src/main.ino`, change line 26:
+   ```cpp
+   // Before
+   const char* MQTT_BROKER = "localhost";
+
+   // After
+   const char* MQTT_BROKER = "192.168.1.105";   // ← your actual LAN IP
+   ```
+
+3. Ensure port 1883 is accessible from your Mac's local network
+   (Docker Desktop exposes it on all interfaces by default on macOS).
+
+4. Paste the updated sketch into Wokwi and run the simulation.
+
+> **Note:** This only works if your Mac and Wokwi's simulation network
+> can reach the same LAN IP. This is normally true on a home/lab network
+> but may fail on corporate networks with client isolation enabled.
+
+### Option B — Use a public MQTT relay (most reliable for Wokwi)
+
+Use a public test broker such as `test.mosquitto.org` (port 1883, unauthenticated):
+
+```cpp
+const char* MQTT_BROKER = "test.mosquitto.org";
+```
+
+Your backend subscriber (`backend/ingestion.py`) must also subscribe to
+the same public broker. Set `MQTT_BROKER_HOST=test.mosquitto.org` in your
+`.env` and restart the backend:
+
+```bash
+docker compose restart backend
+```
+
+> **Limitation:** Messages sent to a public broker are visible to everyone.
+> Do not publish sensitive data. The topic prefix `civictwin/v1/` is
+> sufficient to avoid collisions during a demonstration.
+
+### MQTT topic contract
+
+The firmware publishes to: `civictwin/v1/zones/zone_01/telemetry`
+
+The backend subscribes to: `civictwin/v1/zones/+/telemetry`
+
+Both use the same prefix. Do not change the topic structure.
+
+---
+
+## Mode B — Standalone Mac (no Docker)
+
+```bash
+# 1. Install Python dependencies
 python3 -m pip install -e ".[dev]"
 
-# 4. Run tests to verify installation
-python3 -m pytest tests/ -v
-
-# 5. Run experiments and generate plots
-python3 -m experiments.run_experiments
-
-# 6. Start the backend API
-python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
-
-# 7. Open in browser
-#    API docs: http://127.0.0.1:8000/docs
-#    Health:   http://127.0.0.1:8000/health
-```
-
-## Full Stack Setup (Mode A — Docker)
-
-```bash
-# 1. Copy environment file
+# 2. Create .env (set INFLUXDB_ENABLED=false, STORAGE_BACKEND=sqlite)
 cp .env.example .env
 
-# 2. Start all services
-docker-compose up -d
+# 3. Run the test suite
+python3 -m pytest tests/ -v
 
-# 3. Verify services
-python3 scripts/health_check.py
+# 4. Start the backend (uses Python simulator, no MQTT broker needed)
+python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
 
-# Services available at:
-#   Backend API:  http://127.0.0.1:8000/docs
-#   Node-RED:     http://127.0.0.1:1880
-#   InfluxDB UI:  http://127.0.0.1:8086
+# 5. Open API docs
+open http://127.0.0.1:8000/docs
 ```
 
-## Node-RED Dashboard Setup
+In this mode:
+- The Python simulator (`backend/simulator.py`) generates synthetic telemetry internally.
+- No MQTT broker is needed.
+- All data is stored in `data/civictwin.db` (SQLite).
+- Node-RED is **not** available (it runs in Docker only).
 
-If Node-RED is installed (via Docker or standalone):
+---
 
-1. Open Node-RED at http://127.0.0.1:1880
-2. Go to Menu → Import → Clipboard
-3. Paste the contents of `nodered/flows.json`
-4. Click "Import" then "Deploy"
-5. Install required dashboard nodes if prompted:
-   - `node-red-dashboard` (for Node-RED < 4.0)
-   - Or use the built-in `@flowfuse/node-red-dashboard` for Node-RED 4.0+
-6. Access the dashboard at http://127.0.0.1:1880/ui
+## Quick reference — Local URLs
 
-## Wokwi ESP32 Simulation
+| Service | URL | Notes |
+|---------|-----|-------|
+| Backend API | http://localhost:8000/docs | Interactive Swagger UI |
+| Backend health | http://localhost:8000/health | JSON health check |
+| Node-RED editor | http://localhost:1880 | Flow editor |
+| Node-RED dashboard | http://localhost:1880/ui | Live dashboard |
+| InfluxDB UI | http://localhost:8086 | Time-series explorer |
+| Mosquitto TCP | localhost:1883 | MQTT clients |
+| Mosquitto WebSocket | localhost:9001 | Browser MQTT clients |
 
-1. Go to [wokwi.com](https://wokwi.com)
-2. Create a new ESP32 project
-3. Replace `diagram.json` with `firmware/wokwi/diagram.json`
-4. Replace the sketch with `firmware/esp32/src/main.ino`
-5. Update `MQTT_BROKER` in the sketch to point to your broker
-   - For local testing: Use a public broker like `test.mosquitto.org`
-   - For local network: Use your machine's IP address
-6. Run the simulation
-7. Adjust the HC-SR04 distance slider to simulate water level changes
-
-**Note:** Wokwi's simulated WiFi may not reach a local Mosquitto broker.
-Use the Python sensor simulator as the primary data source.
+---
 
 ## Troubleshooting
 
-See `docs/troubleshooting.md` for common issues and solutions.
+See [`docs/troubleshooting.md`](troubleshooting.md) for common issues.
+
+**Common first-run issues:**
+
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| Backend exits immediately | InfluxDB not ready yet | `docker compose restart backend` after 30s |
+| Node-RED shows no data | Dashboard plugin not installed | Install `node-red-dashboard` via palette manager |
+| Wokwi cannot connect to broker | `localhost` unreachable from Wokwi | Use LAN IP or public broker (see above) |
+| InfluxDB `409 Conflict` on startup | Volume already initialised | Normal — ignored safely on subsequent runs |
+| `docker compose` not found | Docker Desktop not running | Start Docker Desktop and wait for it to be ready |
