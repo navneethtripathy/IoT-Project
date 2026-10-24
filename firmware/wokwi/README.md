@@ -1,23 +1,58 @@
-# CivicTwin-R — Wokwi Simulation
+# CivicTwin-R — Wokwi Simulations
 
 ## Files
 
 - `diagram.json` — Circuit diagram (ESP32 DevKit + HC-SR04 ultrasonic sensor + Alert LED)
 - `wokwi.toml` — Local forwarding configuration
 
-## Study Area Association & Provenance
+The canonical firmware is `firmware/esp32/src/main.ino`. The circuit in
+`firmware/wokwi/diagram.json` is shared by all three simulations.
 
-- **Virtual Study Zone:** This simulated node (`node_01`) is mapped to **Adyar Basin (`zone_01` / `zone_adyar`)**.
-- **Data Provenance:** Telemetry emitted by this simulation is strictly tagged as **`WOKWI_SIMULATED`**.
-- It represents a virtual laboratory prototype and does not reflect direct measurements from Chennai's three river systems.
+## Project configurations
+
+Each Wokwi project uses the same hardware and firmware logic. The project-specific
+configuration section in `main.ino` is canonical for Adyar by default:
+
+| Study area | Zone ID | Device ID | MQTT client ID |
+|---|---|---|---|
+| Adyar | `zone_01` | `node_adyar_01` | `civictwin_adyar_01` |
+| Cooum | `zone_02` | `node_cooum_01` | `civictwin_cooum_01` |
+| Kosasthalaiyar | `zone_03` | `node_kosasthalaiyar_01` | `civictwin_kosasthalaiyar_01` |
+
+For each separate Wokwi project:
+
+1. Copy the existing `firmware/wokwi/diagram.json` into the project.
+2. Copy the canonical `firmware/esp32/src/main.ino` into the project.
+3. Change only `MQTT_CLIENT_ID`, `DEVICE_ID`, and `ZONE_ID` in the marked
+   project configuration section.
+4. Leave the sensor logic, pins, timing, filtering, thresholds, JSON schema,
+   and `DATA_SOURCE` unchanged.
+
+`ZONE_ID` is used to derive the telemetry, status, and alert topics:
+
+```text
+civictwin/v1/zones/{ZONE_ID}/telemetry
+civictwin/v1/zones/{ZONE_ID}/status
+civictwin/v1/zones/{ZONE_ID}/alerts
+```
+
+Therefore, each project's MQTT client ID and device ID must be unique. Its
+payload `zone_id` and all topic zone segments must consistently identify the
+same canonical zone. All telemetry must retain the `WOKWI_SIMULATED` source
+value. These projects represent virtual laboratory prototypes, not direct
+measurements from Chennai's rivers.
 
 ## How to Run
 
 1. Open [wokwi.com](https://wokwi.com)
-2. Create a new ESP32 project
-3. Replace the default `diagram.json` with `firmware/wokwi/diagram.json`
-4. Replace the sketch with `firmware/esp32/src/main.ino`
-5. Press the green **Start Simulation** button
+2. Create three separate ESP32 projects, one for each study area.
+3. For each project, copy the shared `diagram.json` and canonical sketch as
+   described above.
+4. Apply only that project's identity values from the table.
+5. Press the green **Start Simulation** button.
+
+Do not add Wokwi project links to this repository until the projects have been
+created and saved in the owner's Wokwi account.
 
 ## Simulating Water Levels
 
@@ -34,6 +69,20 @@
 
 ## MQTT Connectivity
 
-Wokwi provides simulated Wi-Fi (`Wokwi-GUEST`) that can reach MQTT brokers.
-- For local Docker broker: Use desktop client port-forwarding or your host machine's LAN IP address.
-- When running offline: The firmware maintains local median filtering, threshold evaluation, and LED alerts independently.
+The firmware currently keeps the broker configuration unchanged:
+
+```text
+MQTT_BROKER = "localhost"
+MQTT_PORT = 1883
+```
+
+`localhost` in Wokwi is not the developer's Mac, and Docker service names such
+as `mosquitto` are not reachable from Wokwi. Do not assume that a Mac LAN IP is
+reachable from Wokwi. A secure, approved, externally reachable MQTT endpoint
+with authentication and TLS must be selected before changing these settings.
+Do not expose the current anonymous local Mosquitto broker publicly and do not
+switch to a public broker without explicit approval.
+
+When offline, the firmware still performs local median filtering, threshold
+evaluation, and LED alerts. No broker or networking configuration is changed by
+this README.

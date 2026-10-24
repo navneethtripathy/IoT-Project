@@ -18,27 +18,33 @@
 #include <ArduinoJson.h>
 #include <time.h>
 
+// ── Project Configuration ──────────────────────────────────────────
+// Copy this firmware into each Wokwi project and change only the
+// project-specific identity values below. Keep the topic zone segment
+// derived from ZONE_ID so topic and payload identities remain aligned.
+//
+// Canonical default: Adyar / zone_01.
+
 // WiFi Configuration
 const char* WIFI_SSID     = "Wokwi-GUEST";
 const char* WIFI_PASSWORD = "";
 
 // MQTT Broker Configuration
+// Keep these values unchanged until a broker connectivity method is approved.
 const char* MQTT_BROKER    = "localhost";
 const int   MQTT_PORT      = 1883;
-const char* MQTT_CLIENT_ID = "civictwin_node01";
 const char* MQTT_USER      = "";
 const char* MQTT_PASS      = "";
 
-// MQTT Topics
-const char* TOPIC_TELEMETRY = "civictwin/v1/zones/zone_01/telemetry";
-const char* TOPIC_STATUS    = "civictwin/v1/zones/zone_01/status";
-const char* TOPIC_ALERTS    = "civictwin/v1/zones/zone_01/alerts";
+// Per-project identity
+const char* MQTT_CLIENT_ID = "civictwin_adyar_01";
+const char* DEVICE_ID      = "node_adyar_01";
+#define ZONE_ID "zone_01"
 
-// Device Identification
-// Note: This Wokwi virtual node is explicitly associated with a single designated simulated
-// study zone: Adyar Basin (zone_01 / zone_adyar). It does not represent physical river deployment.
-const char* DEVICE_ID = "node_01";
-const char* ZONE_ID   = "zone_01";
+// MQTT Topics — derived from the configured canonical zone ID.
+const char* TOPIC_TELEMETRY = "civictwin/v1/zones/" ZONE_ID "/telemetry";
+const char* TOPIC_STATUS    = "civictwin/v1/zones/" ZONE_ID "/status";
+const char* TOPIC_ALERTS    = "civictwin/v1/zones/" ZONE_ID "/alerts";
 
 #ifndef DATA_SOURCE
 #define DATA_SOURCE "WOKWI_SIMULATED"
