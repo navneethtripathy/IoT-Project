@@ -32,10 +32,18 @@ Example:
   "distance_cm": 12.4,
   "water_level_cm": 17.6,
   "water_level_pct": 58.7,
+  "rain_sensor_raw": 2048,
+  "rain_indicator_pct": 50.0,
   "sensor_status": "valid",
-  "source": "wokwi"
+  "source": "WOKWI_SIMULATED",
+  "quality_flags": ["rain_indicator_uncalibrated"]
 }
 ```
+
+`rain_sensor_raw` and `rain_indicator_pct` are optional backward-compatible
+fields. For Wokwi, they represent a potentiometer-controlled, uncalibrated
+simulated rain indicator. They are not rainfall in millimetres or millimetres
+per hour. The MQTT topic hierarchy is unchanged.
 
 ### `civictwin/v1/zones/{zone_id}/status`
 

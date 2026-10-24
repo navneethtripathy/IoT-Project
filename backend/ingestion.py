@@ -158,6 +158,13 @@ class IngestionService:
                 "water_level_cm": record.water_level_cm,
                 "current_level_pct": record.water_level_pct,
                 "current_level_cm": record.water_level_cm,
+                "rain_sensor_raw": record.rain_sensor_raw,
+                "rain_indicator_pct": record.rain_indicator_pct,
+                "rainfall_measurement_type": (
+                    "SIMULATED_UNCALIBRATED_INDICATOR"
+                    if record.rain_indicator_pct is not None
+                    else None
+                ),
                 "alert_level": alert_level.value,
                 "source": record.source.value,
                 "last_update": record.ingestion_timestamp.isoformat(),

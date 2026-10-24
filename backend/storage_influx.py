@@ -76,6 +76,10 @@ class InfluxDBStorage(StorageBackend):
                 point.field("water_level_cm", float(record.water_level_cm))
             if record.water_level_pct is not None:
                 point.field("water_level_pct", float(record.water_level_pct))
+            if record.rain_sensor_raw is not None:
+                point.field("rain_sensor_raw", int(record.rain_sensor_raw))
+            if record.rain_indicator_pct is not None:
+                point.field("rain_indicator_pct", float(record.rain_indicator_pct))
 
             point.field("is_reconstructed", int(record.is_reconstructed))
             if record.reconstruction_method:

@@ -84,6 +84,8 @@ class SQLiteStorage(StorageBackend):
         distance_cm REAL,
         water_level_cm REAL,
         water_level_pct REAL,
+        rain_sensor_raw INTEGER,
+        rain_indicator_pct REAL,
         sensor_status TEXT NOT NULL,
         source TEXT NOT NULL,
         is_reconstructed INTEGER DEFAULT 0,
@@ -107,9 +109,23 @@ class SQLiteStorage(StorageBackend):
         self._conn = sqlite3.connect(db_path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute(self._CREATE_TABLE)
+        self._migrate_telemetry_table()
         self._conn.execute(self._CREATE_INDEX)
         self._conn.commit()
         logger.info("SQLite storage initialized at: %s (fallback=%s)", db_path, is_fallback)
+
+    def _migrate_telemetry_table(self):
+        columns = {
+            row["name"]
+            for row in self._conn.execute("PRAGMA table_info(telemetry)").fetchall()
+        }
+        migrations = {
+            "rain_sensor_raw": "ALTER TABLE telemetry ADD COLUMN rain_sensor_raw INTEGER",
+            "rain_indicator_pct": "ALTER TABLE telemetry ADD COLUMN rain_indicator_pct REAL",
+        }
+        for column, statement in migrations.items():
+            if column not in columns:
+                self._conn.execute(statement)
 
     @property
     def backend_type(self) -> str:
@@ -126,10 +142,11 @@ class SQLiteStorage(StorageBackend):
                     """INSERT OR IGNORE INTO telemetry
                        (device_id, zone_id, sequence, event_timestamp,
                         ingestion_timestamp, distance_cm, water_level_cm,
-                        water_level_pct, sensor_status, source,
+                        water_level_pct, rain_sensor_raw, rain_indicator_pct,
+                        sensor_status, source,
                         is_reconstructed, reconstruction_method,
                         scenario_id, quality_flags)
-                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     (
                         record.device_id,
                         record.zone_id,
@@ -139,6 +156,8 @@ class SQLiteStorage(StorageBackend):
                         record.distance_cm,
                         record.water_level_cm,
                         record.water_level_pct,
+                        record.rain_sensor_raw,
+                        record.rain_indicator_pct,
                         record.sensor_status.value,
                         record.source.value,
                         1 if record.is_reconstructed else 0,

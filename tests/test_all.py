@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import math
+import sqlite3
 import sys
 import tempfile
 from datetime import datetime, timezone, timedelta
@@ -365,6 +366,29 @@ class TestModels:
         )
         assert msg.water_level_pct == 100.0
 
+    def test_optional_rain_indicator_fields(self):
+        msg = TelemetryMessage(
+            device_id="rain_node",
+            zone_id="zone_01",
+            sequence=1,
+            timestamp=datetime.now(timezone.utc),
+            rain_sensor_raw=2048,
+            rain_indicator_pct=50.0,
+            source=DataSource.WOKWI_SIMULATED,
+        )
+        assert msg.rain_sensor_raw == 2048
+        assert msg.rain_indicator_pct == 50.0
+
+    def test_telemetry_without_rain_indicator_remains_compatible(self):
+        msg = TelemetryMessage(
+            device_id="legacy_node",
+            zone_id="zone_01",
+            sequence=1,
+            timestamp=datetime.now(timezone.utc),
+        )
+        assert msg.rain_sensor_raw is None
+        assert msg.rain_indicator_pct is None
+
     def test_telemetry_iso_timestamp(self):
         msg = TelemetryMessage(
             device_id="dev1",
@@ -425,6 +449,79 @@ class TestStorage:
             latest = store.query_latest("z1")
             assert len(latest) == 1
             assert latest[0]["sequence"] == 1
+            store.close()
+
+    def test_sqlite_store_and_query_rain_indicator(self):
+        with tempfile.NamedTemporaryFile(suffix=".db") as tmp:
+            store = SQLiteStorage(tmp.name)
+            rec = IngestedTelemetry(
+                device_id="rain_node",
+                zone_id="zone_01",
+                sequence=1,
+                timestamp=datetime.now(timezone.utc),
+                rain_sensor_raw=3000,
+                rain_indicator_pct=73.26,
+                source=DataSource.WOKWI_SIMULATED,
+            )
+            assert store.store(rec)
+            latest = store.query_latest("zone_01")
+            assert latest[0]["rain_sensor_raw"] == 3000
+            assert latest[0]["rain_indicator_pct"] == 73.26
+            store.close()
+
+    def test_sqlite_migrates_existing_table_without_data_loss(self):
+        with tempfile.NamedTemporaryFile(suffix=".db") as tmp:
+            conn = sqlite3.connect(tmp.name)
+            conn.execute(
+                """CREATE TABLE telemetry (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   device_id TEXT NOT NULL,
+                   zone_id TEXT NOT NULL,
+                   sequence INTEGER NOT NULL,
+                   event_timestamp TEXT NOT NULL,
+                   ingestion_timestamp TEXT NOT NULL,
+                   distance_cm REAL,
+                   water_level_cm REAL,
+                   water_level_pct REAL,
+                   sensor_status TEXT NOT NULL,
+                   source TEXT NOT NULL,
+                   is_reconstructed INTEGER DEFAULT 0,
+                   reconstruction_method TEXT,
+                   scenario_id TEXT,
+                   quality_flags TEXT DEFAULT '[]',
+                   UNIQUE(device_id, sequence)
+                )"""
+            )
+            conn.execute(
+                """INSERT INTO telemetry
+                   (device_id, zone_id, sequence, event_timestamp,
+                    ingestion_timestamp, water_level_cm, water_level_pct,
+                    sensor_status, source)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    "legacy_node",
+                    "zone_01",
+                    1,
+                    "2026-10-24T10:00:00+00:00",
+                    "2026-10-24T10:00:01+00:00",
+                    10.0,
+                    33.3,
+                    "valid",
+                    "PYTHON_SIMULATED",
+                ),
+            )
+            conn.commit()
+            conn.close()
+
+            store = SQLiteStorage(tmp.name)
+            columns = {
+                row["name"]
+                for row in store._conn.execute("PRAGMA table_info(telemetry)").fetchall()
+            }
+            assert {"rain_sensor_raw", "rain_indicator_pct"} <= columns
+            latest = store.query_latest("zone_01")
+            assert latest[0]["device_id"] == "legacy_node"
+            assert latest[0]["rain_sensor_raw"] is None
             store.close()
 
     def test_sqlite_duplicate_rejection(self):
@@ -975,4 +1072,3 @@ class TestProvenanceAndSensorVerification:
         })
         assert len(svc.alerts) == 4
         assert svc.alerts[-1].alert_level == AlertLevel.NORMAL
-

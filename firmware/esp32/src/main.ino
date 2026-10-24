@@ -54,6 +54,11 @@ const char* TOPIC_ALERTS    = "civictwin/v1/zones/" ZONE_ID "/alerts";
 const int   TRIG_PIN            = 5;
 const int   ECHO_PIN            = 18;
 const int   LED_PIN             = 2;
+// Wokwi potentiometer stand-in for an analog rain sensor.
+// This is an uncalibrated indicator, not rainfall in millimetres.
+const int   RAIN_SENSOR_PIN      = 36;  // ESP32 VP / ADC1 input
+const int   RAIN_ADC_MIN         = 0;
+const int   RAIN_ADC_MAX         = 4095;
 // Prototype container reference height (cm).
 // Formula assumes a fixed sensor mount above the water surface:
 //   Water depth (cm) = container reference height (cm) - measured distance (cm)
@@ -88,6 +93,16 @@ String        currentAlert    = "normal";
 float         lastValidLevel  = -1.0;
 int           failedReadings  = 0;
 const int     MAX_FAILED      = 5;
+
+int readRainSensorRaw() {
+    int raw = analogRead(RAIN_SENSOR_PIN);
+    return constrain(raw, RAIN_ADC_MIN, RAIN_ADC_MAX);
+}
+
+float rainIndicatorPct(int raw) {
+    return (static_cast<float>(raw - RAIN_ADC_MIN) /
+            static_cast<float>(RAIN_ADC_MAX - RAIN_ADC_MIN)) * 100.0;
+}
 
 float readDistanceCm() {
     digitalWrite(TRIG_PIN, LOW);
@@ -188,6 +203,8 @@ String getISO8601Timestamp() {
 
 void publishTelemetry(float distance, float waterLevel, float waterPct, const char* sensorStatus) {
     sequence++;
+    int rainRaw = readRainSensorRaw();
+    float rainPct = rainIndicatorPct(rainRaw);
 
     JsonDocument doc;
     doc["schema_version"] = "1.0";
@@ -208,6 +225,10 @@ void publishTelemetry(float distance, float waterLevel, float waterPct, const ch
     }
     doc["sensor_status"]  = sensorStatus;
     doc["source"]         = DATA_SOURCE;
+    doc["rain_sensor_raw"] = rainRaw;
+    doc["rain_indicator_pct"] = round(rainPct * 100) / 100.0;
+    JsonArray qualityFlags = doc["quality_flags"].to<JsonArray>();
+    qualityFlags.add("rain_indicator_uncalibrated");
 
     char payload[512];
     serializeJson(doc, payload, sizeof(payload));
@@ -215,14 +236,14 @@ void publishTelemetry(float distance, float waterLevel, float waterPct, const ch
     if (mqttConnected && mqttClient.connected()) {
         bool sent = mqttClient.publish(TOPIC_TELEMETRY, payload);
         if (sent) {
-            Serial.printf("[TX] seq=%lu level=%.1fcm (%.1f%%) status=%s\n",
-                          sequence, waterLevel, waterPct, sensorStatus);
+            Serial.printf("[TX] seq=%lu level=%.1fcm (%.1f%%) rain=%.1f%% status=%s\n",
+                          sequence, waterLevel, waterPct, rainPct, sensorStatus);
         } else {
             Serial.println("[TX] Publish failed");
         }
     } else {
-        Serial.printf("[OFFLINE] seq=%lu level=%.1fcm (%.1f%%) status=%s\n",
-                      sequence, waterLevel, waterPct, sensorStatus);
+        Serial.printf("[OFFLINE] seq=%lu level=%.1fcm (%.1f%%) rain=%.1f%% status=%s\n",
+                      sequence, waterLevel, waterPct, rainPct, sensorStatus);
     }
 }
 

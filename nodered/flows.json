@@ -272,8 +272,8 @@
         "type": "function",
         "z": "civictwin_tab",
         "name": "Parse Zone Data",
-        "func": "var zones = msg.payload.zones || [];\nvar outputs = [];\n\nfor (var i = 0; i < 3 && i < zones.length; i++) {\n    var z = zones[i];\n    var level_pct = z.current_level_pct || z.water_level_pct || 0;\n    var level_cm = z.current_level_cm || z.water_level_cm || 0;\n    var status = z.sensor_status || 'unknown';\n    var source = (z.data_source || z.source || 'DIGITAL_TWIN').toUpperCase();\n    var isStale = z.is_stale === true;\n    var ts = z.last_update ? new Date(z.last_update).toLocaleTimeString() : 'N/A';\n    \n    var statusBadge = '[ONLINE]';\n    if (status === 'offline') statusBadge = '[OFFLINE]';\n    else if (isStale || status === 'stale') statusBadge = '[STALE]';\n    else if (status === 'invalid') statusBadge = '[INVALID]';\n    \n    outputs.push({ payload: level_pct, topic: z.zone_id });\n    outputs.push({ payload: statusBadge + ' [' + source + '] ' + level_cm.toFixed(1) + ' cm (' + level_pct.toFixed(1) + '%) @ ' + ts });\n}\n\nreturn outputs;",
-        "outputs": 6,
+        "func": "var zones = msg.payload.zones || [];\nvar outputs = [];\n\nfor (var i = 0; i < 3 && i < zones.length; i++) {\n    var z = zones[i];\n    var level_pct = z.current_level_pct || z.water_level_pct || 0;\n    var level_cm = z.current_level_cm || z.water_level_cm || 0;\n    var rain_pct = z.rain_indicator_pct;\n    var rain_raw = z.rain_sensor_raw;\n    var status = z.sensor_status || 'unknown';\n    var source = (z.data_source || z.source || 'DIGITAL_TWIN').toUpperCase();\n    var isStale = z.is_stale === true;\n    var ts = z.last_update ? new Date(z.last_update).toLocaleTimeString() : 'N/A';\n    \n    var statusBadge = '[ONLINE]';\n    if (status === 'offline') statusBadge = '[OFFLINE]';\n    else if (isStale || status === 'stale') statusBadge = '[STALE]';\n    else if (status === 'invalid') statusBadge = '[INVALID]';\n    \n    var rainText = rain_pct === null || rain_pct === undefined\n        ? 'Simulated rain indicator: unavailable'\n        : 'Simulated rain indicator: ' + Number(rain_pct).toFixed(1) + '% (ADC ' + rain_raw + ') — not mm';\n    outputs.push({ payload: level_pct, topic: z.zone_id });\n    outputs.push({ payload: statusBadge + ' [' + source + '] ' + level_cm.toFixed(1) + ' cm (' + level_pct.toFixed(1) + '%) @ ' + ts });\n    outputs.push({ payload: rainText, topic: z.zone_id });\n}\n\nreturn outputs;",
+        "outputs": 9,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -288,16 +288,25 @@
                 "zone1_text"
             ],
             [
+                "zone1_rain"
+            ],
+            [
                 "zone2_gauge"
             ],
             [
                 "zone2_text"
             ],
             [
+                "zone2_rain"
+            ],
+            [
                 "zone3_gauge"
             ],
             [
                 "zone3_text"
+            ],
+            [
+                "zone3_rain"
             ]
         ]
     },
@@ -420,6 +429,51 @@
         "layout": "row-spread",
         "x": 750,
         "y": 460
+    },
+    {
+        "id": "zone1_rain",
+        "type": "ui_text",
+        "z": "civictwin_tab",
+        "group": "monitoring_group",
+        "order": 7,
+        "width": "4",
+        "height": 1,
+        "name": "Zone 1 Rain Indicator",
+        "label": "Adyar simulated rain",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 750,
+        "y": 320
+    },
+    {
+        "id": "zone2_rain",
+        "type": "ui_text",
+        "z": "civictwin_tab",
+        "group": "monitoring_group",
+        "order": 8,
+        "width": "4",
+        "height": 1,
+        "name": "Zone 2 Rain Indicator",
+        "label": "Cooum simulated rain",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 750,
+        "y": 400
+    },
+    {
+        "id": "zone3_rain",
+        "type": "ui_text",
+        "z": "civictwin_tab",
+        "group": "monitoring_group",
+        "order": 9,
+        "width": "4",
+        "height": 1,
+        "name": "Zone 3 Rain Indicator",
+        "label": "Kosasthalaiyar simulated rain",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 750,
+        "y": 480
     },
     {
         "id": "scenario_dropdown",

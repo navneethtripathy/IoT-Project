@@ -42,6 +42,37 @@ same canonical zone. All telemetry must retain the `WOKWI_SIMULATED` source
 value. These projects represent virtual laboratory prototypes, not direct
 measurements from Chennai's rivers.
 
+## Simulated rain indicator
+
+The circuit includes a `wokwi-potentiometer` as a controllable, uncalibrated
+stand-in for an analog rain sensor. Its signal connects directly to the ESP32:
+
+```text
+potentiometer SIG -> ESP32 VP / GPIO 36
+```
+
+| Potentiometer pin | ESP32 connection |
+|---|---|
+| `VCC` | `3V3` |
+| `GND` | `GND` |
+| `SIG` | `VP` / GPIO 36 (ADC1 input) |
+
+To demonstrate different conditions, turn the potentiometer through its range:
+
+- Low setting: dry demonstration
+- Middle setting: light or moderate rain demonstration
+- High setting: heavy rain demonstration
+
+The firmware publishes:
+
+- `rain_sensor_raw`: ADC count from `0` to `4095`
+- `rain_indicator_pct`: normalized indicator from `0` to `100`
+
+This is an uncalibrated simulated indicator only. It is not rainfall in
+millimetres, millimetres per hour, or an observation from Chennai. Wokwi
+telemetry retains `WOKWI_SIMULATED` and the
+`rain_indicator_uncalibrated` quality flag.
+
 ## How to Run
 
 1. Open [wokwi.com](https://wokwi.com)

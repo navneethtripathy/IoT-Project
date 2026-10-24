@@ -139,6 +139,9 @@ def get_zones():
         state["water_level_pct"] = status.get("water_level_pct", state.get("current_level_pct", 0.0))
         state["current_level_cm"] = state["water_level_cm"]
         state["current_level_pct"] = state["water_level_pct"]
+        state["rain_sensor_raw"] = status.get("rain_sensor_raw")
+        state["rain_indicator_pct"] = status.get("rain_indicator_pct")
+        state["rainfall_measurement_type"] = status.get("rainfall_measurement_type")
         state["sensor_status"] = status.get("sensor_status", "valid")
         state["alert_level"] = status.get("alert_level", "normal")
         state["zone_type"] = "virtual"
@@ -163,6 +166,9 @@ def get_zone(zone_id: str):
     state["water_level_pct"] = status.get("water_level_pct", state.get("current_level_pct", 0.0))
     state["current_level_cm"] = state["water_level_cm"]
     state["current_level_pct"] = state["water_level_pct"]
+    state["rain_sensor_raw"] = status.get("rain_sensor_raw")
+    state["rain_indicator_pct"] = status.get("rain_indicator_pct")
+    state["rainfall_measurement_type"] = status.get("rainfall_measurement_type")
     state["sensor_status"] = status.get("sensor_status", "valid")
     state["alert_level"] = status.get("alert_level", "normal")
     state["zone_type"] = "virtual"
