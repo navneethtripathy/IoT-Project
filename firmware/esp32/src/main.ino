@@ -1,16 +1,22 @@
 /*
- * CivicTwin-R — ESP32 Firmware
- * Water-Level Monitoring with HC-SR04 Ultrasonic Sensor
+ * CivicTwin-R — ESP32 Dual-Node Cyber-Physical Firmware
+ * Water-Level Monitoring with JSN-SR04T Waterproof Ultrasonic Sensor / HC-SR04
  *
- * Reads distance from an HC-SR04 sensor, calculates water depth,
- * evaluates local thresholds with hysteresis, and publishes telemetry over MQTT.
+ * Reads distance, calculates water depth, applies anti-chatter hysteresis,
+ * controls autonomous edge warning indicator (LED/buzzer), and publishes telemetry
+ * over dual MQTT topic hierarchies (zones and nodes).
  *
- * Pin Connections:
- *   HC-SR04 TRIG -> GPIO 5
- *   HC-SR04 ECHO -> GPIO 18 (use 2.2k/3.3k resistor divider on physical HW for 3.3V)
- *   HC-SR04 VCC  -> 5V (VIN)
- *   HC-SR04 GND  -> GND
- *   Status LED   -> GPIO 2
+ * Pin Connections & Electrical Interface:
+ *   Sensor TRIG -> ESP32 GPIO 5 (3.3V TTL output, 10µs trigger pulse)
+ *   Sensor ECHO -> Resistor Divider -> ESP32 GPIO 18
+ *       Physical JSN-SR04T / HC-SR04 outputs 5V TTL logic.
+ *       CRITICAL: ESP32 GPIO is NOT 5V tolerant!
+ *       Voltage Divider: ECHO -> 2.2kΩ -> GPIO 18 -> 3.3kΩ -> GND
+ *       Output voltage: 5.0V * (3.3 / (2.2 + 3.3)) = 3.0V (safe 3.3V logic).
+ *   Sensor VCC  -> 5.0V (VIN / USB 5V rail)
+ *   Sensor GND  -> GND (Common ground)
+ *   Warning LED -> GPIO 2 (Active HIGH, 220Ω current-limiting resistor)
+ *   Rain Sensor -> GPIO 36 (ADC1 input, 0-4095)
  */
 
 #include <WiFi.h>
@@ -18,36 +24,69 @@
 #include <ArduinoJson.h>
 #include <time.h>
 
-// ── Project Configuration ──────────────────────────────────────────
-// Copy this firmware into each Wokwi project and change only the
-// project-specific identity values below. Keep the topic zone segment
-// derived from ZONE_ID so topic and payload identities remain aligned.
-//
-// Canonical default: Adyar / zone_01.
+// ── Node Identity Selection ─────────────────────────────────────────
+// Set to 1 for Node 01 (Tank 1 / Adyar / Saidapet prototype)
+// Set to 2 for Node 02 (Tank 2 / Cooum / Retention prototype)
+#ifndef NODE_SELECT
+#define NODE_SELECT 1
+#endif
+
+#if NODE_SELECT == 1
+const char* MQTT_CLIENT_ID = "civictwin_node_01";
+const char* DEVICE_ID      = "node_01";
+#define NODE_ID "node_01"
+#define ZONE_ID "zone_01"
+const float CONTAINER_HEIGHT_CM = 50.0; // Laboratory Tank 1 depth
+#elif NODE_SELECT == 2
+const char* MQTT_CLIENT_ID = "civictwin_node_02";
+const char* DEVICE_ID      = "node_02";
+#define NODE_ID "node_02"
+#define ZONE_ID "zone_02"
+const float CONTAINER_HEIGHT_CM = 60.0; // Laboratory Tank 2 depth
+#else
+const char* MQTT_CLIENT_ID = "civictwin_node_custom";
+const char* DEVICE_ID      = "node_custom";
+#define NODE_ID "node_custom"
+#define ZONE_ID "zone_01"
+const float CONTAINER_HEIGHT_CM = 30.0;
+#endif
+
+// Sensor Model Configuration:
+// Set to 1 for JSN-SR04T waterproof sensor (20cm blind zone)
+// Set to 0 for HC-SR04 laboratory prototype (2cm blind zone)
+#ifndef USE_JSN_SR04T
+#define USE_JSN_SR04T 1
+#endif
+
+#if USE_JSN_SR04T
+const float SENSOR_MIN_CM = 20.0; // JSN-SR04T blind distance is ~20-25cm
+const char* SENSOR_TYPE_TAG = "JSN-SR04T-WATERPROOF";
+#else
+const float SENSOR_MIN_CM = 2.0;  // HC-SR04 minimum distance
+const char* SENSOR_TYPE_TAG = "HC-SR04";
+#endif
 
 // WiFi Configuration
 const char* WIFI_SSID     = "Wokwi-GUEST";
 const char* WIFI_PASSWORD = "";
 
 // MQTT Broker Configuration
-// Keep these values unchanged until a broker connectivity method is approved.
 const char* MQTT_BROKER    = "localhost";
 const int   MQTT_PORT      = 1883;
 const char* MQTT_USER      = "";
 const char* MQTT_PASS      = "";
 
-// Per-project identity
-const char* MQTT_CLIENT_ID = "civictwin_adyar_01";
-const char* DEVICE_ID      = "node_adyar_01";
-#define ZONE_ID "zone_01"
+// MQTT Topics — published to both zone and node hierarchies
+const char* TOPIC_ZONE_TELEMETRY = "civictwin/v1/zones/" ZONE_ID "/telemetry";
+const char* TOPIC_ZONE_STATUS    = "civictwin/v1/zones/" ZONE_ID "/status";
+const char* TOPIC_ZONE_ALERTS    = "civictwin/v1/zones/" ZONE_ID "/alerts";
 
-// MQTT Topics — derived from the configured canonical zone ID.
-const char* TOPIC_TELEMETRY = "civictwin/v1/zones/" ZONE_ID "/telemetry";
-const char* TOPIC_STATUS    = "civictwin/v1/zones/" ZONE_ID "/status";
-const char* TOPIC_ALERTS    = "civictwin/v1/zones/" ZONE_ID "/alerts";
+const char* TOPIC_NODE_TELEMETRY = "civictwin/v1/nodes/" NODE_ID "/telemetry";
+const char* TOPIC_NODE_STATUS    = "civictwin/v1/nodes/" NODE_ID "/status";
+const char* TOPIC_NODE_ALERTS    = "civictwin/v1/nodes/" NODE_ID "/alerts";
 
 #ifndef DATA_SOURCE
-#define DATA_SOURCE "WOKWI_SIMULATED"
+#define DATA_SOURCE "FIELD_SENSOR"
 #endif
 
 // Sensor Geometry and Pins
@@ -55,16 +94,10 @@ const int   TRIG_PIN            = 5;
 const int   ECHO_PIN            = 18;
 const int   LED_PIN             = 2;
 // Wokwi potentiometer stand-in for an analog rain sensor.
-// This is an uncalibrated indicator, not rainfall in millimetres.
 const int   RAIN_SENSOR_PIN      = 36;  // ESP32 VP / ADC1 input
 const int   RAIN_ADC_MIN         = 0;
 const int   RAIN_ADC_MAX         = 4095;
-// Prototype container reference height (cm).
-// Formula assumes a fixed sensor mount above the water surface:
-//   Water depth (cm) = container reference height (cm) - measured distance (cm)
-//   Water level (%)  = 100 * water depth / container reference height
-const float CONTAINER_HEIGHT_CM = 30.0;
-const float SENSOR_MIN_CM       = 2.0;
+// Note: CONTAINER_HEIGHT_CM and SENSOR_MIN_CM are configured per-node above.
 const float SENSOR_MAX_CM       = 400.0;
 const float SPEED_OF_SOUND      = 0.0343;
 
@@ -234,8 +267,9 @@ void publishTelemetry(float distance, float waterLevel, float waterPct, const ch
     serializeJson(doc, payload, sizeof(payload));
 
     if (mqttConnected && mqttClient.connected()) {
-        bool sent = mqttClient.publish(TOPIC_TELEMETRY, payload);
-        if (sent) {
+        bool sentZone = mqttClient.publish(TOPIC_ZONE_TELEMETRY, payload);
+        bool sentNode = mqttClient.publish(TOPIC_NODE_TELEMETRY, payload);
+        if (sentZone || sentNode) {
             Serial.printf("[TX] seq=%lu level=%.1fcm (%.1f%%) rain=%.1f%% status=%s\n",
                           sequence, waterLevel, waterPct, rainPct, sensorStatus);
         } else {
@@ -250,6 +284,7 @@ void publishTelemetry(float distance, float waterLevel, float waterPct, const ch
 void publishAlert(const char* level, float waterPct) {
     JsonDocument doc;
     doc["zone_id"]     = ZONE_ID;
+    doc["node_id"]     = NODE_ID;
     doc["device_id"]   = DEVICE_ID;
     doc["alert_level"] = level;
     doc["water_pct"]   = waterPct;
@@ -260,9 +295,23 @@ void publishAlert(const char* level, float waterPct) {
     serializeJson(doc, payload, sizeof(payload));
 
     if (mqttConnected && mqttClient.connected()) {
-        mqttClient.publish(TOPIC_ALERTS, payload);
+        mqttClient.publish(TOPIC_ZONE_ALERTS, payload);
+        mqttClient.publish(TOPIC_NODE_ALERTS, payload);
     }
     Serial.printf("[ALERT] %s: water level at %.1f%%\n", level, waterPct);
+}
+
+void updateLedIndicator(unsigned long now) {
+    if (currentAlert == "critical") {
+        // Critical alert: solid steady illumination
+        digitalWrite(LED_PIN, HIGH);
+    } else if (currentAlert == "warning") {
+        // Warning alert: 1 Hz blinking (500ms ON, 500ms OFF) to distinguish from critical
+        digitalWrite(LED_PIN, (now / 500) % 2 == 0 ? HIGH : LOW);
+    } else {
+        // Normal state: LED OFF
+        digitalWrite(LED_PIN, LOW);
+    }
 }
 
 void evaluateThreshold(float waterPct) {
@@ -270,29 +319,27 @@ void evaluateThreshold(float waterPct) {
 
     if (waterPct >= CRIT_THRESHOLD_PCT) {
         newAlert = "critical";
+    } else if (currentAlert == "critical" && waterPct >= (CRIT_THRESHOLD_PCT - HYSTERESIS_PCT)) {
+        // Retain critical state within the critical hysteresis band
+        newAlert = "critical";
     } else if (waterPct >= WARN_THRESHOLD_PCT) {
         newAlert = "warning";
     } else if (currentAlert == "warning" && waterPct >= (WARN_THRESHOLD_PCT - HYSTERESIS_PCT)) {
+        // Retain warning state within the warning hysteresis band
         newAlert = "warning";
-    } else if (currentAlert == "critical" && waterPct >= (CRIT_THRESHOLD_PCT - HYSTERESIS_PCT)) {
-        newAlert = "critical";
+    } else {
+        newAlert = "normal";
     }
 
     if (newAlert != currentAlert) {
         currentAlert = newAlert;
-        if (currentAlert == "critical" || currentAlert == "warning") {
-            publishAlert(currentAlert.c_str(), waterPct);
-            digitalWrite(LED_PIN, HIGH);
-        } else {
-            publishAlert("normal", waterPct);
-            digitalWrite(LED_PIN, LOW);
-        }
+        publishAlert(currentAlert.c_str(), waterPct);
     }
 }
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("CivicTwin-R Node 01 - Water Level Monitor");
+    Serial.printf("CivicTwin-R %s - Water Level Monitor\n", DEVICE_ID);
 
     pinMode(TRIG_PIN, OUTPUT);
     pinMode(ECHO_PIN, INPUT);
@@ -308,6 +355,7 @@ void setup() {
 
 void loop() {
     unsigned long now = millis();
+    updateLedIndicator(now);
 
     if (WiFi.status() != WL_CONNECTED) {
         connectWiFi();
@@ -361,6 +409,7 @@ void loop() {
 
         JsonDocument doc;
         doc["device_id"]   = DEVICE_ID;
+        doc["node_id"]     = NODE_ID;
         doc["wifi"]        = WiFi.status() == WL_CONNECTED;
         doc["mqtt"]        = mqttConnected;
         doc["uptime_sec"]  = millis() / 1000;
@@ -372,7 +421,8 @@ void loop() {
         serializeJson(doc, payload, sizeof(payload));
 
         if (mqttConnected && mqttClient.connected()) {
-            mqttClient.publish(TOPIC_STATUS, payload);
+            mqttClient.publish(TOPIC_ZONE_STATUS, payload);
+            mqttClient.publish(TOPIC_NODE_STATUS, payload);
         }
         Serial.printf("[STATUS] uptime=%lus seq=%lu alert=%s heap=%u\n",
                       millis() / 1000, sequence, currentAlert.c_str(), ESP.getFreeHeap());

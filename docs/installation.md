@@ -26,7 +26,7 @@
 ### Step 1 — Open Terminal in the project root
 
 ```bash
-cd "/Users/neilnickson/Documents/iot/iot project/IoT-Project"
+cd /path/to/CivicTwin-R  # or navigate to your cloned repository root
 ```
 
 ### Step 2 — Create your local `.env` file

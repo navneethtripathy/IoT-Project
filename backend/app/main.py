@@ -17,6 +17,8 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
+from pydantic import BaseModel, Field
+
 from backend import config
 from backend.models import AlertLevel
 from backend.storage import create_storage, StorageBackend
@@ -25,6 +27,14 @@ from backend.simulator import SensorSimulator
 from digital_twin.model import DigitalTwinEngine, create_default_zones
 from digital_twin.scenarios import ScenarioController, list_scenarios, SCENARIOS
 from digital_twin.forecast import BaselineForecaster, evaluate_forecaster_time_aware
+from digital_twin.tank_twin import (
+    PhysicalTankModel,
+    TankGeometry,
+    TankCalibrationResult,
+    create_default_tanks,
+    calibrate_drain_down,
+    evaluate_tank_prediction,
+)
 from scripts.replay_historical import HistoricalReplayController
 
 logging.basicConfig(
@@ -41,6 +51,7 @@ twin_engine: Optional[DigitalTwinEngine] = None
 scenario_ctrl: Optional[ScenarioController] = None
 replay_ctrl: Optional[HistoricalReplayController] = None
 forecaster = BaselineForecaster()
+tanks: dict[str, PhysicalTankModel] = create_default_tanks()
 
 
 @asynccontextmanager
@@ -385,6 +396,8 @@ def evaluate_forecast(zone_id: Optional[str] = "zone_01"):
 
     history = storage.query_latest(target_id, limit=200)
     series = [r.get("water_level_cm", 0.0) for r in reversed(history) if r.get("water_level_cm") is not None]
+    sources = {r.get("source") for r in history if r.get("source")}
+
     if len(series) < 20:
         eval_engine = DigitalTwinEngine(seed=config.RANDOM_SEED)
         for z in create_default_zones():
@@ -399,7 +412,13 @@ def evaluate_forecast(zone_id: Optional[str] = "zone_01"):
                     series.append(d["true_level_cm"])
         classification = "synthetic"
     else:
-        classification = "observed"
+        # Determine classification accurately from stored telemetry metadata
+        if sources and all(s in ("OBSERVED", "FIELD_SENSOR") for s in sources):
+            classification = "observed"
+        elif "REPLAYED" in sources:
+            classification = "replayed"
+        else:
+            classification = "synthetic"
 
     eval_15m = evaluate_forecaster_time_aware(series, height, horizon_steps=3, zone_id=target_id, data_classification=classification)
     eval_60m = evaluate_forecaster_time_aware(series, height, horizon_steps=12, zone_id=target_id, data_classification=classification)
@@ -489,3 +508,177 @@ def reset_replay():
         raise HTTPException(503, "Replay controller not initialized")
     replay_ctrl.reset()
     return {"status": "reset", "replay": replay_ctrl.get_status()}
+
+
+# -------------------------------------------------------------------------
+# Node Freshness & Hardware Diagnostics Endpoints
+# -------------------------------------------------------------------------
+
+
+@app.get("/api/nodes/freshness")
+def get_all_nodes_freshness():
+    """Returns freshness state, last valid timestamp, and age for all monitored nodes."""
+    if not ingestion:
+        raise HTTPException(503, "Ingestion service not initialized")
+    return [report.model_dump() for report in ingestion.get_all_node_freshness()]
+
+
+@app.get("/api/nodes/{node_id}/freshness")
+def get_node_freshness(node_id: str):
+    """Returns real-time freshness state for a specific node."""
+    if not ingestion:
+        raise HTTPException(503, "Ingestion service not initialized")
+    return ingestion.get_node_freshness(node_id).model_dump()
+
+
+@app.get("/api/nodes/status")
+def get_all_nodes_status():
+    """Returns edge diagnostics, battery levels, RSSI, and boot counts."""
+    if not ingestion:
+        raise HTTPException(503, "Ingestion service not initialized")
+    return ingestion.get_all_node_diagnostics()
+
+
+# -------------------------------------------------------------------------
+# Calibrated Physical Tank Digital Twin Endpoints
+# -------------------------------------------------------------------------
+
+
+class DrainDownCalibrationRequest(BaseModel):
+    tank_id: str = Field("tank_01", description="Identifier of the tank to calibrate")
+    times_sec: list[float] = Field(..., description="Timestamp offsets in seconds from drain start")
+    levels_cm: list[float] = Field(..., description="Water height measurements in cm")
+    area_cm2: Optional[float] = Field(None, description="Optional override for cross-sectional area")
+
+
+@app.get("/api/tank/config")
+def get_tank_config():
+    """Returns physical specifications and operational parameters for all laboratory tanks."""
+    return {tank_id: tank.get_state() for tank_id, tank in tanks.items()}
+
+
+@app.get("/api/tank/{tank_id}/state")
+def get_tank_state(tank_id: str):
+    """Returns current state and geometry for a specific laboratory tank."""
+    if tank_id not in tanks:
+        raise HTTPException(404, f"Tank '{tank_id}' not found. Available: {list(tanks.keys())}")
+    return tanks[tank_id].get_state()
+
+
+@app.post("/api/tank/calibrate")
+def calibrate_tank(req: DrainDownCalibrationRequest):
+    """
+    Performs analytical OLS calibration of the discharge coefficient k using Torricelli's Law:
+        2 * A * (sqrt(h0) - sqrt(ht)) = k * t
+    """
+    if req.tank_id not in tanks:
+        raise HTTPException(404, f"Tank '{req.tank_id}' not found")
+
+    tank = tanks[req.tank_id]
+    area = req.area_cm2 if req.area_cm2 is not None else tank.geometry.area_cm2
+    samples = list(zip(req.times_sec, req.levels_cm))
+
+    result = calibrate_drain_down(samples=samples, area_cm2=area, tank_id=req.tank_id)
+    if result.status == "success" and result.calibrated_k > 0:
+        tank.drainage_k = result.calibrated_k
+        logger.info(
+            "Updated tank '%s' drainage_k to %.4f (R^2=%.4f)",
+            req.tank_id,
+            result.calibrated_k,
+            result.r_squared,
+        )
+
+    return result.to_dict()
+
+
+@app.get("/api/tank/predict")
+def predict_tank_trajectory(
+    tank_id: str = Query("tank_01", description="Tank identifier"),
+    duration_sec: float = Query(60.0, ge=1.0, le=3600.0, description="Prediction duration in seconds"),
+    dt_sec: float = Query(1.0, ge=0.01, le=10.0, description="Simulation step in seconds"),
+    q_in_cm3_s: Optional[float] = Query(None, description="Inlet flow rate (cm^3/s). Defaults to tank default."),
+    initial_level_cm: Optional[float] = Query(None, description="Initial level (cm). Defaults to current tank level."),
+):
+    """Simulates physical water height trajectory forward in time using RK4 numerical integration."""
+    if tank_id not in tanks:
+        raise HTTPException(404, f"Tank '{tank_id}' not found")
+    tank = tanks[tank_id]
+    h0 = initial_level_cm if initial_level_cm is not None else tank.current_level_cm
+    trajectory = tank.simulate_trajectory(
+        duration_sec=duration_sec,
+        dt_sec=dt_sec,
+        q_in=q_in_cm3_s,
+        h0_cm=h0,
+    )
+    times = [p["time_sec"] for p in trajectory]
+    levels = [p["level_cm"] for p in trajectory]
+    return {
+        "tank_id": tank_id,
+        "node_id": tank.geometry.node_id,
+        "times_sec": times,
+        "predicted_levels_cm": levels,
+        "initial_level_cm": h0,
+        "q_in_cm3_s": q_in_cm3_s if q_in_cm3_s is not None else tank.default_q_in,
+        "drainage_k": tank.drainage_k,
+        "area_cm2": tank.geometry.area_cm2,
+        "provenance": "TWIN_ESTIMATED",
+    }
+
+
+@app.get("/api/tank/compare")
+def compare_tank_prediction_vs_measured(
+    tank_id: str = Query("tank_01", description="Tank identifier"),
+    limit: int = Query(50, ge=5, le=500, description="Telemetry sample window limit"),
+):
+    """
+    Evaluates digital-twin fidelity by simulating forward from the earliest measurement
+    in the window and computing MAE and RMSE against actual stored telemetry.
+    """
+    if not storage:
+        raise HTTPException(503, "Storage not initialized")
+    if tank_id not in tanks:
+        raise HTTPException(404, f"Tank '{tank_id}' not found")
+
+    tank = tanks[tank_id]
+    node_id = tank.geometry.node_id
+    records = storage.query_latest(node_id, limit=limit)
+    if not records:
+        # Fall back to zone_01 / zone_02 if node-specific telemetry is not yet populated
+        fallback_zone = "zone_01" if tank_id == "tank_01" else "zone_02"
+        records = storage.query_latest(fallback_zone, limit=limit)
+
+    if len(records) < 5:
+        # Generate demonstration comparison using calibrated ODE simulation
+        trajectory = tank.simulate_trajectory(duration_sec=60.0, dt_sec=2.0)
+        times = [p["time_sec"] for p in trajectory]
+        measured = [p["level_cm"] for p in trajectory]
+        import random
+        rng = random.Random(42)
+        noisy_measured = [round(max(0.0, m + rng.gauss(0, 0.4)), 2) for m in measured]
+        eval_metrics = evaluate_tank_prediction(measured=noisy_measured, predicted=measured)
+        eval_metrics["data_source"] = "SIMULATED_DEMO"
+        eval_metrics["tank_id"] = tank_id
+        eval_metrics["measured_levels_cm"] = noisy_measured
+        eval_metrics["predicted_levels_cm"] = measured
+        eval_metrics["times_sec"] = times
+        return eval_metrics
+
+    chronological = list(reversed(records))
+    measured_levels = [r.get("water_level_cm", 0.0) for r in chronological if r.get("water_level_cm") is not None]
+
+    h0 = measured_levels[0]
+    dt = 5.0
+    duration = dt * (len(measured_levels) - 1)
+    trajectory = tank.simulate_trajectory(duration_sec=duration, dt_sec=dt, h0_cm=h0)
+    times = [p["time_sec"] for p in trajectory]
+    predicted_levels = [p["level_cm"] for p in trajectory]
+
+    eval_metrics = evaluate_tank_prediction(measured=measured_levels, predicted=predicted_levels)
+    eval_metrics["data_source"] = chronological[0].get("source", "SIMULATED")
+    eval_metrics["tank_id"] = tank_id
+    eval_metrics["node_id"] = node_id
+    eval_metrics["measured_levels_cm"] = measured_levels
+    eval_metrics["predicted_levels_cm"] = predicted_levels[:len(measured_levels)]
+    eval_metrics["times_sec"] = times[:len(measured_levels)]
+    return eval_metrics
+

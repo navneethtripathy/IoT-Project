@@ -15,7 +15,8 @@ from typing import Optional, Callable
 
 from backend.models import (
     TelemetryMessage, IngestedTelemetry, SensorStatus,
-    DataSource, Alert, AlertLevel,
+    DataSource, Alert, AlertLevel, FreshnessState,
+    NodeFreshnessReport, NodeStatusPayload, NodeAlertPayload,
 )
 from backend import config
 
@@ -31,7 +32,10 @@ class IngestionService:
         self._storage = storage
         self._seen_sequences: dict[str, int] = {}
         self._last_timestamps: dict[str, datetime] = {}
+        self._last_valid_timestamps: dict[str, datetime] = {}
         self._zone_status: dict[str, dict] = {}
+        self._node_status: dict[str, dict] = {}
+        self._node_diagnostics: dict[str, dict] = {}
         self._zone_alert_states: dict[str, AlertLevel] = {}
         self._alerts: list[Alert] = []
         self._stats = {
@@ -41,6 +45,8 @@ class IngestionService:
             "messages_duplicate": 0,
             "messages_stale": 0,
             "messages_stored": 0,
+            "status_messages_received": 0,
+            "edge_alerts_received": 0,
         }
         self._callbacks: list[Callable] = []
         self._lock = threading.RLock()
@@ -60,6 +66,16 @@ class IngestionService:
     def zone_status(self) -> dict:
         with self._lock:
             return dict(self._zone_status)
+
+    @property
+    def node_status(self) -> dict:
+        with self._lock:
+            return dict(self._node_status)
+
+    @property
+    def node_diagnostics(self) -> dict:
+        with self._lock:
+            return dict(self._node_diagnostics)
 
     def add_callback(self, cb: Callable):
         self._callbacks.append(cb)
@@ -150,7 +166,16 @@ class IngestionService:
     def _update_zone_status(self, record: IngestedTelemetry):
         with self._lock:
             alert_level = self._zone_alert_states.get(record.zone_id, AlertLevel.NORMAL)
-            self._zone_status[record.zone_id] = {
+            is_valid = record.sensor_status == SensorStatus.VALID and record.water_level_pct is not None
+            record_ts = record.timestamp or record.ingestion_timestamp
+            if is_valid:
+                self._last_valid_timestamps[record.device_id] = record_ts
+                self._last_valid_timestamps[record.zone_id] = record_ts
+
+            last_valid_ts = self._last_valid_timestamps.get(record.device_id) or self._last_valid_timestamps.get(record.zone_id)
+            last_valid_str = last_valid_ts.isoformat() if last_valid_ts else None
+
+            status_entry = {
                 "zone_id": record.zone_id,
                 "device_id": record.device_id,
                 "sensor_status": record.sensor_status.value,
@@ -167,10 +192,13 @@ class IngestionService:
                 ),
                 "alert_level": alert_level.value,
                 "source": record.source.value,
-                "last_update": record.ingestion_timestamp.isoformat(),
+                "last_update": record_ts.isoformat(),
+                "last_valid_timestamp": last_valid_str,
                 "is_stale": record.is_stale,
                 "quality_flags": record.quality_flags,
             }
+            self._zone_status[record.zone_id] = status_entry
+            self._node_status[record.device_id] = status_entry
 
     def _check_thresholds(self, record: IngestedTelemetry):
         if record.water_level_pct is None:
@@ -231,17 +259,169 @@ class IngestionService:
                 logger.warning("ALERT transition [%s]: %s -> %s (level=%.1f%%)",
                                zone_id, current_state.value, new_state.value, pct)
 
+    def process_status(self, topic: str, payload: bytes) -> Optional[dict]:
+        """Processes node health heartbeat payloads from ESP32 or simulated nodes."""
+        with self._lock:
+            self._stats["status_messages_received"] += 1
+        try:
+            data = json.loads(payload)
+            msg = NodeStatusPayload(**data)
+        except Exception as e:
+            logger.warning("Invalid node status payload on %s: %s", topic, e)
+            return None
+
+        dev_id = msg.device_id
+        with self._lock:
+            self._node_diagnostics[dev_id] = {
+                "device_id": dev_id,
+                "wifi": msg.wifi,
+                "mqtt": msg.mqtt,
+                "uptime_sec": msg.uptime_sec,
+                "sequence": msg.sequence,
+                "alert_state": msg.alert_state,
+                "heap_free": msg.heap_free,
+                "last_heartbeat": msg.timestamp.isoformat(),
+            }
+        logger.debug("Received node status for %s (uptime=%ds, heap=%d)", dev_id, msg.uptime_sec, msg.heap_free)
+        return self._node_diagnostics[dev_id]
+
+    def process_alert(self, topic: str, payload: bytes) -> Optional[dict]:
+        """Processes edge-warning alert events published directly by nodes."""
+        with self._lock:
+            self._stats["edge_alerts_received"] += 1
+        try:
+            data = json.loads(payload)
+            msg = NodeAlertPayload(**data)
+        except Exception as e:
+            logger.warning("Invalid edge alert payload on %s: %s", topic, e)
+            return None
+
+        alert = Alert(
+            alert_id=f"edge_{msg.device_id}_{int(datetime.now(timezone.utc).timestamp())}",
+            zone_id=msg.zone_id or msg.node_id or msg.device_id,
+            device_id=msg.device_id,
+            alert_level=msg.alert_level,
+            water_level_pct=msg.water_pct,
+            threshold_pct=msg.threshold,
+            timestamp=msg.timestamp,
+            message=f"Edge alert from {msg.device_id}: {msg.alert_level.value} at {msg.water_pct:.1f}%",
+        )
+        with self._lock:
+            self._alerts.append(alert)
+            if len(self._alerts) > 100:
+                self._alerts = self._alerts[-100:]
+        logger.warning("EDGE ALERT received from %s: level=%s, pct=%.1f%%", msg.device_id, msg.alert_level.value, msg.water_pct)
+        return alert.model_dump(mode="json")
+
+    def get_all_node_freshness(self, as_of: Optional[datetime] = None) -> list[NodeFreshnessReport]:
+        """Evaluates real-time data freshness across all monitored nodes (guaranteeing node_01 and node_02)."""
+        now = as_of or datetime.now(timezone.utc)
+        reports = []
+        with self._lock:
+            tracked_entities = dict(self._node_status)
+            for default_node in ("node_01", "node_02"):
+                if default_node not in tracked_entities:
+                    tracked_entities[default_node] = {
+                        "device_id": default_node,
+                        "zone_id": "zone_01" if default_node == "node_01" else "zone_02",
+                        "sensor_status": "offline",
+                    }
+            for zid, zdata in self._zone_status.items():
+                if zid not in tracked_entities:
+                    tracked_entities[zid] = zdata
+
+            for entity_id, status in tracked_entities.items():
+                last_valid_str = status.get("last_valid_timestamp")
+                last_attempt_str = status.get("last_update")
+                last_valid_ts = datetime.fromisoformat(last_valid_str) if last_valid_str else None
+
+                if last_valid_ts:
+                    age_sec = max(0.0, (now - last_valid_ts).total_seconds())
+                else:
+                    age_sec = 999999.0
+
+                sensor_st_str = status.get("sensor_status", "valid")
+                try:
+                    sensor_st = SensorStatus(sensor_st_str)
+                except ValueError:
+                    sensor_st = SensorStatus.VALID
+
+                if sensor_st == SensorStatus.INVALID:
+                    freshness = FreshnessState.INVALID
+                    conn = "error"
+                elif age_sec > config.OFFLINE_TIMEOUT_SEC or sensor_st == SensorStatus.OFFLINE or last_valid_ts is None:
+                    freshness = FreshnessState.OFFLINE
+                    conn = "disconnected"
+                elif age_sec > config.FRESHNESS_TIMEOUT_SEC:
+                    freshness = FreshnessState.STALE
+                    conn = "stale"
+                else:
+                    freshness = FreshnessState.FRESH
+                    conn = "online"
+
+                src_str = status.get("source", "OBSERVED")
+                try:
+                    src_enum = DataSource(src_str)
+                except ValueError:
+                    src_enum = DataSource.OBSERVED
+
+                al_str = status.get("alert_level", "normal")
+                try:
+                    al_enum = AlertLevel(al_str)
+                except ValueError:
+                    al_enum = AlertLevel.NORMAL
+
+                reports.append(NodeFreshnessReport(
+                    node_id=status.get("device_id", entity_id),
+                    zone_id=status.get("zone_id", entity_id),
+                    freshness_state=freshness,
+                    age_seconds=round(age_sec, 1) if age_sec < 999999.0 else 0.0,
+                    last_valid_timestamp=last_valid_str,
+                    last_attempt_timestamp=last_attempt_str,
+                    water_level_cm=status.get("water_level_cm"),
+                    water_level_pct=status.get("water_level_pct"),
+                    alert_level=al_enum,
+                    sensor_status=sensor_st,
+                    source=src_enum,
+                    connection_state=conn,
+                ))
+        return reports
+
+    def get_node_freshness(self, node_id: str, as_of: Optional[datetime] = None, now: Optional[datetime] = None) -> NodeFreshnessReport:
+        """Returns the real-time freshness state for a specific node."""
+        effective_now = as_of or now or datetime.now(timezone.utc)
+        all_reports = self.get_all_node_freshness(as_of=effective_now)
+        for r in all_reports:
+            if r.node_id == node_id or r.zone_id == node_id:
+                return r
+        # Default report if node has never communicated
+        return NodeFreshnessReport(
+            node_id=node_id,
+            zone_id="zone_01" if node_id == "node_01" else "zone_02",
+            freshness_state=FreshnessState.OFFLINE,
+            age_seconds=0.0,
+            sensor_status=SensorStatus.OFFLINE,
+            connection_state="disconnected",
+        )
+
+    def get_all_node_diagnostics(self) -> dict:
+        """Returns dictionary of all active node diagnostics."""
+        with self._lock:
+            return dict(self._node_diagnostics)
+
     def get_health(self) -> dict:
         return {
             "status": "running",
             "stats": self.stats,
             "zones_tracked": len(self._zone_status),
+            "nodes_tracked": len(self._node_status),
+            "diagnostics_tracked": len(self._node_diagnostics),
             "active_alerts": sum(1 for a in self._alerts if not a.acknowledged),
         }
 
 
 class MQTTIngestionClient:
-    """MQTT client subscribing to telemetry topics and routing to IngestionService."""
+    """MQTT client subscribing to telemetry, status, and alert topics."""
 
     def __init__(self, ingestion: IngestionService):
         self._ingestion = ingestion
@@ -287,9 +467,17 @@ class MQTTIngestionClient:
     def _on_connect(self, client, userdata, flags, reason_code, properties=None):
         if reason_code == 0:
             self._connected = True
-            topic = f"{self._topic_prefix}/zones/+/telemetry"
-            client.subscribe(topic, qos=config.MQTT_QOS)
-            logger.info("MQTT connected, subscribed to %s", topic)
+            topics = [
+                f"{self._topic_prefix}/zones/+/telemetry",
+                f"{self._topic_prefix}/zones/+/status",
+                f"{self._topic_prefix}/zones/+/alerts",
+                f"{self._topic_prefix}/nodes/+/telemetry",
+                f"{self._topic_prefix}/nodes/+/status",
+                f"{self._topic_prefix}/nodes/+/alerts",
+            ]
+            for t in topics:
+                client.subscribe(t, qos=config.MQTT_QOS)
+            logger.info("MQTT connected, subscribed to %d topic filters", len(topics))
         else:
             logger.error("MQTT connection failed with code %s", reason_code)
 
@@ -298,4 +486,11 @@ class MQTTIngestionClient:
         logger.warning("MQTT disconnected (rc=%s)", reason_code)
 
     def _on_message(self, client, userdata, msg):
-        self._ingestion.process_raw(msg.topic, msg.payload)
+        topic = msg.topic
+        if topic.endswith("/status"):
+            self._ingestion.process_status(topic, msg.payload)
+        elif topic.endswith("/alerts"):
+            self._ingestion.process_alert(topic, msg.payload)
+        else:
+            self._ingestion.process_raw(topic, msg.payload)
+

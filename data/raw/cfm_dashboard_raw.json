@@ -1,7 +1,7 @@
 {
   "source": "Chennai Flood Monitoring and Spatial DSS (CFM-DSS)",
   "url": "https://www.chennaifloodmonitor.tn.gov.in/HomePage/Dashboard",
-  "retrieved_at": "2026-10-23T16:45:50.338457+00:00",
+  "retrieved_at": "2026-10-23T17:23:52.202113+00:00",
   "arg_count": 328,
   "reservoir_count": 5,
   "aws_count": 38,
@@ -28,7 +28,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN05Z058W16",
@@ -36,7 +36,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTWALVIS17",
@@ -44,7 +44,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN07Z086W25",
@@ -52,7 +52,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN03Z022W11",
@@ -60,7 +60,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN02Z016W6",
@@ -68,7 +68,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLMADKAR8",
@@ -84,15 +84,15 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN08Z107W31",
       "subbasin": "Kovalam",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.4,
-      "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "rainfall": 0.0,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN15ZRFW53",
@@ -164,7 +164,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0071",
@@ -178,9 +178,9 @@
       "argid": "KPMKANSIR8",
       "subbasin": "Cheyyar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
+      "rainfall": 0.4,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLTAMCHI6",
@@ -220,7 +220,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T20:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRTIUMAN15",
@@ -228,15 +228,15 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0026",
       "subbasin": null,
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
-      "previous_rainfall": 0.2,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "rainfall": 0.2,
+      "previous_rainfall": 0.0,
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLTHRTHI29",
@@ -244,7 +244,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLTAMMED17",
@@ -252,7 +252,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRTIRVEN33",
@@ -260,7 +260,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0017",
@@ -268,7 +268,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRUTHPEN19",
@@ -340,7 +340,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0014",
@@ -348,7 +348,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "VELKATMEL10",
@@ -356,7 +356,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0015",
@@ -388,7 +388,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLMADMAD12",
@@ -396,7 +396,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN02Z019W10",
@@ -404,15 +404,15 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLPALPAM23",
       "subbasin": "Cooum",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.4,
-      "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "rainfall": 0.0,
+      "previous_rainfall": 0.4,
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN02Z016W5",
@@ -428,7 +428,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN01Z010W2",
@@ -516,7 +516,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLCHYSOO27",
@@ -540,7 +540,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLMADJAM7",
@@ -548,7 +548,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLCHYCHE5",
@@ -556,7 +556,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN02Z017W8",
@@ -572,7 +572,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN13Z174W43",
@@ -596,7 +596,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN15Z196W50",
@@ -604,7 +604,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLMADOON19",
@@ -612,7 +612,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "Area_14-Perungudi",
@@ -652,7 +652,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN14Z185W45",
@@ -668,7 +668,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN07Z084W23",
@@ -676,15 +676,15 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN12Z167W41",
       "subbasin": "Adyar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.8,
-      "previous_rainfall": 0.4,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "rainfall": 0.4,
+      "previous_rainfall": 0.8,
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN07Z085W24",
@@ -700,7 +700,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN03Z023W12",
@@ -708,7 +708,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN14Z188W46",
@@ -716,7 +716,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN10Z128W33",
@@ -724,7 +724,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "Goodwill_School_Villivakkam",
@@ -764,7 +764,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "KPMKANPAR7",
@@ -780,7 +780,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRTIRPOO21",
@@ -788,7 +788,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTSHOBAN4",
@@ -812,7 +812,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRPONRED25",
@@ -820,7 +820,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTNEMNEM8",
@@ -828,7 +828,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRPONGNA6",
@@ -836,7 +836,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRGUMPOO24",
@@ -844,15 +844,15 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTKALMAM7",
       "subbasin": "Araniyar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
-      "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "rainfall": 24.8,
+      "previous_rainfall": 4.8,
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "KPMUTHUTH18",
@@ -868,23 +868,23 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "KPMSRISRP12",
       "subbasin": "Kosasthalayar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.4,
+      "rainfall": 0.0,
       "previous_rainfall": 0.4,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "KPMWALTHE15",
       "subbasin": "Cooum",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
+      "rainfall": 0.8,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTARCARC3",
@@ -892,15 +892,15 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "KPMWALWAL19",
       "subbasin": "Kosasthalayar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
+      "rainfall": 0.4,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTARAPAL9",
@@ -908,7 +908,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRAVAAVA1",
@@ -924,7 +924,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRPONKAT12",
@@ -938,9 +938,9 @@
       "argid": "RPTKALKAL5",
       "subbasin": "Kosasthalayar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
+      "rainfall": 4.4,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRGUMMAD14",
@@ -954,9 +954,9 @@
       "argid": "KPMKANKAN2",
       "subbasin": "Kosasthalayar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
+      "rainfall": 0.8,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTSHOSHO14",
@@ -964,7 +964,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTARCPUD12",
@@ -972,7 +972,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRAVAMOR17",
@@ -980,15 +980,15 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTARCTHI15",
       "subbasin": "Kosasthalayar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
+      "rainfall": 0.4,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLPALPAL21",
@@ -1004,7 +1004,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "KPMUTHUTH17",
@@ -1036,7 +1036,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRTIUKAN9",
@@ -1044,7 +1044,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRTIUCHE2",
@@ -1052,7 +1052,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0039",
@@ -1076,7 +1076,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN04Z042WG",
@@ -1124,7 +1124,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRTIRVEL31",
@@ -1132,7 +1132,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN12Z0P2WG",
@@ -1148,7 +1148,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0001",
@@ -1156,7 +1156,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN12Z156WG",
@@ -1204,7 +1204,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLCHECHE3",
@@ -1228,7 +1228,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRTIUCHE3",
@@ -1236,7 +1236,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0025",
@@ -1284,7 +1284,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLCHYLAT10",
@@ -1292,7 +1292,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0023",
@@ -1308,7 +1308,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN07Z084WG",
@@ -1332,7 +1332,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN10Z139WG",
@@ -1482,9 +1482,9 @@
       "argid": "KPMKUNKUN3",
       "subbasin": "Cheyyar",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.8,
-      "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "rainfall": 0.0,
+      "previous_rainfall": 0.8,
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN06Z065W18",
@@ -1508,7 +1508,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0053",
@@ -1516,7 +1516,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0041",
@@ -1532,7 +1532,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0058",
@@ -1660,7 +1660,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0056",
@@ -1756,7 +1756,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0059",
@@ -1770,9 +1770,9 @@
       "argid": "ARG0045",
       "subbasin": null,
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.2,
-      "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "rainfall": 0.0,
+      "previous_rainfall": 0.2,
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0065",
@@ -1780,7 +1780,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN11Z155W38",
@@ -1796,7 +1796,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0075",
@@ -1804,7 +1804,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN09Z111W32",
@@ -1844,7 +1844,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0077",
@@ -1852,7 +1852,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN07Z083W22",
@@ -1900,7 +1900,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN09Z110WG",
@@ -1932,7 +1932,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0068",
@@ -1956,7 +1956,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN10Z134WG",
@@ -2012,7 +2012,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0005",
@@ -2036,7 +2036,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN14Z192WG",
@@ -2132,7 +2132,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTWALWAL18",
@@ -2140,7 +2140,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0054",
@@ -2210,9 +2210,9 @@
       "argid": "KPMWALMAG6",
       "subbasin": "Poiney",
       "date": "2026-10-23T00:00:00",
-      "rainfall": 0.0,
+      "rainfall": 0.4,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN02Z019WG",
@@ -2228,7 +2228,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLTHRNEL18",
@@ -2244,7 +2244,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "KPMSRITHA14",
@@ -2252,7 +2252,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRTIRMAP16",
@@ -2260,7 +2260,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0042",
@@ -2268,7 +2268,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "TLRPONPON20",
@@ -2276,7 +2276,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0011",
@@ -2292,7 +2292,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN15Z192W48",
@@ -2332,7 +2332,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "RPTARAARK2",
@@ -2340,7 +2340,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "KPMSRISRP11",
@@ -2348,7 +2348,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLTHITHI28",
@@ -2356,7 +2356,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN15Z199W52",
@@ -2372,7 +2372,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN04Z043WG",
@@ -2428,7 +2428,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLTAMMED16",
@@ -2436,7 +2436,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0035",
@@ -2444,7 +2444,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.2,
       "previous_rainfall": 0.2,
-      "time_of_measurement": "2026-10-23T20:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLVANMAM14",
@@ -2452,7 +2452,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CGLTHRPAI20",
@@ -2476,7 +2476,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "CHN14Z194WG",
@@ -2548,7 +2548,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0030",
@@ -2580,7 +2580,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0028",
@@ -2588,7 +2588,7 @@
       "date": "2026-10-23T00:00:00",
       "rainfall": 0.0,
       "previous_rainfall": 0.0,
-      "time_of_measurement": "2026-10-23T21:30:00"
+      "time_of_measurement": "2026-10-23T22:30:00"
     },
     {
       "argid": "ARG0029",
@@ -2639,7 +2639,7 @@
       "Upstream_Tank_2": null,
       "Downstream_tank_1": null,
       "Downstream_tank_2": null,
-      "Storage_capacity_live": 68.32791,
+      "Storage_capacity_live": 68.38454,
       "Storage_capacity_dead": 0.07,
       "Storage_capacity_gross": 93.446,
       "Water_spread_area_at_ftl": null,
@@ -2761,17 +2761,17 @@
     },
     {
       "awsid": "AWS0005",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "AWS0004",
-      "datetime": "2026-10-23T21:30:00",
-      "rainfall": 0.2
+      "datetime": "2026-10-23T22:30:00",
+      "rainfall": 0.0
     },
     {
       "awsid": "AWS0010",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
@@ -2781,32 +2781,32 @@
     },
     {
       "awsid": "AWS0008",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "AWS0013",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "TLRGUMGUM75",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "RPTNEMKAV58",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "CGLTHRKEL10",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "TLRTIUTIR77",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
@@ -2861,8 +2861,8 @@
     },
     {
       "awsid": "AWS0003",
-      "datetime": "2026-10-23T21:30:00",
-      "rainfall": 0.4
+      "datetime": "2026-10-23T22:30:00",
+      "rainfall": 0.0
     },
     {
       "awsid": "AWS_Madhavaram_AMFU",
@@ -2876,12 +2876,12 @@
     },
     {
       "awsid": "AWS0001",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "AWS0002",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
@@ -2891,7 +2891,7 @@
     },
     {
       "awsid": "AWS0006",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
@@ -2901,7 +2901,7 @@
     },
     {
       "awsid": "RPTARCPUD56",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
@@ -2916,32 +2916,32 @@
     },
     {
       "awsid": "KPMWALWAL34",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "CGLCHYLAT9",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "AWS0014",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "AWS0011",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "KPMSRISRI32",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     },
     {
       "awsid": "TLRUTHUTH78",
-      "datetime": "2026-10-23T21:30:00",
+      "datetime": "2026-10-23T22:30:00",
       "rainfall": 0.0
     }
   ]

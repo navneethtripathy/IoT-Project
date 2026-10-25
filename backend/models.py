@@ -21,6 +21,13 @@ class SensorStatus(str, enum.Enum):
     SIMULATED = "simulated"
 
 
+class FreshnessState(str, enum.Enum):
+    FRESH = "fresh"
+    STALE = "stale"
+    OFFLINE = "offline"
+    INVALID = "invalid"
+
+
 class DataSource(str, enum.Enum):
     # Canonical provenance tags
     WOKWI_SIMULATED = "WOKWI_SIMULATED"
@@ -30,7 +37,10 @@ class DataSource(str, enum.Enum):
     DIGITAL_TWIN = "DIGITAL_TWIN"
     IMPUTED = "IMPUTED"
 
-    # Backwards-compatible aliases
+    # Backwards-compatible aliases and professor directive tags
+    SYNTHETIC = "PYTHON_SIMULATED"
+    REPLAYED = "REPLAYED_HISTORICAL"
+    TWIN_ESTIMATED = "DIGITAL_TWIN"
     SIMULATOR = "PYTHON_SIMULATED"
     PYTHON_SIMULATOR = "PYTHON_SIMULATED"
     WOKWI = "WOKWI_SIMULATED"
@@ -38,6 +48,7 @@ class DataSource(str, enum.Enum):
     FORECAST = "DIGITAL_TWIN"
     DIGITAL_TWIN_SIMULATION = "DIGITAL_TWIN"
     PHYSICAL = "OBSERVED"
+    FIELD_SENSOR = "OBSERVED"
     PHYSICAL_SENSOR = "OBSERVED"
 
 
@@ -64,12 +75,17 @@ def normalize_data_source(v) -> DataSource:
             "PYTHON_SIMULATED": DataSource.PYTHON_SIMULATED,
             "PYTHON_SIMULATOR": DataSource.PYTHON_SIMULATED,
             "SIMULATOR": DataSource.PYTHON_SIMULATED,
+            "SYNTHETIC": DataSource.PYTHON_SIMULATED,
             "OBSERVED": DataSource.OBSERVED,
             "PHYSICAL": DataSource.OBSERVED,
             "PHYSICAL_SENSOR": DataSource.OBSERVED,
+            "FIELD_SENSOR": DataSource.OBSERVED,
+            "FIELD": DataSource.OBSERVED,
             "REPLAYED_HISTORICAL": DataSource.REPLAYED_HISTORICAL,
+            "REPLAYED": DataSource.REPLAYED_HISTORICAL,
             "DIGITAL_TWIN": DataSource.DIGITAL_TWIN,
             "DIGITAL_TWIN_SIMULATION": DataSource.DIGITAL_TWIN,
+            "TWIN_ESTIMATED": DataSource.DIGITAL_TWIN,
             "FORECAST": DataSource.DIGITAL_TWIN,
             "IMPUTED": DataSource.IMPUTED,
             "RECONSTRUCTED": DataSource.IMPUTED,
@@ -81,6 +97,7 @@ def normalize_data_source(v) -> DataSource:
         except ValueError:
             pass
     return v
+
 
 
 class TelemetryMessage(BaseModel):
@@ -221,7 +238,51 @@ class ExperimentSummary(BaseModel):
     experiment_id: str
     started_at: datetime
     completed_at: Optional[datetime] = None
-    scenario_ids: list[str] = Field(default_factory=list)
-    reconstruction_results: list[ReconstructionResult] = Field(default_factory=list)
-    latency_results: list[LatencyResult] = Field(default_factory=list)
     notes: str = ""
+
+
+class NodeStatusPayload(BaseModel):
+    """Health/diagnostic heartbeat emitted by ESP32 or simulated sensor node."""
+
+    device_id: str
+    wifi: bool = True
+    mqtt: bool = True
+    uptime_sec: int = 0
+    sequence: int = 0
+    alert_state: str = "normal"
+    heap_free: int = 0
+    node_id: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class NodeAlertPayload(BaseModel):
+    """Local edge-warning alert event emitted by ESP32 or simulated node."""
+
+    device_id: str
+    node_id: Optional[str] = None
+    zone_id: Optional[str] = None
+    alert_level: AlertLevel = AlertLevel.NORMAL
+    water_pct: float = 0.0
+    threshold: float = 70.0
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class NodeFreshnessReport(BaseModel):
+    """Real-time data-freshness report for a monitoring node."""
+
+    node_id: str
+    zone_id: str
+    freshness_state: FreshnessState
+    age_seconds: float
+    last_valid_timestamp: Optional[str] = None
+    last_attempt_timestamp: Optional[str] = None
+    water_level_cm: Optional[float] = None
+    water_level_pct: Optional[float] = None
+    alert_level: AlertLevel = AlertLevel.NORMAL
+    sensor_status: SensorStatus = SensorStatus.VALID
+    source: DataSource = DataSource.PYTHON_SIMULATED
+    connection_state: str = "online"
+
+    @property
+    def is_online(self) -> bool:
+        return self.connection_state in ("online", "stale")

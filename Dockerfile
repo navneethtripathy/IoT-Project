@@ -7,6 +7,7 @@ RUN pip install --no-cache-dir ".[dev]"
 COPY backend/ backend/
 COPY digital_twin/ digital_twin/
 COPY experiments/ experiments/
+COPY scripts/ scripts/
 COPY data/ data/
 
 EXPOSE 8000

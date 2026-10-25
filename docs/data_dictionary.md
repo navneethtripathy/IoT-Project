@@ -93,7 +93,7 @@ Index: `(zone_id, event_timestamp)`
 ## InfluxDB Schema (when enabled)
 
 - **Bucket:** `telemetry`
-- **Measurement:** `water_level`
+- **Measurement:** `telemetry`
 - **Tags:** `device_id`, `zone_id`, `sensor_status`, `source`
 - **Fields:** `distance_cm`, `water_level_cm`, `water_level_pct`, `rain_sensor_raw`, `rain_indicator_pct`, `sequence`
 - **Retention:** 7 days (configurable)

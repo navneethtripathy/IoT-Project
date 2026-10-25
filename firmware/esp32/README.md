@@ -1,85 +1,97 @@
-# CivicTwin-R — ESP32 Firmware
+# CivicTwin-R — ESP32 Cyber-Physical Firmware
 
 ## Overview
 
-Arduino C++ firmware for the ESP32 with an HC-SR04 ultrasonic distance sensor.
-Reads distance, computes water depth and percentage level, applies local threshold logic with hysteresis, and publishes JSON telemetry over MQTT.
+Arduino C++ firmware for the ESP32 paired with the **JSN-SR04T waterproof ultrasonic distance sensor** (or HC-SR04 for desktop simulation).
+Reads distance, computes water depth and percentage level, applies local threshold logic with anti-chatter hysteresis, controls an autonomous local warning indicator (LED / buzzer), and publishes structured JSON telemetry over MQTT to dual topic hierarchies (`zones` and `nodes`).
 
-> **Important Study Area Disclaimer:**  
-> In simulation mode (Wokwi), this virtual node (`node_01`) is explicitly mapped to **Adyar Basin (`zone_01` / `zone_adyar`)**. It represents a virtual laboratory prototype and does **not** imply that physical hardware has been deployed in Chennai rivers, nor does a single simulated node measure all three metropolitan basins.
+> **Important Deployment & Study Area Disclaimer:**  
+> In laboratory simulation mode (Wokwi or test harness), virtual nodes (`node_01` and `node_02`) represent scaled cyber-physical tank prototypes. They do **not** imply that physical hardware has been submerged into Chennai rivers, nor do two laboratory tanks simulate real-time flood inundation across the entire metropolitan area. Hardware tests must be clearly identified as laboratory prototypes.
 
-## Circuit Wiring & Pinout
+---
 
-| HC-SR04 Pin | ESP32 Pin | Function | Notes |
-|-------------|-----------|----------|-------|
-| VCC | VIN (5V) | Power | HC-SR04 requires 5V supply |
-| GND | GND | Ground | Common ground reference |
-| TRIG | GPIO 5 | Trigger pulse | 3.3V GPIO pulse initiates 40 kHz ultrasound burst |
-| ECHO | GPIO 18 | Echo pulse input | **⚠ REQUIRES VOLTAGE DIVIDER ON PHYSICAL HARDWARE** |
-| Status LED | GPIO 2 | Threshold Alert | High on Warning/Critical, Low on Normal (220Ω resistor) |
+## Sensor Selection: JSN-SR04T Waterproof Ultrasonic Sensor
 
-### Voltage Protection (Physical Hardware Only)
+The project utilizes the **JSN-SR04T waterproof ultrasonic distance transducer**, which replaces consumer HC-SR04 sensors for damp, outdoor, and water-tank monitoring:
 
-The HC-SR04 `ECHO` pin outputs 5V TTL logic. ESP32 GPIOs are 3.3V tolerant.
-For physical hardware assembly, a passive resistor voltage divider is mandatory:
+| Specification | JSN-SR04T (Physical Hardware) | HC-SR04 (Wokwi Simulation Stand-in) |
+|---|---|---|
+| **Enclosure** | IP67 sealed waterproof probe with 2.5m coaxial cable | Open transducer mesh (non-waterproof) |
+| **Operating Voltage** | 5.0 V DC (from ESP32 VIN / USB rail) | 5.0 V DC |
+| **Echo Output Level** | **5.0 V TTL Logic** (Requires voltage divider!) | **5.0 V TTL Logic** (Requires voltage divider!) |
+| **Operating Frequency** | 40 kHz | 40 kHz |
+| **Blind Distance (Dead Zone)** | **20 cm to 25 cm** | 2 cm |
+| **Max Detection Range** | 450 cm (4.5 m) | 400 cm (4.0 m) |
+| **Mounting Requirement** | Mount $\ge 25\text{ cm}$ above maximum expected water crest | Mount $\ge 5\text{ cm}$ above crest |
+
+---
+
+## Circuit Wiring & Electrical Protection
+
+| Sensor Pin | ESP32 Pin | Function | Electrical Notes |
+|---|---|---|---|
+| **VCC** | **VIN (5V)** | Power Supply | JSN-SR04T board requires 5.0V supply |
+| **GND** | **GND** | Ground | Common reference ground |
+| **TRIG** | **GPIO 5** | Trigger Input | ESP32 3.3V logic level reliably triggers the 5V sensor board |
+| **ECHO** | **GPIO 18** | Echo Pulse Output | **⚠ REQUIRES VOLTAGE DIVIDER ON PHYSICAL HARDWARE (5V $\rightarrow$ 3.0V)** |
+| **Status LED** | **GPIO 2** | Threshold Alert | Active HIGH (internal LED / external LED via 220Ω resistor) |
+| **Rain Pin** | **GPIO 36 (VP)** | Analog Rain Sensor | ADC1 input (0–4095) uncalibrated rain indicator |
+
+### Critical Electrical Safety: 5V Echo Voltage Divider
+
+The ESP32 microcontroller GPIO pins are **NOT 5V tolerant**. Exposing GPIO 18 directly to the 5V Echo pin will degrade or destroy the ESP32 input gate. A passive resistor voltage divider is mandatory:
 
 ```
-HC-SR04 ECHO ──┬── 2.2kΩ ──── ESP32 GPIO 18
-               │
-              3.3kΩ
-               │
-              GND
+Sensor ECHO (5V TTL) ──┬── [R1: 2.2 kΩ] ──── ESP32 GPIO 18 (3.0V logic)
+                       │
+                  [R2: 3.3 kΩ]
+                       │
+                      GND
 ```
 
-Calculation: $V_{\text{out}} = 5\text{V} \times \frac{3.3\text{k}\Omega}{2.2\text{k}\Omega + 3.3\text{k}\Omega} \approx 3.0\text{V}$ (safe for ESP32).  
-*Note: In Wokwi browser simulation, no physical voltage divider is required.*
+$$V_{\text{out}} = 5.0\text{ V} \times \frac{3.3\text{ k}\Omega}{2.2\text{ k}\Omega + 3.3\text{ k}\Omega} = 5.0\text{ V} \times \frac{3.3}{5.5} = 3.00\text{ V}$$
+
+$3.00\text{ V}$ is safely within the ESP32 input specification ($V_{\text{IH}} \ge 2.45\text{ V}$, $V_{\text{max}} = 3.6\text{ V}$).
+
+---
+
+## Two-Node Laboratory Architecture
+
+The firmware is parameterized to compile for either of the two laboratory tank nodes by toggling `#define NODE_SELECT`:
+
+| Parameter | Node 01 (`NODE_SELECT 1`) | Node 02 (`NODE_SELECT 2`) |
+|---|---|---|
+| **Device ID** | `node_01` | `node_02` |
+| **Physical Tank ID** | `tank_01` | `tank_02` |
+| **Associated Basin Zone** | `zone_01` (Saidapet Drainage Runoff) | `zone_02` (Cooum Urban Retention) |
+| **Tank Geometry** | Cylindrical $\varnothing 19.54\text{ cm}$ ($A = 300.0\text{ cm}^2$) | Cylindrical $\varnothing 23.94\text{ cm}$ ($A = 450.0\text{ cm}^2$) |
+| **Container Depth ($H_{\text{ref}}$)**| $50.0\text{ cm}$ | $60.0\text{ cm}$ |
+| **Discharge Coeff ($k$)** | $4.50\text{ cm}^{2.5}/\text{s}$ | $6.00\text{ cm}^{2.5}/\text{s}$ |
+| **Inlet Flow Rate ($Q_{\text{in}}$)** | $25.0\text{ cm}^3/\text{s}$ ($1.5\text{ L/min}$) | $35.0\text{ cm}^3/\text{s}$ ($2.1\text{ L/min}$) |
+| **Warning Threshold** | $70.0\%$ ($35.0\text{ cm}$) | $70.0\%$ ($42.0\text{ cm}$) |
+| **Critical Threshold** | $85.0\%$ ($42.5\text{ cm}$) | $85.0\%$ ($51.0\text{ cm}$) |
+| **Telemetry Topics** | `civictwin/v1/zones/zone_01/telemetry`<br>`civictwin/v1/nodes/node_01/telemetry` | `civictwin/v1/zones/zone_02/telemetry`<br>`civictwin/v1/nodes/node_02/telemetry` |
+
+---
 
 ## Water Level Calculation & Geometry
 
-The sensor is mounted above a channel or container with a known reference height:
+The downward-facing ultrasonic sensor measures distance $D$ from the probe face to the water surface:
 
-$$\text{Water Depth (cm)} = \text{Container Reference Height (cm)} - \text{Measured Distance (cm)}$$
-$$\text{Water Level (\%)} = 100 \times \frac{\text{Water Depth (cm)}}{\text{Container Reference Height (cm)}}$$
+$$\text{Water Depth (cm)} = H_{\text{ref}} - D_{\text{measured}}$$
+$$\text{Water Level (\%)} = 100 \times \frac{\text{Water Depth (cm)}}{H_{\text{ref}}}$$
 
-- **Reference Height:** Configurable via `CONTAINER_HEIGHT_CM` (default: **30.0 cm**).
-- **Assumptions:** Fixed downward-facing sensor mount, stationary baseline, open channel/container.
-- **Boundaries:** Depth clamped to $[0.0, 30.0]\text{ cm}$; Percentage clamped to $[0.0\%, 100.0\%]$.
-- **Invalid Readings:** Echo timeouts or distances outside $[2.0, 400.0]\text{ cm}$ are marked `sensor_status: "invalid"`. Null values (`nullptr`) are emitted rather than fabricating a zero-depth reading.
+- **Boundaries:** Depth clamped to $[0.0, H_{\text{ref}}]\text{ cm}$; Percentage clamped to $[0.0\%, 100.0\%]$.
+- **Invalid Readings:** Echo timeouts or distances outside $[S_{\text{min}}, 400.0]\text{ cm}$ trigger outlier rejection and are marked `sensor_status: "invalid"`. Null values (`nullptr` / `None`) are published rather than fabricating a false zero-depth reading.
 
-## Warning & Critical Thresholds
+---
 
-- **Warning Threshold:** `70.0%`
-- **Critical Threshold:** `85.0%`
-- **Hysteresis Band:** `3.0%` (prevents alert oscillation when levels hover near threshold)
-- **Local Indicator:** Onboard LED on GPIO 2 illuminates when Warning or Critical state is reached.
+## Edge Warning Logic with Hysteresis
 
-> **Prototype Threshold Disclaimer:**  
-> These threshold values (70% warn, 85% crit) are prototype settings for testing cyber-physical digital twin pipelines. They are **not** officially validated, legal, or calibrated flood-warning thresholds for the Chennai river basins.
-
-## Configuration Constants in `main.ino`
-
-| Constant | Default | Description |
-|---|---|---|
-| `DEVICE_ID` | `"node_01"` | Edge sensor node identifier |
-| `ZONE_ID` | `"zone_01"` | Associated study zone (`zone_adyar`) |
-| `DATA_SOURCE` | `"WOKWI_SIMULATED"` | Telemetry data provenance tag |
-| `WIFI_SSID` | `"Wokwi-GUEST"` | Wi-Fi network SSID |
-| `MQTT_BROKER` | `"localhost"` | MQTT broker hostname/IP |
-| `MQTT_PORT` | `1883` | MQTT broker port |
-| `CONTAINER_HEIGHT_CM`| `30.0` | Channel reference container height (cm) |
-| `READ_INTERVAL_MS` | `5000` | Sensor sampling interval (5 seconds) |
-| `WARN_THRESHOLD_PCT` | `70.0` | Warning alert trigger (%) |
-| `CRIT_THRESHOLD_PCT` | `85.0` | Critical alert trigger (%) |
-| `HYSTERESIS_PCT` | `3.0` | Alert hysteresis dampener (%) |
-| `FILTER_READINGS` | `5` | Median filtering window size |
-
-## Running in Wokwi (Recommended Simulation)
-
-1. Open [wokwi.com](https://wokwi.com) → ESP32 project.
-2. Replace `diagram.json` with `firmware/wokwi/diagram.json`.
-3. Paste `firmware/esp32/src/main.ino` into the code editor.
-4. Click **Start Simulation**.
-5. Drag the HC-SR04 distance slider:
-   - High distance (e.g. 28 cm) $\rightarrow$ low water level ($2\text{ cm} \approx 6.7\%$).
-   - Low distance (e.g. 5 cm) $\rightarrow$ high water level ($25\text{ cm} \approx 83.3\%$, Warning Alert + LED ON).
-   - Very low distance (e.g. 3 cm) $\rightarrow$ critical water level ($27\text{ cm} \approx 90.0\%$, Critical Alert + LED ON).
+To prevent alert chatter when water ripples or surface fluctuations occur near the alert boundaries:
+- **Warning Threshold:** $\ge 70.0\%$
+- **Critical Threshold:** $\ge 85.0\%$
+- **Anti-Chatter Hysteresis Band:** $3.0\%$
+  - Warning alert only clears when water level drops below $70.0\% - 3.0\% = 67.0\%$.
+  - Critical alert only drops to Warning when level drops below $85.0\% - 3.0\% = 82.0\%$.
+- **Offline Autonomy:** Warning evaluation occurs locally in the micro-controller loop independent of Wi-Fi or MQTT broker connectivity. If network connectivity fails, GPIO 2 activates immediately upon breach.
