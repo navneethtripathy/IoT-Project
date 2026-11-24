@@ -122,12 +122,21 @@ app.add_middleware(
 def health():
     active_storage = storage.backend_type if storage else "none"
     is_fallback = storage.is_fallback if storage else False
+    influx_active = False
+    if storage and hasattr(storage, "secondary_storage") and storage.secondary_storage:
+        influx_active = True
+    elif storage and storage.backend_type == "influxdb":
+        influx_active = True
+
     return {
         "status": "healthy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "storage": active_storage,
         "storage_configured": config.STORAGE_BACKEND,
         "storage_fallback_active": is_fallback,
+        "influxdb_enabled": config.INFLUXDB_ENABLED,
+        "influxdb_active": influx_active,
+        "influxdb_url": config.INFLUXDB_URL,
         "mqtt_connected": mqtt_client.is_connected if mqtt_client else False,
         "simulator_running": simulator is not None,
         "records_stored": storage.count() if storage else 0,
@@ -757,6 +766,51 @@ def get_database_stats():
     if not storage:
         raise HTTPException(503, "Storage not initialized")
     return storage.get_database_stats()
+
+
+@app.get("/api/storage/influx/status")
+def get_influx_status():
+    """Returns InfluxDB connectivity and bucket status."""
+    secondary = getattr(storage, "secondary_storage", None)
+    target = secondary if secondary else (storage if storage and storage.backend_type == "influxdb" else None)
+    if not target or not hasattr(target, "is_healthy"):
+        return {
+            "status": "disabled" if not config.INFLUXDB_ENABLED else "not_configured",
+            "connected": False,
+            "url": config.INFLUXDB_URL,
+            "org": config.INFLUXDB_ORG,
+            "bucket": config.INFLUXDB_BUCKET,
+        }
+    healthy = target.is_healthy()
+    record_count = target.count() if healthy else 0
+    return {
+        "status": "connected" if healthy else "unhealthy",
+        "connected": healthy,
+        "url": config.INFLUXDB_URL,
+        "org": config.INFLUXDB_ORG,
+        "bucket": config.INFLUXDB_BUCKET,
+        "records_count": record_count,
+    }
+
+
+@app.get("/api/storage/influx/latest")
+def get_influx_latest(
+    zone_id: Optional[str] = Query(None, description="Optional zone or device ID"),
+    limit: int = Query(10, ge=1, le=100)
+):
+    """Queries telemetry directly from InfluxDB 2.x."""
+    secondary = getattr(storage, "secondary_storage", None)
+    target = secondary if secondary else (storage if storage and storage.backend_type == "influxdb" else None)
+    if not target or not hasattr(target, "query_latest"):
+        raise HTTPException(503, "InfluxDB storage backend not active")
+    if zone_id:
+        records = target.query_latest(zone_id, limit=limit)
+    else:
+        grouped = target.query_all_latest(limit_per_zone=limit)
+        records = []
+        for r_list in grouped.values():
+            records.extend(r_list)
+    return {"backend": "influxdb", "count": len(records), "records": records}
 
 
 @app.get("/urban-twin", response_class=HTMLResponse)

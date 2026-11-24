@@ -133,9 +133,10 @@ class SQLiteStorage(StorageBackend):
         ON telemetry(device_id, event_timestamp);
     """
 
-    def __init__(self, db_path: str, is_fallback: bool = False):
+    def __init__(self, db_path: str, is_fallback: bool = False, secondary_storage: Optional[StorageBackend] = None):
         self._db_path = db_path
         self._is_fallback = is_fallback
+        self._secondary_storage = secondary_storage
         Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
         self._conn = sqlite3.connect(db_path, check_same_thread=False)
@@ -148,7 +149,7 @@ class SQLiteStorage(StorageBackend):
         ]:
             self._conn.execute(idx)
         self._conn.commit()
-        logger.info("SQLite storage initialized at: %s (fallback=%s)", db_path, is_fallback)
+        logger.info("SQLite storage initialized at: %s (fallback=%s, secondary=%s)", db_path, is_fallback, type(secondary_storage).__name__ if secondary_storage else "None")
 
     def _migrate_telemetry_table(self):
         columns = {
@@ -172,9 +173,16 @@ class SQLiteStorage(StorageBackend):
     def is_fallback(self) -> bool:
         return self._is_fallback
 
+    @property
+    def secondary_storage(self) -> Optional[StorageBackend]:
+        return self._secondary_storage
+
     def store(self, record: IngestedTelemetry) -> bool:
+        stored = False
         with self._lock:
             try:
+                src_val = record.source.value if hasattr(record.source, "value") else str(record.source)
+                status_val = record.sensor_status.value if hasattr(record.sensor_status, "value") else str(record.sensor_status)
                 self._conn.execute(
                     """INSERT OR IGNORE INTO telemetry
                        (device_id, zone_id, sequence, event_timestamp,
@@ -196,8 +204,8 @@ class SQLiteStorage(StorageBackend):
                         record.rain_sensor_raw,
                         record.rain_indicator_pct,
                         record.inflow_cm3_s,
-                        record.sensor_status.value,
-                        record.source.value,
+                        status_val,
+                        src_val,
                         1 if record.is_reconstructed else 0,
                         record.reconstruction_method,
                         record.scenario_id,
@@ -205,13 +213,21 @@ class SQLiteStorage(StorageBackend):
                     ),
                 )
                 self._conn.commit()
-                return True
+                stored = True
             except sqlite3.IntegrityError:
                 logger.debug("Duplicate record: %s seq=%d", record.device_id, record.sequence)
                 return False
             except Exception:
                 logger.exception("Failed to store record")
                 return False
+
+        if stored and self._secondary_storage is not None:
+            try:
+                self._secondary_storage.store(record)
+            except Exception as e:
+                logger.warning("Secondary storage write failed: %s", e)
+
+        return stored
 
     def _rows_to_dicts(self, rows) -> list[dict]:
         return [dict(r) for r in rows]
@@ -373,11 +389,20 @@ class SQLiteStorage(StorageBackend):
                 "latest_timestamp": max_ts,
                 "records_by_device": device_counts,
                 "journal_mode": jmode,
+                "influxdb_active": self._secondary_storage is not None,
             }
 
     def close(self):
         with self._lock:
-            self._conn.close()
+            try:
+                self._conn.close()
+            except Exception:
+                pass
+        if self._secondary_storage is not None:
+            try:
+                self._secondary_storage.close()
+            except Exception:
+                pass
 
 
 class MemoryStorage(StorageBackend):
@@ -465,7 +490,15 @@ def create_storage(backend: Optional[str] = None) -> StorageBackend:
     backend = backend or config.STORAGE_BACKEND
 
     if backend == "sqlite":
-        return SQLiteStorage(config.SQLITE_DB_PATH, is_fallback=False)
+        secondary = None
+        if config.INFLUXDB_ENABLED:
+            try:
+                from backend.storage_influx import InfluxDBStorage
+                secondary = InfluxDBStorage()
+                logger.info("Parallel InfluxDB 2.x storage attached to SQLite primary")
+            except Exception as e:
+                logger.warning("InfluxDB secondary initialization failed: %s; using SQLite only", e)
+        return SQLiteStorage(config.SQLITE_DB_PATH, is_fallback=False, secondary_storage=secondary)
     elif backend == "memory":
         return MemoryStorage()
     elif backend == "influxdb":

@@ -12,8 +12,9 @@
 ## Pre-Demonstration Setup (T - 2 Minutes)
 1. Open a clean browser window at `http://127.0.0.1:8000/showcase`.
 2. Open a second tab at `http://127.0.0.1:8000/urban-twin` (Dedicated 3D Urban Map).
-3. Open a third tab at `http://127.0.0.1:1880/ui/` (Node-RED Dashboard).
-4. Ensure terminal has verified stack health via `./scripts/showcase_verify.sh` with all PASS marks.
+3. Open a third tab at `http://127.0.0.1:8086` (InfluxDB 2.x Time-Series UI).
+4. Open a fourth tab at `http://127.0.0.1:1880/ui/` (Node-RED Dashboard).
+5. Ensure terminal has verified stack health via `./scripts/showcase_verify.sh` with all PASS marks.
 
 ---
 
@@ -146,17 +147,18 @@
 ---
 
 ### [10:30 – 11:30] Phase 8: Database Inspection Explorer & MQTT Packet Streamer
-- **Tab to Display:** **Tab 11: Database Inspection Explorer** & **Tab 12: Live MQTT Packet Streamer**
-- **Action:** Expand the SQLite table records, showing Write-Ahead Logging (WAL) timestamps, monotonic sequence numbers, and live raw JSON MQTT packets streaming across the socket.
+- **Tab to Display:** **Tab 11: Database Inspection Explorer** & **Tab 12: Live MQTT Packet Streamer** (or InfluxDB UI at `:8086`)
+- **Action:** Expand the SQLite table records, showing Write-Ahead Logging (WAL) timestamps, monotonic sequence numbers, and live raw JSON MQTT packets streaming across the socket. Switch to InfluxDB UI (`:8086`) to show time-series visualization in bucket `telemetry`.
 - **Narrative:**
   > "Under Tabs 11 and 12, we expose the engineering infrastructure under the hood:
   > - The **Database Inspection Explorer** provides real-time visibility into our SQLite database, configured with Write-Ahead Logging (WAL) for concurrent read-write performance.
+  > - Telemetry is concurrently dual-persisted to **InfluxDB 2.x on port 8086**, enabling high-throughput time-series aggregation, Flux analytics, and visualization without impacting relational query performance.
   > - The **MQTT Packet Streamer** taps directly into the Mosquitto broker socket, displaying live JSON payloads, quality flags, and sub-millisecond timestamps."
 
 ---
 
 ### [11:30 – 12:00] Phase 9: Node-RED Dashboard & Conclusion
-- **Tab to Display:** Browser Tab 3: [http://127.0.0.1:1880/ui/](http://127.0.0.1:1880/ui/)
+- **Tab to Display:** Browser Tab 4: [http://127.0.0.1:1880/ui/](http://127.0.0.1:1880/ui/)
 - **Visual Focus:** Operational gauge dials, continuous level charts, edge warning LEDs.
 - **Concluding Narrative:**
   > "Finally, we switch to our secondary supervisory interface: the **Node-RED Operational Dashboard**.
@@ -167,6 +169,7 @@
   > 1. An authentic **3D Urban Flood Digital Twin of Chennai** covering 10 critical locations, waterways, and 3D buildings.
   > 2. A mathematically rigorous **Experimental IoT Tank Digital Twin** with RK4 numerical ODE forecasting and OLS parameter calibration.
   > 3. Scientifically validated **missing-data resilience algorithms** with zero future-data leakage in real time.
-  > 4. Full software completeness verified by **142 automated passing tests**.
+  > 4. Enterprise-grade **dual storage** coupling SQLite WAL with **InfluxDB 2.x time-series indexing**.
+  > 5. Full software completeness verified by **149 automated passing tests**.
   >
   > Thank you. We are ready to answer your technical questions."

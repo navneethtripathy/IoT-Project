@@ -1,11 +1,12 @@
 # CivicTwin-R: A Resilient Cyber-Physical Digital Twin for Urban Flood Monitoring and Scenario Planning
 
-[![Automated Tests](https://img.shields.io/badge/tests-142%20passed-brightgreen.svg)](tests/)
+[![Automated Tests](https://img.shields.io/badge/tests-149%20passed-brightgreen.svg)](tests/)
 [![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.14-blue.svg)](pyproject.toml)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com/)
 [![MQTT](https://img.shields.io/badge/MQTT-Mosquitto%20v2.0-red.svg)](mqtt/)
 [![3D Urban Twin](https://img.shields.io/badge/3D%20Urban%20Twin-MapLibre%20WebGL-blue.svg)](backend/app/templates/urban_twin.html)
-[![Storage](https://img.shields.io/badge/Storage-SQLite%20(WAL)-blue.svg)](data/)
+[![Storage](https://img.shields.io/badge/Storage-SQLite%20(WAL)%20%2B%20InfluxDB-blue.svg)](data/)
+[![InfluxDB](https://img.shields.io/badge/InfluxDB-2.10.1%20Time--Series-purple.svg)](http://localhost:8086)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 **CivicTwin-R** is an end-to-end cyber-physical digital twin platform that couples real-time edge telemetry with continuous differential fluid dynamics, missing-data recovery algorithms, and 3D urban flood scenario planning.
@@ -27,6 +28,8 @@ The platform's primary centerpiece is an **interactive, geographically grounded 
 | ![Heavy Rainfall](showcase/screenshots/07_heavy_rainfall_scenario.png) | ![Drainage Obstruction](showcase/screenshots/08_drainage_obstruction.png) |
 | **9. Cyclone Michaung Storm Replay** | **10. Experimental IoT Tank Twin (Lab Bench)** |
 | ![Michaung Replay](showcase/screenshots/09_michaung_replay.png) | ![Experimental Tank Twin](showcase/screenshots/10_experimental_tank_twin.png) |
+| **11. InfluxDB 2.x Time-Series UI** | **12. Node-RED Operational Dashboard** |
+| ![InfluxDB UI](showcase/screenshots/11_influxdb_ui.png) | ![Node-RED Dashboard](showcase/screenshots/11_nodered_dashboard.png) |
 
 ---
 
@@ -54,6 +57,7 @@ pip install -e ".[dev]"
 
 - **Dedicated 3D Chennai Urban Digital Twin:** [http://127.0.0.1:8000/urban-twin](http://127.0.0.1:8000/urban-twin)
 - **Engineering Showcase Web Center (All 13 Views):** [http://127.0.0.1:8000/showcase](http://127.0.0.1:8000/showcase)
+- **InfluxDB 2.x Time-Series Web UI:** [http://127.0.0.1:8086](http://127.0.0.1:8086) (Org: `civictwin`, Bucket: `telemetry`)
 - **Node-RED Operational Dashboard:** [http://127.0.0.1:1880/ui/](http://127.0.0.1:1880/ui/)
 - **Interactive Swagger REST API Docs:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - **Service Health & Ingestion Metrics:** [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
@@ -97,10 +101,10 @@ pip install -e ".[dev]"
               • 3% Anti-Chatter Hysteresis
                           │
                           ▼
-              [ PERSISTENCE LAYER: SQLite 3 ]
-              • Write-Ahead Logging (WAL mode)
-              • Concurrency Thread-Safe Locks
-              • In-Memory Storage Fallback Guard
+              [ DUAL-PERSISTENCE STORAGE LAYER ]
+              • SQLite 3 (WAL Mode, Thread-Safe Locks, Primary Store)
+              • InfluxDB 2.x (Time-Series Engine, Flux Queries, Port 8086)
+              • Parallel Concurrency Guarantee & Graceful Fallback
                           │
                           ▼
          [ SCIENTIFIC COMPUTING & DIGITAL TWIN CORE ]
@@ -209,7 +213,7 @@ We strictly distinguish between two operational regimes to prevent future-data l
 
 ## 6. Verification & Automated Test Suite
 
-The repository includes a comprehensive automated test suite of **142 tests** covering urban geospatial layers, hydrological screening ODEs, unit physics, calibration regression, edge warning hysteresis, REST endpoints, and live socket integration:
+The repository includes a comprehensive automated test suite of **149 tests** covering InfluxDB 2.x time-series integration, urban geospatial layers, hydrological screening ODEs, unit physics, calibration regression, edge warning hysteresis, REST endpoints, and live socket integration:
 
 ```bash
 # Execute entire test suite
@@ -218,15 +222,16 @@ PYTHONPATH=. pytest tests/ -v
 
 ```
 ============================== test session starts ==============================
-collected 142 items
+collected 149 items
 
-tests/test_all.py ...................................................... [ 51%]
-tests/test_chennai_twin.py ...................                           [ 64%]
-tests/test_live_showcase_integration.py .......                          [ 69%]
-tests/test_tank_twin.py ............................                     [ 88%]
+tests/test_all.py ...................................................... [ 49%]
+tests/test_chennai_twin.py ...................                           [ 62%]
+tests/test_influxdb.py .......                                           [ 66%]
+tests/test_live_showcase_integration.py .......                          [ 71%]
+tests/test_tank_twin.py ............................                     [ 90%]
 tests/test_urban_twin.py ................                                [100%]
 
-======================= 142 passed, 1 warning in 14.81s ========================
+======================= 149 passed, 1 warning in 16.87s ========================
 ```
 
 ---

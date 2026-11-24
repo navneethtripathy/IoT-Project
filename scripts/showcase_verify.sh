@@ -18,6 +18,17 @@ else
     echo "[WARN] MQTT Broker: port 1883 not responding (may be running in internal mode)"
 fi
 
+# 2. Check InfluxDB 2.x Time-Series Engine port 8086
+INFLUX_HEALTH=$(curl -s http://127.0.0.1:8086/health 2>/dev/null || echo "")
+if echo "$INFLUX_HEALTH" | grep -q "pass"; then
+    INFLUX_COUNT=$(curl -s http://127.0.0.1:8000/api/storage/influx/status 2>/dev/null | python3 -c "import sys, json; print(json.load(sys.stdin).get('records_count', 0))" 2>/dev/null || echo "0")
+    echo "[PASS] InfluxDB 2.x: listening on http://127.0.0.1:8086 (bucket 'telemetry' records: $INFLUX_COUNT)"
+elif nc -z 127.0.0.1 8086 2>/dev/null; then
+    echo "[PASS] InfluxDB 2.x: listening on port 8086"
+else
+    echo "[WARN] InfluxDB 2.x: not responding on port 8086 (SQLite handles all data)"
+fi
+
 # 2. Check FastAPI Backend health endpoint
 HEALTH_RESP=$(curl -s http://127.0.0.1:8000/health 2>/dev/null || echo "")
 if echo "$HEALTH_RESP" | grep -q "healthy"; then

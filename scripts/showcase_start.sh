@@ -22,10 +22,29 @@ fi
 
 # 2. Check Python environment
 PYTHON_BIN="$(which python3 || echo "python3")"
-echo "[1/5] Checking runtime dependencies... Python: $($PYTHON_BIN --version)"
+echo "[1/6] Checking runtime dependencies... Python: $($PYTHON_BIN --version)"
 
-# 3. Start Mosquitto MQTT Broker
-echo "[2/5] Starting Mosquitto MQTT broker on port 1883..."
+# 3. Start InfluxDB 2.x Time-Series Engine
+echo "[2/6] Checking InfluxDB 2.x on port 8086..."
+if curl -s http://127.0.0.1:8086/health 2>/dev/null | grep -q "pass"; then
+    echo "      [OK] InfluxDB 2.x already running and healthy on port 8086"
+elif command -v brew > /dev/null 2>&1 && brew services list | grep -q "influxdb@2"; then
+    brew services start influxdb@2 > /dev/null 2>&1 || true
+    sleep 2
+    echo "      [OK] InfluxDB 2.x service started via Homebrew"
+elif [ -x "/opt/homebrew/opt/influxdb@2/bin/influxd" ]; then
+    nohup /opt/homebrew/opt/influxdb@2/bin/influxd < /dev/null > .run/logs/influxdb.log 2>&1 &
+    INFLUX_PID=$!
+    disown $INFLUX_PID 2>/dev/null || true
+    echo $INFLUX_PID > .run/influxdb.pid
+    sleep 2
+    echo "      [OK] InfluxDB 2.x engine running (PID: $INFLUX_PID)"
+else
+    echo "      [INFO] InfluxDB 2.x binary not found; SQLite handles all telemetry"
+fi
+
+# 4. Start Mosquitto MQTT Broker
+echo "[3/6] Starting Mosquitto MQTT broker on port 1883..."
 MOSQUITTO_BIN="/opt/homebrew/sbin/mosquitto"
 if [ ! -x "$MOSQUITTO_BIN" ]; then
     MOSQUITTO_BIN="$(which mosquitto || echo "")"
@@ -42,8 +61,8 @@ else
     echo "      [WARN] Mosquitto binary not found; continuing in standalone mode"
 fi
 
-# 4. Start FastAPI Backend
-echo "[3/5] Starting FastAPI backend on http://127.0.0.1:8000..."
+# 5. Start FastAPI Backend
+echo "[4/6] Starting FastAPI backend on http://127.0.0.1:8000..."
 nohup $PYTHON_BIN -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 < /dev/null > .run/logs/backend.log 2>&1 &
 BACKEND_PID=$!
 disown $BACKEND_PID 2>/dev/null || true
@@ -59,8 +78,8 @@ for i in {1..20}; do
     sleep 0.5
 done
 
-# 5. Start Node-RED (if installed)
-echo "[4/5] Starting Node-RED dashboard on http://127.0.0.1:1880..."
+# 6. Start Node-RED (if installed)
+echo "[5/6] Starting Node-RED dashboard on http://127.0.0.1:1880..."
 NODE_BIN="$(which node || echo "/opt/homebrew/bin/node")"
 RED_JS="$DIR/nodered_runtime/node_modules/node-red/red.js"
 
@@ -96,8 +115,8 @@ else
     echo "      [INFO] Node-RED runtime not installed; UI available via Showcase Web Center"
 fi
 
-# 6. Start Two-Node Live MQTT Simulator
-echo "[5/5] Starting Two-Node Live Cyber-Physical Simulator..."
+# 7. Start Two-Node Live MQTT Simulator
+echo "[6/6] Starting Two-Node Live Cyber-Physical Simulator..."
 nohup $PYTHON_BIN "$DIR/scripts/mqtt_node_simulator.py" --broker localhost --port 1883 --interval 5.0 < /dev/null > .run/logs/simulator.log 2>&1 &
 SIM_PID=$!
 disown $SIM_PID 2>/dev/null || true
@@ -105,7 +124,7 @@ echo $SIM_PID > .run/simulator.pid
 sleep 1
 echo "      [OK] Dual-node simulator active (PID: $SIM_PID)"
 
-# 7. Run Verification Check
+# 8. Run Verification Check
 echo ""
 echo "Running system verification..."
 bash "$DIR/scripts/showcase_verify.sh"
@@ -114,7 +133,9 @@ echo ""
 echo "================================================================================"
 echo "  CivicTwin-R Showcase is LIVE and READY FOR DEMONSTRATION!"
 echo "================================================================================"
+echo "  * Dedicated 3D Chennai Urban Twin     : http://127.0.0.1:8000/urban-twin"
 echo "  * Engineering Showcase Control Center : http://127.0.0.1:8000/showcase"
+echo "  * InfluxDB 2.x Time-Series UI         : http://127.0.0.1:8086"
 echo "  * Interactive Swagger API Docs        : http://127.0.0.1:8000/docs"
 if [ -n "$NODERED_BIN" ]; then
 echo "  * Node-RED Operational Dashboard      : http://127.0.0.1:1880/ui"

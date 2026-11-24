@@ -11,6 +11,8 @@
 | Service Name | Protocol / Port | Primary Access URL | Function & Capability | Authentication | Process Owner |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Engineering Showcase Web Center** | HTTP / `8000` | [http://127.0.0.1:8000/showcase](http://127.0.0.1:8000/showcase) | Primary academic demonstration UI: Dual-node gauges, 3D WebGL twin, RK4 ODE prediction, reconstruction benchmark, scenario lab, SQLite database explorer, and MQTT packet streamer. | Anonymous (Read/Write) | Uvicorn / FastAPI (`backend.app.main:app`) |
+| **Dedicated 3D Chennai Urban Twin** | HTTP / `8000` | [http://127.0.0.1:8000/urban-twin](http://127.0.0.1:8000/urban-twin) | Dedicated standalone 3D WebGL geospatial digital twin of Chennai flood catchments, waterways, and extruded buildings. | Anonymous | MapLibre WebGL / FastAPI |
+| **InfluxDB 2.x Time-Series Engine & UI** | HTTP / `8086` | [http://127.0.0.1:8086](http://127.0.0.1:8086) | High-performance time-series database and visualization UI. Organization: `civictwin`, Bucket: `telemetry`. Telemetry dual-persisted concurrently with SQLite. | Token / User (`civictwin` / `civictwin-dev-token`) | InfluxDB 2.x (`influxd`) |
 | **Interactive OpenAPI Documentation** | HTTP / `8000` | [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) | Swagger UI for interactive execution and validation of all REST API endpoints. | Anonymous | FastAPI (`/docs`) |
 | **ReDoc API Specifications** | HTTP / `8000` | [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) | Alternative structured technical reference documentation for the REST API. | Anonymous | FastAPI (`/redoc`) |
 | **Node-RED Operational Dashboard** | HTTP / `1880` | [http://127.0.0.1:1880/ui/](http://127.0.0.1:1880/ui/) | Secondary real-time operations dashboard featuring gauges, water level bar charts, alert badges, and historical trend curves. | Anonymous | Node.js (`node-red/red.js`) |
@@ -41,11 +43,13 @@
 - **`GET /api/nodes/freshness`**: Returns real-time freshness state (`FRESH`, `STALE`, `OFFLINE`) and observation age for all registered nodes.
 - **`GET /api/nodes/status`**: Returns diagnostic heartbeat status (battery voltage, WiFi RSSI, sensor hardware status, quality flags).
 
-### Database Explorer
+### Database Explorer & Time-Series Storage
 - **`GET /api/database/tables`**: Returns list of all SQLite tables and row counts.
 - **`GET /api/database/records?table={name}&limit={n}&offset={m}&device_id={id}`**: Returns paginated database records with column schema metadata.
 - **`GET /api/database/stats`**: Returns database file size, journal mode, total records, min/max timestamps, and storage health.
 - **`GET /api/database/export?format=csv`**: Downloads complete telemetry archive as CSV.
+- **`GET /api/storage/influx/status`**: Returns InfluxDB 2.x connectivity, organization, bucket, and stored record counts.
+- **`GET /api/storage/influx/latest?zone_id={id}&limit={n}`**: Queries time-series telemetry records directly from InfluxDB 2.x bucket `telemetry`.
 
 ### Live MQTT Streamer
 - **`GET /api/mqtt/recent-messages?limit={n}`**: Returns in-memory ring buffer of recent incoming MQTT packets with topic, payload, QoS, timestamp, and size.

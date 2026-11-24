@@ -56,18 +56,28 @@ class InfluxDBStorage(StorageBackend):
     def is_fallback(self) -> bool:
         return False
 
+    def is_healthy(self) -> bool:
+        try:
+            health = self._client.health()
+            return health.status == "pass"
+        except Exception:
+            return False
+
     def store(self, record: IngestedTelemetry) -> bool:
         from influxdb_client import Point
 
         try:
+            src_val = record.source.value if hasattr(record.source, "value") else str(record.source)
+            status_val = record.sensor_status.value if hasattr(record.sensor_status, "value") else str(record.sensor_status)
+            ts = record.timestamp or record.ingestion_timestamp
             point = (
                 Point("telemetry")
                 .tag("zone_id", record.zone_id)
                 .tag("device_id", record.device_id)
-                .tag("source", record.source.value)
-                .tag("sensor_status", record.sensor_status.value)
+                .tag("source", src_val)
+                .tag("sensor_status", status_val)
                 .field("sequence", int(record.sequence))
-                .time(record.timestamp)
+                .time(ts)
             )
 
             if record.distance_cm is not None:
