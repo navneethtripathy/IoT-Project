@@ -52,13 +52,19 @@ def check_mqtt(host: str = "localhost", port: int = 1883) -> bool:
 
 
 def main():
+    from backend import config
+
     print("CivicTwin-R service health status:\n")
 
+    api_url = f"http://{config.API_HOST}:{config.API_PORT}/health"
+    nodered_url = f"http://{config.API_HOST}:{config.NODERED_PORT}"
+    influx_url = f"{config.INFLUXDB_URL}/health"
+
     results = {}
-    results["backend"] = check_url("FastAPI API", "http://127.0.0.1:8000/health")
-    results["nodered"] = check_url("Node-RED UI", "http://127.0.0.1:1880")
-    results["influxdb"] = check_url("InfluxDB 2.x", "http://127.0.0.1:8086/health")
-    results["mqtt"] = check_mqtt("localhost", 1883)
+    results["backend"] = check_url("FastAPI API", api_url)
+    results["nodered"] = check_url("Node-RED UI", nodered_url)
+    results["influxdb"] = check_url("InfluxDB 2.x", influx_url)
+    results["mqtt"] = check_mqtt(config.MQTT_BROKER_HOST, config.MQTT_BROKER_PORT)
 
     healthy = sum(1 for v in results.values() if v)
     total = len(results)

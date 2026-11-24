@@ -10,13 +10,13 @@
 
 ### Team Members
 
-| Name | Registration No. | Department |
-|------|-----------------|------------|
-| Navneeth Tripathy | 145611085 | B.E. CSE (Artificial Intelligence and Machine Learning) |
-| Keith Rocha | 145611335 | B.E. CSE (Artificial Intelligence and Machine Learning) |
-| Neil Nickson | 145611086 | B.E. CSE (Artificial Intelligence and Machine Learning) |
-| Mohanavel | 145611076 | B.E. CSE (Artificial Intelligence and Machine Learning) |
-| Pandi Devi Naga Pallavi | 145614120 | B.E. CSE with CS |
+| Name                    | Registration No. | Department                                              |
+| ----------------------- | ---------------- | ------------------------------------------------------- |
+| Navneeth Tripathy       | 145611085        | B.E. CSE (Artificial Intelligence and Machine Learning) |
+| Keith Rocha             | 145611335        | B.E. CSE (Artificial Intelligence and Machine Learning) |
+| Neil Nickson            | 145611086        | B.E. CSE (Artificial Intelligence and Machine Learning) |
+| Mohanavel               | 145611076        | B.E. CSE (Artificial Intelligence and Machine Learning) |
+| Pandi Devi Naga Pallavi | 145614120        | B.E. CSE with CS                                        |
 
 ---
 
@@ -83,30 +83,30 @@ This project differs from the cited works in that it specifically focuses on res
 
 ### Functional Requirements
 
-| ID | Requirement | Priority |
-|----|------------|----------|
-| F1 | Read water level from ultrasonic sensor | High |
-| F2 | Publish telemetry over MQTT | High |
-| F3 | Validate and store incoming messages | High |
-| F4 | Detect duplicate and stale messages | High |
-| F5 | Model 3+ virtual monitoring zones | High |
-| F6 | Execute 8 configurable scenarios | High |
-| F7 | Reconstruct missing data (LOCF, linear) | High |
-| F8 | Generate threshold alerts | High |
-| F9 | Provide REST API for data access | Medium |
-| F10 | Display data on Node-RED dashboard | Medium |
-| F11 | Export data to CSV/JSON | Medium |
-| F12 | Local threshold evaluation without backend | Medium |
+| ID  | Requirement                                | Priority |
+| --- | ------------------------------------------ | -------- |
+| F1  | Read water level from ultrasonic sensor    | High     |
+| F2  | Publish telemetry over MQTT                | High     |
+| F3  | Validate and store incoming messages       | High     |
+| F4  | Detect duplicate and stale messages        | High     |
+| F5  | Model 3+ virtual monitoring zones          | High     |
+| F6  | Execute 8 configurable scenarios           | High     |
+| F7  | Reconstruct missing data (LOCF, linear)    | High     |
+| F8  | Generate threshold alerts                  | High     |
+| F9  | Provide REST API for data access           | Medium   |
+| F10 | Display data on Node-RED dashboard         | Medium   |
+| F11 | Export data to CSV/JSON                    | Medium   |
+| F12 | Local threshold evaluation without backend | Medium   |
 
 ### Non-Functional Requirements
 
-| ID | Requirement |
-|----|------------|
-| NF1 | Reproducible results using fixed random seeds |
-| NF2 | No credentials in source code |
-| NF3 | Modular architecture with clear separation of concerns |
+| ID  | Requirement                                             |
+| --- | ------------------------------------------------------- |
+| NF1 | Reproducible results using fixed random seeds           |
+| NF2 | No credentials in source code                           |
+| NF3 | Modular architecture with clear separation of concerns  |
 | NF4 | Works without Docker, MQTT broker, or InfluxDB (Mode B) |
-| NF5 | Automated test suite with >40 tests |
+| NF5 | Automated test suite with >40 tests                     |
 
 ## 6. System Architecture
 
@@ -118,17 +118,17 @@ Data Sources → Messaging → Processing → Storage → Presentation
 
 ### Components
 
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| Sensor | ESP32 + HC-SR04 (Wokwi) | Water level measurement |
-| Sensor Simulator | Python | Software replacement for hardware |
-| Messaging | Mosquitto MQTT 2.0 | Telemetry transport |
-| Ingestion | Python service | Validation, deduplication, enrichment |
-| Backend API | FastAPI | REST endpoints, scenario control |
-| Storage | SQLite (default) / InfluxDB | Time-series persistence |
-| Dashboard | Node-RED | Visual monitoring interface |
-| Digital Twin | Python engine | Multi-zone simulation |
-| Experiments | Python + matplotlib | Evaluation and plotting |
+| Component        | Technology                  | Purpose                               |
+| ---------------- | --------------------------- | ------------------------------------- |
+| Sensor           | ESP32 + HC-SR04 (Wokwi)     | Water level measurement               |
+| Sensor Simulator | Python                      | Software replacement for hardware     |
+| Messaging        | Mosquitto MQTT 2.0          | Telemetry transport                   |
+| Ingestion        | Python service              | Validation, deduplication, enrichment |
+| Backend API      | FastAPI                     | REST endpoints, scenario control      |
+| Storage          | SQLite (default) / InfluxDB | Time-series persistence               |
+| Dashboard        | Node-RED                    | Visual monitoring interface           |
+| Digital Twin     | Python engine               | Multi-zone simulation                 |
+| Experiments      | Python + matplotlib         | Evaluation and plotting               |
 
 ### Execution Modes
 
@@ -191,14 +191,14 @@ The ingestion service adds: `ingestion_timestamp`, `is_duplicate`, `is_stale`, `
 
 The system enforces six canonical provenance tags throughout the pipeline:
 
-| Provenance Tag | Source Description | Usage |
-|---|---|---|
-| `WOKWI_SIMULATED` | Virtual ESP32 and HC-SR04 in Wokwi browser simulation. | Mapped to `zone_adyar` (`zone_01`). |
-| `PYTHON_SIMULATED` | Headless Python multi-zone sensor simulator. | Multi-zone synthetic baseline for tests. |
-| `OBSERVED` | Verified records from official monitoring portals. | CFM-DSS rain gauges and reservoir metrics. |
-| `REPLAYED_HISTORICAL` | Previously recorded environmental observations streamed at controlled speed. | Cyclone Michaung Dec 2023 hourly storm series. |
-| `DIGITAL_TWIN` | Physical mass-balance state, forecasts, and scenario runs. | Catchment model calculations and projections. |
-| `IMPUTED` | Missing readings reconstructed by an imputation method. | Evaluated recovery (LOCF / Linear interpolation). |
+| Provenance Tag          | Source Description                                                           | Usage                                             |
+| ----------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------- |
+| `WOKWI_SIMULATED`     | Virtual ESP32 and HC-SR04 in Wokwi browser simulation.                       | Mapped to `zone_adyar` (`zone_01`).           |
+| `PYTHON_SIMULATED`    | Headless Python multi-zone sensor simulator.                                 | Multi-zone synthetic baseline for tests.          |
+| `OBSERVED`            | Verified records from official monitoring portals.                           | CFM-DSS rain gauges and reservoir metrics.        |
+| `REPLAYED_HISTORICAL` | Previously recorded environmental observations streamed at controlled speed. | Cyclone Michaung Dec 2023 hourly storm series.    |
+| `DIGITAL_TWIN`        | Physical mass-balance state, forecasts, and scenario runs.                   | Catchment model calculations and projections.     |
+| `IMPUTED`             | Missing readings reconstructed by an imputation method.                      | Evaluated recovery (LOCF / Linear interpolation). |
 
 > **Rule:** Simulated, predicted, replayed, or imputed values are never labeled as live observations.
 
@@ -217,6 +217,7 @@ next_level = clamp(next_level, 0, container_height)
 **Units:** Water levels in cm, rates in cm per base_dt (5 seconds), percentages 0–100%.
 
 **Assumptions and limitations:**
+
 - Linear inflow and drainage (no hydraulic head effects)
 - No evaporation, infiltration, or overflow modeling
 - Sensor noise modeled as Gaussian with configurable standard deviation
@@ -226,11 +227,11 @@ next_level = clamp(next_level, 0, container_height)
 
 The three monitoring zones represent virtual study areas modeled in the digital twin:
 
-| Zone | Study Sub-Basin | Height (cm) | Baseline (cm) | Drainage | Warn% | Crit% |
-|------|-----------------|-------------|----------------|----------|-------|-------|
-| zone_01 | Adyar Basin (Saidapet Corridor) | 30 | 5 | 0.5 cm/step | 70% | 85% |
-| zone_02 | Cooum Basin (Central Urban Drain) | 25 | 3 | 0.4 cm/step | 70% | 85% |
-| zone_03 | Kosasthalaiyar Basin (Ennore Corridor) | 40 | 8 | 0.6 cm/step | 65% | 80% |
+| Zone    | Study Sub-Basin                        | Height (cm) | Baseline (cm) | Drainage    | Warn% | Crit% |
+| ------- | -------------------------------------- | ----------- | ------------- | ----------- | ----- | ----- |
+| zone_01 | Adyar Basin (Saidapet Corridor)        | 30          | 5             | 0.5 cm/step | 70%   | 85%   |
+| zone_02 | Cooum Basin (Central Urban Drain)      | 25          | 3             | 0.4 cm/step | 70%   | 85%   |
+| zone_03 | Kosasthalaiyar Basin (Ennore Corridor) | 40          | 8             | 0.6 cm/step | 65%   | 80%   |
 
 *Note: These study areas are modeled within the software digital twin; they do not imply physical hardware deployment in Chennai waterways. Thresholds (70% warn, 85% crit) are prototype testing parameters, not official government flood alert lines.*
 
@@ -238,16 +239,16 @@ The three monitoring zones represent virtual study areas modeled in the digital 
 
 All data was generated using the Python digital twin engine with `seed=42` for reproducibility. The eight scenarios systematically test different failure modes:
 
-| Scenario | Steps | Description |
-|----------|-------|-------------|
-| normal | 200 | Baseline — stable conditions |
-| heavy_rainfall | 300 | Increased inflow across all zones |
-| blocked_drain | 250 | Drainage capacity reduced in zone_01 |
-| sudden_rise | 200 | Flash-flood inflow spike in zone_02 |
-| sensor_dropout | 250 | Sensor reliability drops to 30% in zone_01 |
-| noisy_sensor | 200 | Noise stddev increased to ±2cm in zone_02 |
-| network_outage | 250 | Complete network loss in zone_01 (steps 60–140) |
-| multi_zone_stress | 350 | Combined heavy rain + sensor failures + network outage |
+| Scenario          | Steps | Description                                            |
+| ----------------- | ----- | ------------------------------------------------------ |
+| normal            | 200   | Baseline — stable conditions                          |
+| heavy_rainfall    | 300   | Increased inflow across all zones                      |
+| blocked_drain     | 250   | Drainage capacity reduced in zone_01                   |
+| sudden_rise       | 200   | Flash-flood inflow spike in zone_02                    |
+| sensor_dropout    | 250   | Sensor reliability drops to 30% in zone_01             |
+| noisy_sensor      | 200   | Noise stddev increased to ±2cm in zone_02             |
+| network_outage    | 250   | Complete network loss in zone_01 (steps 60–140)       |
+| multi_zone_stress | 350   | Combined heavy rain + sensor failures + network outage |
 
 ## 11. Missing-Data Reconstruction Methods
 
@@ -271,34 +272,35 @@ Fills gaps by drawing a straight line between the nearest available values befor
 ### Local Threshold Evaluation
 
 The ESP32 firmware evaluates thresholds independently of the backend:
+
 - **Warning:** water_level_pct ≥ 70%
 - **Critical:** water_level_pct ≥ 85%
 - **Hysteresis:** ±5% prevents rapid oscillation near threshold boundaries
 
 ### Failure Handling
 
-| Failure Type | System Response |
-|--------------|----------------|
-| Sensor invalid reading | Reading flagged as "invalid", last valid level used for threshold check |
-| 5+ consecutive failures | "invalid" status published, LED activated |
-| MQTT disconnected | Local threshold checking continues, readings logged to serial |
-| Stale data (>30s) | "stale" quality flag added by ingestion service |
-| Network outage | Dashboard shows offline indicator, zone status persists |
+| Failure Type            | System Response                                                         |
+| ----------------------- | ----------------------------------------------------------------------- |
+| Sensor invalid reading  | Reading flagged as "invalid", last valid level used for threshold check |
+| 5+ consecutive failures | "invalid" status published, LED activated                               |
+| MQTT disconnected       | Local threshold checking continues, readings logged to serial           |
+| Stale data (>30s)       | "stale" quality flag added by ingestion service                         |
+| Network outage          | Dashboard shows offline indicator, zone status persists                 |
 
 ## 13. Implementation
 
 The project was implemented in Python 3.14 with the following key libraries:
 
-| Library | Version | Purpose |
-|---------|---------|---------|
-| FastAPI | ≥0.115 | REST API framework |
-| Pydantic | ≥2.8 | Data validation and serialization |
-| paho-mqtt | ≥2.1 | MQTT client |
-| SQLite | Built-in | Default storage backend |
-| pandas | ≥2.2 | Data analysis |
-| numpy | ≥2.0 | Numerical computation |
-| matplotlib | ≥3.9 | Plot generation |
-| pytest | ≥8.0 | Automated testing |
+| Library    | Version  | Purpose                           |
+| ---------- | -------- | --------------------------------- |
+| FastAPI    | ≥0.115  | REST API framework                |
+| Pydantic   | ≥2.8    | Data validation and serialization |
+| paho-mqtt  | ≥2.1    | MQTT client                       |
+| SQLite     | Built-in | Default storage backend           |
+| pandas     | ≥2.2    | Data analysis                     |
+| numpy      | ≥2.0    | Numerical computation             |
+| matplotlib | ≥3.9    | Plot generation                   |
+| pytest     | ≥8.0    | Automated testing                 |
 
 The ESP32 firmware uses the Arduino framework with ArduinoJson, PubSubClient, and WiFi libraries.
 
@@ -337,29 +339,29 @@ python3 -m experiments.run_experiments
 **Table 1: Reconstruction MAE (cm) — Zone 01 (Riverside Canal)**
 
 | Missing Rate | LOCF MAE | LOCF RMSE | Linear MAE | Linear RMSE |
-|-------------|----------|-----------|------------|-------------|
-| 5% | 0.1933 | 0.4768 | 0.0700 | 0.1830 |
-| 10% | 0.3033 | 0.5997 | 0.1083 | 0.2055 |
-| 20% | 0.8183 | 1.4329 | 0.0608 | 0.1512 |
-| 30% | 0.7833 | 1.3281 | 0.0783 | 0.2326 |
+| ------------ | -------- | --------- | ---------- | ----------- |
+| 5%           | 0.1933   | 0.4768    | 0.0700     | 0.1830      |
+| 10%          | 0.3033   | 0.5997    | 0.1083     | 0.2055      |
+| 20%          | 0.8183   | 1.4329    | 0.0608     | 0.1512      |
+| 30%          | 0.7833   | 1.3281    | 0.0783     | 0.2326      |
 
 **Table 2: Reconstruction MAE (cm) — Zone 02 (Downtown Storm Drain)**
 
 | Missing Rate | LOCF MAE | LOCF RMSE | Linear MAE | Linear RMSE |
-|-------------|----------|-----------|------------|-------------|
-| 5% | 0.1833 | 0.4706 | 0.0000 | 0.0000 |
-| 10% | 0.2550 | 0.5755 | 0.0000 | 0.0000 |
-| 20% | 0.5708 | 1.0897 | 0.0383 | 0.1626 |
-| 30% | 0.4978 | 0.9517 | 0.0647 | 0.1853 |
+| ------------ | -------- | --------- | ---------- | ----------- |
+| 5%           | 0.1833   | 0.4706    | 0.0000     | 0.0000      |
+| 10%          | 0.2550   | 0.5755    | 0.0000     | 0.0000      |
+| 20%          | 0.5708   | 1.0897    | 0.0383     | 0.1626      |
+| 30%          | 0.4978   | 0.9517    | 0.0647     | 0.1853      |
 
 **Table 3: Reconstruction MAE (cm) — Zone 03 (Suburban Retention Basin)**
 
 | Missing Rate | LOCF MAE | LOCF RMSE | Linear MAE | Linear RMSE |
-|-------------|----------|-----------|------------|-------------|
-| 5% | 0.3013 | 0.4810 | 0.0000 | 0.0000 |
-| 10% | 0.7253 | 1.0077 | 0.0000 | 0.0000 |
-| 20% | 0.9573 | 1.3076 | 0.0217 | 0.0830 |
-| 30% | 1.0707 | 1.4069 | 0.0144 | 0.0678 |
+| ------------ | -------- | --------- | ---------- | ----------- |
+| 5%           | 0.3013   | 0.4810    | 0.0000     | 0.0000      |
+| 10%          | 0.7253   | 1.0077    | 0.0000     | 0.0000      |
+| 20%          | 0.9573   | 1.3076    | 0.0217     | 0.0830      |
+| 30%          | 1.0707   | 1.4069    | 0.0144     | 0.0678      |
 
 **Analysis:** Linear interpolation consistently and significantly outperforms LOCF across all zones and missing-data rates. LOCF's error increases with the missing rate because longer gaps cause the carried-forward value to diverge further from the true (changing) level. Linear interpolation achieves near-perfect reconstruction in zones 02 and 03 at low missing rates, because the water level changes smoothly and linearly between available points.
 
@@ -371,15 +373,15 @@ At higher missing rates (20–30%), linear interpolation still achieves MAE belo
 
 **Table 4: Pipeline Latency (software processing only)**
 
-| Metric | Value |
-|--------|-------|
-| Messages sent | 300 |
-| Messages received | 300 |
-| Delivery rate | 100.0% |
-| Mean latency | 0.0275 ms |
-| Median latency | 0.0271 ms |
-| P95 latency | 0.0396 ms |
-| Max latency | 0.1124 ms |
+| Metric            | Value     |
+| ----------------- | --------- |
+| Messages sent     | 300       |
+| Messages received | 300       |
+| Delivery rate     | 100.0%    |
+| Mean latency      | 0.0275 ms |
+| Median latency    | 0.0271 ms |
+| P95 latency       | 0.0396 ms |
+| Max latency       | 0.1124 ms |
 
 **Note:** These measurements represent Python processing time from message creation through validation, enrichment, and SQLite storage, reproduced by `experiments/run_experiments.py`. They do NOT include MQTT network latency, broker processing, or WiFi transmission time. Real end-to-end latency with a physical sensor and network would be significantly higher (estimated 50–500 ms depending on network conditions).
 
@@ -387,11 +389,11 @@ At higher missing rates (20–30%), linear interpolation still achieves MAE belo
 
 **Table 5: Threshold Detection Results**
 
-| Zone | True Warning Crossings | True Critical Crossings | Detected Warning Steps | Detected Critical Steps |
-|------|----------------------|------------------------|----------------------|------------------------|
-| zone_01 | 1 | 1 | 15 | 87 |
-| zone_02 | 1 | 1 | 16 | 84 |
-| zone_03 | 1 | 1 | 26 | 37 |
+| Zone    | True Warning Crossings | True Critical Crossings | Detected Warning Steps | Detected Critical Steps |
+| ------- | ---------------------- | ----------------------- | ---------------------- | ----------------------- |
+| zone_01 | 1                      | 1                       | 15                     | 87                      |
+| zone_02 | 1                      | 1                       | 16                     | 84                      |
+| zone_03 | 1                      | 1                       | 26                     | 37                      |
 
 All true threshold crossings were detected with zero detection delay (same step). The "detected" counts represent the number of steps at each alert level, not false positives — once the threshold is crossed and levels stay high, every subsequent step correctly reports the elevated alert state.
 
@@ -402,11 +404,13 @@ All 8 scenarios completed successfully. The heavy_rainfall scenario caused water
 ## 16. Limitations and Threats to Validity
 
 ### Internal Validity
+
 - All data is simulated, not from physical sensors. Results may not reflect real-world sensor behavior.
 - The digital twin model uses simplified linear physics. Real hydraulic behavior is nonlinear.
 - Reconstruction experiments use the same model that generated the data, which may overestimate performance vs. real-world data.
 
 ### External Validity
+
 - The system has not been deployed in a real urban environment.
 - MQTT functionality is implemented but not tested with a live broker.
 - Network outage simulation modifies model parameters rather than interrupting real network connections.
@@ -414,12 +418,14 @@ All 8 scenarios completed successfully. The heavy_rainfall scenario caused water
 - The Node-RED dashboard flows are provided but not live-tested.
 
 ### Construct Validity
+
 - Software pipeline latency does not represent end-to-end system latency.
 - Sensor reliability is modeled as a simple Bernoulli probability, which may not reflect real sensor failure patterns.
 
 ## 17. Security and Ethical Considerations
 
 ### Security Measures
+
 - No credentials stored in source code (`.env.example` with placeholders only)
 - Schema validation on all incoming messages
 - CORS enabled for local demo only (should be restricted for production)
@@ -427,6 +433,7 @@ All 8 scenarios completed successfully. The heavy_rainfall scenario caused water
 - API binds to 127.0.0.1 by default (not exposed to network)
 
 ### Ethical Considerations
+
 - This project does not process personal data.
 - The system is clearly documented as a student prototype, not a certified flood warning system.
 - No false claims of deployment, validation, or real-world testing are made.
@@ -437,13 +444,9 @@ All 8 scenarios completed successfully. The heavy_rainfall scenario caused water
 CivicTwin-R demonstrates that a software-first approach to IoT digital twins is feasible for educational and prototyping purposes. The key findings are:
 
 1. **Linear interpolation is significantly more accurate than LOCF** for reconstructing missing water-level data, achieving 10× lower MAE across all tested conditions.
-
 2. **Local threshold evaluation with hysteresis** enables the edge device to maintain warning capability independently of backend connectivity.
-
 3. **The modular storage abstraction** allows the system to function with SQLite when InfluxDB is unavailable, demonstrating graceful degradation.
-
 4. **Deterministic scenario simulation** enables reproducible testing of failure modes that would be impractical or dangerous to test with physical infrastructure.
-
 5. **A complete, tested IoT data pipeline** can be implemented as a student project with open-source tools and zero external service dependencies.
 
 ## 19. Future Work
@@ -487,51 +490,51 @@ python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
 
 ## Appendix B: API Endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | /health | System health check |
-| GET | /api/zones | List all zones |
-| GET | /api/zones/{zone_id} | Zone details |
-| GET | /api/telemetry/latest | Latest readings |
-| GET | /api/telemetry/history | Historical data |
-| GET | /api/alerts | Active alerts |
-| GET | /api/scenarios | List scenarios |
-| POST | /api/scenarios/{id}/start | Start scenario |
-| POST | /api/scenarios/{id}/stop | Stop scenario |
-| POST | /api/scenarios/step | Advance scenario |
-| GET | /api/experiments/results | Experiment results |
-| GET | /api/stats | System statistics |
-| GET | /api/data/export | Export data |
+| Method | Path                      | Description         |
+| ------ | ------------------------- | ------------------- |
+| GET    | /health                   | System health check |
+| GET    | /api/zones                | List all zones      |
+| GET    | /api/zones/{zone_id}      | Zone details        |
+| GET    | /api/telemetry/latest     | Latest readings     |
+| GET    | /api/telemetry/history    | Historical data     |
+| GET    | /api/alerts               | Active alerts       |
+| GET    | /api/scenarios            | List scenarios      |
+| POST   | /api/scenarios/{id}/start | Start scenario      |
+| POST   | /api/scenarios/{id}/stop  | Stop scenario       |
+| POST   | /api/scenarios/step       | Advance scenario    |
+| GET    | /api/experiments/results  | Experiment results  |
+| GET    | /api/stats                | System statistics   |
+| GET    | /api/data/export          | Export data         |
 
 ## Appendix C: Delivery Manifest
 
-| # | Artifact | Path | Status |
-|---|----------|------|--------|
-| 1 | Source code (backend) | `backend/` | ✅ Implemented & tested |
-| 2 | Digital twin engine | `digital_twin/` | ✅ Implemented & tested |
-| 3 | ESP32 firmware | `firmware/esp32/src/main.ino` | ✅ Implemented |
-| 4 | Wokwi project files | `firmware/wokwi/` | ✅ Created |
-| 5 | Sensor simulator | `backend/simulator.py` | ✅ Implemented & tested |
-| 6 | MQTT configuration | `mqtt/mosquitto.conf` | ✅ Created |
-| 7 | MQTT test publisher | `mqtt/examples/test_publisher.py` | ✅ Created |
-| 8 | Node-RED flows | `nodered/flows.json` | ✅ Created |
-| 9 | Automated tests (48) | `tests/test_all.py` | ✅ All passing |
-| 10 | Experiment runner | `experiments/run_experiments.py` | ✅ Executed |
-| 11 | Reconstruction results | `results/tables/reconstruction_results.json` | ✅ Generated |
-| 12 | Scenario summaries | `results/tables/scenario_summaries.json` | ✅ Generated |
-| 13 | Latency results | `results/tables/latency_results.json` | ✅ Generated |
-| 14 | Warning results | `results/tables/warning_results.json` | ✅ Generated |
-| 15 | Reconstruction plots | `results/plots/reconstruction_*.png` | ✅ Generated |
-| 16 | Scenario plots | `results/plots/scenario_water_levels.png` | ✅ Generated |
-| 17 | Sensor dropout plot | `results/plots/sensor_dropout_timeline.png` | ✅ Generated |
-| 18 | Architecture docs | `docs/architecture.md` | ✅ Written |
-| 19 | Installation guide | `docs/installation.md` | ✅ Written |
-| 20 | Data dictionary | `docs/data_dictionary.md` | ✅ Written |
-| 21 | MQTT contract | `docs/mqtt_contract.md` | ✅ Written |
-| 22 | Testing guide | `docs/testing.md` | ✅ Written |
-| 23 | Demo script | `docs/demo_script.md` | ✅ Written |
-| 24 | Troubleshooting | `docs/troubleshooting.md` | ✅ Written |
-| 25 | Limitations | `docs/limitations.md` | ✅ Written |
-| 26 | Final report | `reports/final_report.md` | ✅ This document |
-| 27 | Docker Compose | `docker-compose.yml` | ✅ Created (untested) |
-| 28 | README | `README.md` | ✅ Written |
+| #  | Artifact               | Path                                           | Status                  |
+| -- | ---------------------- | ---------------------------------------------- | ----------------------- |
+| 1  | Source code (backend)  | `backend/`                                   | ✅ Implemented & tested |
+| 2  | Digital twin engine    | `digital_twin/`                              | ✅ Implemented & tested |
+| 3  | ESP32 firmware         | `firmware/esp32/src/main.ino`                | ✅ Implemented          |
+| 4  | Wokwi project files    | `firmware/wokwi/`                            | ✅ Created              |
+| 5  | Sensor simulator       | `backend/simulator.py`                       | ✅ Implemented & tested |
+| 6  | MQTT configuration     | `mqtt/mosquitto.conf`                        | ✅ Created              |
+| 7  | MQTT test publisher    | `mqtt/examples/test_publisher.py`            | ✅ Created              |
+| 8  | Node-RED flows         | `nodered/flows.json`                         | ✅ Created              |
+| 9  | Automated tests (48)   | `tests/test_all.py`                          | ✅ All passing          |
+| 10 | Experiment runner      | `experiments/run_experiments.py`             | ✅ Executed             |
+| 11 | Reconstruction results | `results/tables/reconstruction_results.json` | ✅ Generated            |
+| 12 | Scenario summaries     | `results/tables/scenario_summaries.json`     | ✅ Generated            |
+| 13 | Latency results        | `results/tables/latency_results.json`        | ✅ Generated            |
+| 14 | Warning results        | `results/tables/warning_results.json`        | ✅ Generated            |
+| 15 | Reconstruction plots   | `results/plots/reconstruction_*.png`         | ✅ Generated            |
+| 16 | Scenario plots         | `results/plots/scenario_water_levels.png`    | ✅ Generated            |
+| 17 | Sensor dropout plot    | `results/plots/sensor_dropout_timeline.png`  | ✅ Generated            |
+| 18 | Architecture docs      | `docs/architecture.md`                       | ✅ Written              |
+| 19 | Installation guide     | `docs/installation.md`                       | ✅ Written              |
+| 20 | Data dictionary        | `docs/data_dictionary.md`                    | ✅ Written              |
+| 21 | MQTT contract          | `docs/mqtt_contract.md`                      | ✅ Written              |
+| 22 | Testing guide          | `docs/testing.md`                            | ✅ Written              |
+| 23 | Demo script            | `docs/demo_script.md`                        | ✅ Written              |
+| 24 | Troubleshooting        | `docs/troubleshooting.md`                    | ✅ Written              |
+| 25 | Limitations            | `docs/limitations.md`                        | ✅ Written              |
+| 26 | Final report           | `reports/final_report.md`                    | ✅ This document        |
+| 27 | Docker Compose         | `docker-compose.yml`                         | ✅ Created (untested)   |
+| 28 | README                 | `README.md`                                  | ✅ Written              |

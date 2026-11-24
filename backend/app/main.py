@@ -16,6 +16,7 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse
 
 from pydantic import BaseModel, Field
 
@@ -681,4 +682,110 @@ def compare_tank_prediction_vs_measured(
     eval_metrics["predicted_levels_cm"] = predicted_levels[:len(measured_levels)]
     eval_metrics["times_sec"] = times[:len(measured_levels)]
     return eval_metrics
+
+
+# -------------------------------------------------------------------------
+# Showcase Control Center Endpoints & Web UI
+# -------------------------------------------------------------------------
+
+SHOWCASE_HTML_PATH = Path(__file__).resolve().parent / "templates" / "showcase.html"
+SIMULATOR_CONTROL_FILE = config._PROJECT_ROOT / ".run" / "simulator_control.json"
+
+
+@app.get("/", response_class=HTMLResponse)
+@app.get("/showcase", response_class=HTMLResponse)
+def get_showcase_dashboard():
+    """Serves the Unified Showcase Engineering Control Center."""
+    if not SHOWCASE_HTML_PATH.exists():
+        raise HTTPException(404, "Showcase dashboard template not found")
+    return FileResponse(SHOWCASE_HTML_PATH)
+
+
+@app.post("/api/showcase/scenario/{name}")
+def trigger_showcase_scenario(name: str):
+    """Activates controlled showcase scenarios for live demonstration."""
+    SIMULATOR_CONTROL_FILE.parent.mkdir(parents=True, exist_ok=True)
+    control_data = {"scenario": name, "timestamp": datetime.now(timezone.utc).isoformat(), "nodes": {}}
+
+    if name == "normal":
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 25.0, "reset_level": 15.0},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 35.0, "reset_level": 18.0},
+        }
+        if scenario_ctrl and scenario_ctrl.is_running:
+            scenario_ctrl.stop()
+    elif name == "rising_water":
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "inflow_override": 45.0},
+            "node_02": {"paused": False, "disconnected": False, "inflow_override": 55.0},
+        }
+        if twin_engine:
+            twin_engine.apply_scenario_params("zone_01", inflow_rate=0.45)
+            twin_engine.apply_scenario_params("zone_02", inflow_rate=0.40)
+    elif name == "critical_water":
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "inflow_override": 75.0, "reset_level": 43.0},
+            "node_02": {"paused": False, "disconnected": False, "inflow_override": 85.0, "reset_level": 52.0},
+        }
+        if twin_engine:
+            twin_engine.apply_scenario_params("zone_01", inflow_rate=0.85)
+            twin_engine.apply_scenario_params("zone_02", inflow_rate=0.80)
+    elif name == "missing_data_recovery":
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 25.0},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 35.0},
+        }
+    else:
+        raise HTTPException(400, f"Unknown showcase scenario: {name}")
+
+    with open(SIMULATOR_CONTROL_FILE, "w") as f:
+        json.dump(control_data, f, indent=2)
+
+    logger.info("Activated showcase scenario '%s'", name)
+    return {"status": "activated", "scenario": name, "control": control_data}
+
+
+@app.post("/api/showcase/node/{node_id}/{action}")
+def control_showcase_node(node_id: str, action: str):
+    """Controls simulated node behavior (disconnect, reconnect, fault, pause)."""
+    SIMULATOR_CONTROL_FILE.parent.mkdir(parents=True, exist_ok=True)
+    control_data = {"timestamp": datetime.now(timezone.utc).isoformat(), "nodes": {}}
+
+    if SIMULATOR_CONTROL_FILE.exists():
+        try:
+            with open(SIMULATOR_CONTROL_FILE, "r") as f:
+                control_data = json.load(f)
+        except Exception:
+            pass
+
+    if "nodes" not in control_data:
+        control_data["nodes"] = {}
+
+    targets = ["node_01", "node_02"] if node_id in ("both", "all") else [node_id]
+
+    for nid in targets:
+        if nid not in control_data["nodes"]:
+            control_data["nodes"][nid] = {}
+
+        if action == "disconnect":
+            control_data["nodes"][nid]["disconnected"] = True
+        elif action == "reconnect":
+            control_data["nodes"][nid]["disconnected"] = False
+            control_data["nodes"][nid]["sensor_fault"] = False
+            control_data["nodes"][nid]["paused"] = False
+        elif action == "sensor_fault":
+            control_data["nodes"][nid]["sensor_fault"] = True
+        elif action == "pause":
+            control_data["nodes"][nid]["paused"] = True
+        elif action == "resume":
+            control_data["nodes"][nid]["paused"] = False
+        else:
+            raise HTTPException(400, f"Unknown node action: {action}")
+
+    with open(SIMULATOR_CONTROL_FILE, "w") as f:
+        json.dump(control_data, f, indent=2)
+
+    logger.info("Showcase node control applied: %s -> %s", node_id, action)
+    return {"status": "applied", "node_id": node_id, "action": action, "control": control_data}
+
 
