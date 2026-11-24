@@ -705,6 +705,7 @@ def compare_tank_prediction_vs_measured(
 # -------------------------------------------------------------------------
 
 SHOWCASE_HTML_PATH = Path(__file__).resolve().parent / "templates" / "showcase.html"
+URBAN_TWIN_HTML_PATH = Path(__file__).resolve().parent / "templates" / "urban_twin.html"
 SIMULATOR_CONTROL_FILE = config._PROJECT_ROOT / ".run" / "simulator_control.json"
 
 
@@ -756,6 +757,147 @@ def get_database_stats():
     if not storage:
         raise HTTPException(503, "Storage not initialized")
     return storage.get_database_stats()
+
+
+@app.get("/urban-twin", response_class=HTMLResponse)
+def get_urban_twin_page():
+    """Serves the Chennai Urban 3D Digital Twin Interface."""
+    if not URBAN_TWIN_HTML_PATH.exists():
+        raise HTTPException(404, "Chennai urban twin template not found")
+    return FileResponse(URBAN_TWIN_HTML_PATH)
+
+
+# ── Chennai Urban Geospatial Digital Twin REST APIs ───────────────────────
+@app.get("/api/urban/locations")
+def get_urban_locations():
+    """Returns the 10 prioritized Chennai focus locations with elevation, population and flood metrics."""
+    from digital_twin.chennai_geo_data import CHENNAI_LOCATIONS
+    return {"count": len(CHENNAI_LOCATIONS), "locations": CHENNAI_LOCATIONS}
+
+
+@app.get("/api/urban/locations/{location_id}")
+def get_urban_location(location_id: str):
+    """Returns individual location details for a Chennai locality."""
+    from digital_twin.urban_hydrology import urban_engine
+    loc = urban_engine.get_location_by_id(location_id)
+    if not loc:
+        raise HTTPException(404, f"Location '{location_id}' not found")
+    return loc
+
+
+@app.get("/api/urban/stations")
+def get_urban_stations():
+    """Returns verified Automatic Rain Gauge stations from CFM-DSS/IMD with coordinates."""
+    from digital_twin.chennai_geo_data import RAINFALL_STATIONS
+    return {"count": len(RAINFALL_STATIONS), "stations": RAINFALL_STATIONS}
+
+
+@app.get("/api/urban/reservoirs")
+def get_urban_reservoirs():
+    """Returns official Chennai major reservoirs with storage and capacities from WRD."""
+    from digital_twin.chennai_geo_data import CHENNAI_RESERVOIRS
+    return {"count": len(CHENNAI_RESERVOIRS), "reservoirs": CHENNAI_RESERVOIRS}
+
+
+@app.get("/api/urban/geo/waterways")
+def get_urban_waterways_geojson():
+    """Returns GeoJSON FeatureCollection of rivers, canals, marshes, and major lakes."""
+    from digital_twin.chennai_geo_data import WATERWAYS_GEOJSON
+    return WATERWAYS_GEOJSON
+
+
+@app.get("/api/urban/geo/catchments")
+def get_urban_catchments_geojson():
+    """Returns GeoJSON FeatureCollection of Chennai sub-basin catchment boundaries."""
+    from digital_twin.chennai_geo_data import CATCHMENTS_GEOJSON
+    return CATCHMENTS_GEOJSON
+
+
+@app.get("/api/urban/geo/buildings")
+def get_urban_buildings_geojson():
+    """Returns GeoJSON 3D building footprints with estimated extrusion heights for pilot area."""
+    from digital_twin.chennai_geo_data import BUILDINGS_GEOJSON
+    return BUILDINGS_GEOJSON
+
+
+@app.get("/api/urban/scenarios/list")
+def list_urban_scenarios():
+    """Returns list of available predefined urban flood scenarios."""
+    from digital_twin.urban_hydrology import PREDEFINED_SCENARIOS
+    return [
+        {
+            "id": p.scenario_id,
+            "name": p.scenario_name,
+            "description": p.description,
+            "rainfall_intensity_mm_hr": p.rainfall_intensity_mm_hr,
+            "duration_hours": p.duration_hours,
+            "drainage_capacity_pct": p.drainage_capacity_pct,
+            "chembarambakkam_discharge_cusecs": p.chembarambakkam_discharge_cusecs,
+        }
+        for p in PREDEFINED_SCENARIOS.values()
+    ]
+
+
+@app.get("/api/urban/historical-events")
+def get_urban_historical_events():
+    """Returns historical Cyclone Michaung storm series and 2015 flood benchmarks."""
+    try:
+        michaung_path = config.PROCESSED_DIR / "chennai_michaung_hourly.csv"
+        records = []
+        if michaung_path.exists():
+            import csv
+            with open(michaung_path) as f:
+                reader = list(csv.DictReader(f))
+                records = reader[:144]
+        return {
+            "event_id": "cyclone_michaung_2023",
+            "event_name": "Cyclone Michaung (Dec 1-6, 2023)",
+            "peak_hourly_intensity_mm_hr": 46.8,
+            "cumulative_precipitation_mm": 472.0,
+            "records_count": len(records),
+            "sample_records": records[:12],
+            "provenance": "CFM-DSS_HourlyObservations",
+        }
+    except Exception as e:
+        return {"error": str(e), "status": "unavailable"}
+
+
+@app.post("/api/urban/scenario")
+def execute_urban_scenario(payload: Optional[dict] = None):
+    """
+    Executes the mass-balance urban flood screening model for Chennai.
+    Accepts custom parameters or a predefined scenario_id.
+    """
+    from digital_twin.urban_hydrology import urban_engine, PREDEFINED_SCENARIOS, UrbanScenarioParams
+    payload = payload or {}
+    scenario_id = payload.get("scenario_id", "heavy_rain")
+
+    if scenario_id in PREDEFINED_SCENARIOS and not any(k in payload for k in ["rainfall_intensity_mm_hr", "chembarambakkam_discharge_cusecs"]):
+        params = PREDEFINED_SCENARIOS[scenario_id]
+    else:
+        params = UrbanScenarioParams(
+            scenario_id=scenario_id,
+            scenario_name=payload.get("scenario_name", f"Custom ({scenario_id})"),
+            rainfall_intensity_mm_hr=float(payload.get("rainfall_intensity_mm_hr", 45.0)),
+            duration_hours=float(payload.get("duration_hours", 4.0)),
+            runoff_coefficient=float(payload.get("runoff_coefficient", 0.82)),
+            drainage_capacity_pct=float(payload.get("drainage_capacity_pct", 85.0)),
+            infiltration_rate_mm_hr=float(payload.get("infiltration_rate_mm_hr", 4.0)),
+            chembarambakkam_discharge_cusecs=float(payload.get("chembarambakkam_discharge_cusecs", 3500.0)),
+            description=payload.get("description", "Custom user-defined flood scenario."),
+        )
+
+    return urban_engine.run_scenario(params)
+
+
+@app.get("/api/urban/scenario/{scenario_id}")
+def get_urban_scenario_result(scenario_id: str):
+    """Retrieves computed flood results for a specific scenario ID."""
+    from digital_twin.urban_hydrology import urban_engine, PREDEFINED_SCENARIOS
+    if scenario_id not in PREDEFINED_SCENARIOS:
+        raise HTTPException(404, f"Scenario '{scenario_id}' not found")
+    params = PREDEFINED_SCENARIOS[scenario_id]
+    return urban_engine.run_scenario(params)
 
 
 @app.get("/", response_class=HTMLResponse)

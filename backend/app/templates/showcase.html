@@ -61,6 +61,9 @@
 
     <!-- QUICK LINKS & TIME -->
     <div class="flex items-center gap-3">
+      <a href="/urban-twin" target="_blank" class="px-3.5 py-1.5 rounded-md bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-xs font-semibold text-white shadow-lg shadow-cyan-900/40 flex items-center gap-1.5 transition">
+        <span>&#x26F6;</span> 3D Urban Twin &rarr;
+      </a>
       <div id="clock" class="text-xs mono text-slate-400"></div>
       <a href="/docs" target="_blank" class="px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-600 transition flex items-center gap-1">
         Swagger API &rarr;
@@ -70,24 +73,140 @@
 
   <!-- NAVIGATION TABS -->
   <nav class="glass border-b border-slate-800 px-6 py-2 overflow-x-auto flex items-center gap-2 text-xs font-medium">
-    <button onclick="switchTab('overview')" class="tab-btn px-3 py-1.5 rounded-md transition text-cyan-400 bg-slate-800/80 border border-cyan-800/50" data-tab="overview">1. Overview</button>
-    <button onclick="switchTab('nodes')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="nodes">2. Dual-Node Gauges</button>
-    <button onclick="switchTab('twin3d')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="twin3d">3. Interactive 3D Digital Twin</button>
-    <button onclick="switchTab('twin')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="twin">4. Digital Twin ODE Prediction</button>
-    <button onclick="switchTab('reconstruction')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="reconstruction">5. Gap Reconstruction</button>
-    <button onclick="switchTab('reliability')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="reliability">6. Freshness & Alerts</button>
-    <button onclick="switchTab('chennai')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="chennai">7. Chennai Basin</button>
-    <button onclick="switchTab('scenarios')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="scenarios">8. Showcase Laboratory Scenarios</button>
-    <button onclick="switchTab('database')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="database">9. Database Explorer</button>
-    <button onclick="switchTab('mqtt')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="mqtt">10. MQTT Streamer</button>
-    <button onclick="switchTab('benchmarks')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="benchmarks">11. Benchmarks</button>
+    <button onclick="switchTab('urbantwin')" class="tab-btn px-3 py-1.5 rounded-md transition text-cyan-400 bg-slate-800/80 border border-cyan-800/50" data-tab="urbantwin">1. Chennai Urban 3D Digital Twin</button>
+    <button onclick="switchTab('urbanscenarios')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="urbanscenarios">2. Urban Flood Scenario Laboratory</button>
+    <button onclick="switchTab('chennai')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="chennai">3. Chennai Basin & Catchment Analytics</button>
+    <button onclick="switchTab('overview')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="overview">4. IoT System Topology & Health</button>
+    <button onclick="switchTab('nodes')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="nodes">5. Dual-Node Telemetry</button>
+    <button onclick="switchTab('twin3d')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="twin3d">6. Experimental IoT Tank Digital Twin</button>
+    <button onclick="switchTab('twin')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="twin">7. Digital Twin ODE Prediction</button>
+    <button onclick="switchTab('reconstruction')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="reconstruction">8. Missing-Data Reconstruction</button>
+    <button onclick="switchTab('reliability')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="reliability">9. Freshness & Edge Warnings</button>
+    <button onclick="switchTab('scenarios')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="scenarios">10. Showcase Laboratory (Dual Nodes)</button>
+    <button onclick="switchTab('database')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="database">11. Database Explorer</button>
+    <button onclick="switchTab('mqtt')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="mqtt">12. MQTT Streamer</button>
+    <button onclick="switchTab('benchmarks')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="benchmarks">13. Benchmarks</button>
   </nav>
 
   <!-- MAIN VIEW CONTAINER -->
   <main class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
 
-    <!-- 1. OVERVIEW & SYSTEM HEALTH TAB -->
-    <section id="view-overview" class="view-panel space-y-6">
+    <!-- 1. CHENNAI URBAN 3D DIGITAL TWIN TAB (PRIMARY CENTERPIECE) -->
+    <section id="view-urbantwin" class="view-panel space-y-6">
+      <div class="glass p-5 rounded-xl border border-cyan-800/60 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-950 text-cyan-400 border border-cyan-700">PRIMARY CENTERPIECE</span>
+              <h2 class="text-xl font-bold text-white tracking-tight">Chennai Urban Geospatial Digital Twin</h2>
+            </div>
+            <p class="text-sm text-slate-300 mt-1">
+              Interactive 3D WebGL digital twin of the South Chennai Flood Basin: Velachery depression, Pallikaranai marsh sink, Adyar & Cooum rivers, Chembarambakkam reservoir, 3D extruded buildings, and terrain-aware inundation screening.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="/urban-twin" target="_blank" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-cyan-900/40 flex items-center gap-1.5 transition">
+              <span>&#x26F6;</span> Full-Screen 3D Geospatial Mode &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- QUICK FLY-TO LOCATION SHORTCUTS -->
+        <div class="mt-4 p-2.5 bg-slate-900/80 rounded-lg border border-slate-800 flex flex-wrap items-center gap-1.5 text-xs">
+          <span class="text-slate-400 font-semibold px-1">Quick Fly-To:</span>
+          <button onclick="flyUrbanIframe('velachery')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Velachery (6.2m)</button>
+          <button onclick="flyUrbanIframe('pallikaranai')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Pallikaranai Marsh (3.1m)</button>
+          <button onclick="flyUrbanIframe('saidapet')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Saidapet (8.0m)</button>
+          <button onclick="flyUrbanIframe('adyar')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Adyar Estuary (3.8m)</button>
+          <button onclick="flyUrbanIframe('madipakkam')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Madipakkam (5.4m)</button>
+          <button onclick="flyUrbanIframe('perungudi')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Perungudi OMR (6.8m)</button>
+          <button onclick="flyUrbanIframe('chembarambakkam')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Chembarambakkam (25.4m)</button>
+          <button onclick="flyUrbanIframe('porur')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Porur (14.1m)</button>
+          <button onclick="flyUrbanIframe('tambaram')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-cyan-900 text-cyan-300 border border-slate-700">Tambaram (28.5m)</button>
+        </div>
+
+        <!-- EMBEDDED MAPLIBRE GL JS 3D URBAN TWIN IFRAME -->
+        <div class="mt-4 rounded-xl overflow-hidden border border-cyan-900/50 shadow-2xl relative" style="height: 620px;">
+          <iframe id="urban-twin-frame" src="/urban-twin" class="w-full h-full border-0"></iframe>
+        </div>
+
+        <!-- SUMMARY KEY INDICATORS BAR -->
+        <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs mono">
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
+            <span class="text-slate-400 block text-[11px]">Modeled Basin Volume:</span>
+            <span id="overview-vol" class="text-cyan-300 font-bold text-base">70.3 MCM</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
+            <span class="text-slate-400 block text-[11px]">Total Inundated Area:</span>
+            <span id="overview-area" class="text-blue-300 font-bold text-base">74.8 km²</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
+            <span class="text-slate-400 block text-[11px]">Max Waterlogging Depth:</span>
+            <span id="overview-depth" class="text-amber-400 font-bold text-base">1.19 m</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
+            <span class="text-slate-400 block text-[11px]">Active Risk Localities:</span>
+            <span id="overview-risk" class="text-red-400 font-bold text-base">8 of 10 High/Critical</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. URBAN FLOOD SCENARIO LABORATORY TAB -->
+    <section id="view-urbanscenarios" class="view-panel hidden space-y-6">
+      <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+              <span>&#9889;</span> Chennai Urban Flood Scenario Laboratory
+            </h2>
+            <p class="text-sm text-slate-400 mt-0.5">
+              Terrain-aware mass-balance flood screening across Chennai's 10 strategic focus locations under simulated meteorological and drainage regimes.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="main-scenario-preset" onchange="runMainUrbanScenario(this.value)" class="bg-slate-900 border border-slate-700 text-cyan-300 text-xs rounded-lg p-2 focus:outline-none">
+              <option value="normal">Scenario 1 — Normal Baseline (Dry Weather)</option>
+              <option value="heavy_rain" selected>Scenario 2 — Heavy Monsoon Rain (45 mm/hr)</option>
+              <option value="extreme_monsoon">Scenario 3 — Extreme Cyclonic Downpour (85 mm/hr)</option>
+              <option value="drainage_obstruction">Scenario 4 — Drainage Obstruction (25% Capacity)</option>
+              <option value="reservoir_discharge">Scenario 5 — Chembarambakkam Sluice Surge (25,000 cfs)</option>
+              <option value="michaung_replay">Scenario 6 — Cyclone Michaung Dec 2023 Replay</option>
+              <option value="sensor_failure">Scenario 7 — Monitoring Data Dropout Simulation</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 10 CHENNAI LOCATIONS FLOOD IMPACT TABLE -->
+        <div class="overflow-x-auto rounded-lg border border-slate-800 bg-slate-900/70">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-800/80 text-slate-300 uppercase tracking-wider font-semibold border-b border-slate-700">
+              <tr>
+                <th class="py-2.5 px-3">Location</th>
+                <th class="py-2.5 px-3">Sub-Basin</th>
+                <th class="py-2.5 px-3">Elevation</th>
+                <th class="py-2.5 px-3">Est. Flood Depth</th>
+                <th class="py-2.5 px-3">Severity Classification</th>
+                <th class="py-2.5 px-3">Risk Level</th>
+                <th class="py-2.5 px-3">Pop. Affected</th>
+                <th class="py-2.5 px-3">Primary Hazard Mechanism</th>
+              </tr>
+            </thead>
+            <tbody id="urban-scenario-tbody" class="divide-y divide-slate-800 mono">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-3 bg-slate-900/90 rounded-lg border border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+          <span>*Scientific Integrity Note: Mass-balance terrain depression screening approximation; not a calibrated 2D hydrodynamic Navier-Stokes solver.</span>
+          <span class="text-cyan-400 font-semibold">Provenance: SIMULATED_SCREENING_MODEL</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. IOT SYSTEM TOPOLOGY & HEALTH TAB -->
+    <section id="view-overview" class="view-panel hidden space-y-6">
       <div class="glass p-5 rounded-xl border border-slate-800 shadow-xl relative overflow-hidden">
         <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -331,10 +450,10 @@
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-              <span>&#128392;</span> Live Interactive 3D Cyber-Physical Tank Digital Twin
+              <span>&#128392;</span> Experimental IoT Tank Digital Twin (Laboratory Validation Environment)
             </h2>
             <p class="text-sm text-slate-400 mt-0.5">
-              Three.js WebGL simulation of the physical dual-cylinder laboratory tanks. Dynamic water height updates directly from live MQTT telemetry.
+              Controlled software-based experimental environment for validating water-level modeling, IoT data pipelines, missing-data reconstruction, sensor failure handling, and warning logic. (Note: The primary urban digital twin is located under Tab 1).
             </p>
           </div>
           <div class="flex items-center gap-2 mono text-xs">
@@ -1004,6 +1123,69 @@
       if (tabId === 'chennai') initChennaiChart();
       if (tabId === 'database') refreshDatabaseView();
       if (tabId === 'mqtt') fetchRecentMqttMessages();
+      if (tabId === 'urbanscenarios') fetchUrbanScenarioTable();
+    }
+
+    function flyUrbanIframe(locId) {
+      const frame = document.getElementById('urban-twin-frame');
+      if (frame && frame.contentWindow && typeof frame.contentWindow.flyToLocation === 'function') {
+        frame.contentWindow.flyToLocation(locId);
+      }
+    }
+
+    async function runMainUrbanScenario(preset) {
+      try {
+        const resp = await fetch('/api/urban/scenario', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({scenario_id: preset})
+        });
+        const data = await resp.json();
+        renderUrbanScenarioTable(data);
+        const frame = document.getElementById('urban-twin-frame');
+        if (frame && frame.contentWindow && typeof frame.contentWindow.applyPresetScenario === 'function') {
+          frame.contentWindow.applyPresetScenario(preset);
+        }
+        showToast(`Activated urban flood scenario: ${preset}`, '🌊');
+      } catch (err) {
+        console.error('Error running urban scenario:', err);
+      }
+    }
+
+    async function fetchUrbanScenarioTable() {
+      const preset = document.getElementById('main-scenario-preset') ? document.getElementById('main-scenario-preset').value : 'heavy_rain';
+      await runMainUrbanScenario(preset);
+    }
+
+    function renderUrbanScenarioTable(data) {
+      const tbody = document.getElementById('urban-scenario-tbody');
+      if (!tbody || !data.location_impacts) return;
+      tbody.innerHTML = '';
+      data.location_impacts.forEach(loc => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/50 transition';
+        const badgeColor = loc.risk_level === 'Critical' ? 'bg-red-950 text-red-300 border-red-800' :
+                           loc.risk_level === 'High' ? 'bg-amber-950 text-amber-300 border-amber-800' :
+                           loc.risk_level === 'Moderate' ? 'bg-blue-950 text-blue-300 border-blue-800' :
+                           'bg-emerald-950 text-emerald-300 border-emerald-800';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-bold text-white">${loc.name}</td>
+          <td class="py-2.5 px-3 text-slate-400 font-sans">${loc.coordinates[1].toFixed(4)}°N, ${loc.coordinates[0].toFixed(4)}°E</td>
+          <td class="py-2.5 px-3 text-slate-300">${loc.elevation_m} m</td>
+          <td class="py-2.5 px-3 text-cyan-300 font-bold">${loc.estimated_depth_m} m (${loc.estimated_depth_cm} cm)</td>
+          <td class="py-2.5 px-3 font-sans text-slate-300">${loc.classification}</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">${loc.risk_level}</span></td>
+          <td class="py-2.5 px-3 text-slate-300">${loc.affected_population_estimate.toLocaleString()}</td>
+          <td class="py-2.5 px-3 font-sans text-[11px] text-slate-400">${loc.drainage_status}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      if (document.getElementById('overview-vol')) {
+        document.getElementById('overview-vol').innerText = `${data.summary.total_accumulated_volume_mcm} MCM`;
+        document.getElementById('overview-area').innerText = `${data.summary.total_inundated_area_km2} km²`;
+        document.getElementById('overview-depth').innerText = `${data.summary.max_depth_m} m`;
+        document.getElementById('overview-risk').innerText = `${data.summary.high_risk_locations_count} of 10 High/Critical`;
+      }
     }
 
     // Toast alert
@@ -1735,13 +1917,16 @@
     // Continuous polling every 2.5 seconds
     setInterval(fetchLiveTelemetry, 2500);
     fetchLiveTelemetry();
+    fetchUrbanScenarioTable();
 
     // Support hash navigation
     if (window.location.hash) {
       const tabName = window.location.hash.replace('#', '');
-      if (['overview', 'nodes', 'twin3d', 'twin', 'reconstruction', 'reliability', 'chennai', 'scenarios', 'database', 'mqtt', 'benchmarks'].includes(tabName)) {
+      if (['urbantwin', 'urbanscenarios', 'overview', 'nodes', 'twin3d', 'twin', 'reconstruction', 'reliability', 'chennai', 'scenarios', 'database', 'mqtt', 'benchmarks'].includes(tabName)) {
         switchTab(tabName);
       }
+    } else {
+      switchTab('urbantwin');
     }
   </script>
 </body>

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicTwin-R — Chennai 3D Urban Flood Digital Twin</title>
+    <!-- MapLibre GL JS (WebGL 3D Geospatial Engine) -->
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0b1120; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; height: 100%; }
+        .glass-panel { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.2); }
+        .maplibregl-popup-content { background: #0f172a; color: #f8fafc; border: 1px solid #0284c7; border-radius: 8px; padding: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7); }
+        .maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: #0284c7; }
+        .location-marker { width: 22px; height: 22px; border-radius: 50%; background: #06b6d4; border: 3px solid #ffffff; box-shadow: 0 0 15px #06b6d4; cursor: pointer; transition: transform 0.2s; }
+        .location-marker:hover { transform: scale(1.3); }
+        .station-marker { width: 16px; height: 16px; border-radius: 50%; background: #3b82f6; border: 2px solid #93c5fd; box-shadow: 0 0 10px #3b82f6; cursor: pointer; }
+        .reservoir-marker { width: 24px; height: 24px; border-radius: 6px; background: #0284c7; border: 2px solid #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: white; cursor: pointer; box-shadow: 0 0 12px #0284c7; }
+        .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+    </style>
+</head>
+<body class="text-slate-100 select-none">
+
+    <!-- 3D Map Viewport -->
+    <div id="map"></div>
+
+    <!-- Top Header & Navigation Bar -->
+    <header class="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 py-3 glass-panel border-b border-cyan-900/40">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-600 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <i data-lucide="map-pin" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-base font-bold tracking-wide text-white">CivicTwin-R</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800">Chennai 3D Urban Twin</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Geospatial Live
+                    </span>
+                </div>
+                <p class="text-xs text-slate-400">South Chennai Flood Basin (Adyar - Velachery - Pallikaranai Marsh Corridor)</p>
+            </div>
+        </div>
+
+        <!-- Quick Location Fly-to Pills -->
+        <div class="hidden lg:flex items-center space-x-1.5 bg-slate-900/70 p-1 rounded-lg border border-slate-800">
+            <span class="text-[11px] text-slate-400 px-2 font-medium">Quick Fly-To:</span>
+            <button onclick="flyToLocation('velachery')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-cyan-900/60 hover:text-cyan-300 text-slate-200 transition">Velachery</button>
+            <button onclick="flyToLocation('pallikaranai')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-cyan-900/60 hover:text-cyan-300 text-slate-200 transition">Pallikaranai</button>
+            <button onclick="flyToLocation('adyar')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-cyan-900/60 hover:text-cyan-300 text-slate-200 transition">Adyar</button>
+            <button onclick="flyToLocation('saidapet')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-cyan-900/60 hover:text-cyan-300 text-slate-200 transition">Saidapet</button>
+            <button onclick="flyToLocation('madipakkam')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-cyan-900/60 hover:text-cyan-300 text-slate-200 transition">Madipakkam</button>
+            <button onclick="flyToLocation('perungudi')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-cyan-900/60 hover:text-cyan-300 text-slate-200 transition">Perungudi</button>
+            <button onclick="flyToLocation('chembarambakkam')" class="px-2.5 py-1 text-xs rounded bg-slate-800 hover:bg-cyan-900/60 hover:text-cyan-300 text-slate-200 transition">Chembarambakkam</button>
+            <button onclick="resetCameraView()" class="px-2.5 py-1 text-xs rounded bg-cyan-900/60 text-cyan-300 hover:bg-cyan-800 transition font-medium">Overview</button>
+        </div>
+
+        <!-- External Service Links & Controls -->
+        <div class="flex items-center space-x-2">
+            <button onclick="toggle3DMode()" id="btn-3d-toggle" class="px-3 py-1.5 text-xs rounded-md bg-cyan-900/50 hover:bg-cyan-800 border border-cyan-700/50 text-cyan-200 flex items-center gap-1.5 transition">
+                <i data-lucide="box" class="w-3.5 h-3.5"></i> <span id="label-3d">3D Tilt (60°)</span>
+            </button>
+            <a href="/showcase" class="px-3 py-1.5 text-xs rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center gap-1.5 transition">
+                <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i> Showcase Center
+            </a>
+            <a href="http://127.0.0.1:1880/ui/" target="_blank" class="px-3 py-1.5 text-xs rounded-md bg-red-950 hover:bg-red-900 border border-red-800 text-red-200 flex items-center gap-1.5 transition">
+                <i data-lucide="gauge" class="w-3.5 h-3.5"></i> Node-RED (1880)
+            </a>
+            <a href="/docs" target="_blank" class="px-3 py-1.5 text-xs rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center gap-1.5 transition">
+                <i data-lucide="code" class="w-3.5 h-3.5"></i> API Docs
+            </a>
+        </div>
+    </header>
+
+    <!-- Floating Scenario Control Laboratory (Left Panel) -->
+    <aside class="absolute top-16 left-4 bottom-6 w-96 z-20 flex flex-col glass-panel rounded-xl shadow-2xl overflow-hidden border border-slate-700/60">
+        <!-- Panel Tabs -->
+        <div class="flex border-b border-slate-800 bg-slate-900/90 text-xs font-medium">
+            <button onclick="switchSidebarTab('scenarios')" id="tab-btn-scenarios" class="flex-1 py-2.5 px-3 border-b-2 border-cyan-400 text-cyan-400 bg-slate-800/50 flex items-center justify-center gap-1.5">
+                <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Scenarios & Controls
+            </button>
+            <button onclick="switchSidebarTab('layers')" id="tab-btn-layers" class="flex-1 py-2.5 px-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center justify-center gap-1.5">
+                <i data-lucide="layers" class="w-3.5 h-3.5"></i> Map Layers
+            </button>
+            <button onclick="switchSidebarTab('info')" id="tab-btn-info" class="flex-1 py-2.5 px-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center justify-center gap-1.5">
+                <i data-lucide="info" class="w-3.5 h-3.5"></i> Location Data
+            </button>
+        </div>
+
+        <!-- Tab 1: Scenarios & Controls -->
+        <div id="sidebar-tab-scenarios" class="flex-1 p-4 overflow-y-auto scrollbar-thin space-y-4">
+            <!-- Preset Scenario Selector -->
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Predefined Scenario Profile</label>
+                <select id="scenario-preset" onchange="applyPresetScenario(this.value)" class="w-full bg-slate-900 border border-slate-700 text-cyan-300 text-xs rounded-lg p-2.5 focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                    <option value="normal">Scenario 1 — Normal Baseline (Dry Weather)</option>
+                    <option value="heavy_rain" selected>Scenario 2 — Heavy Monsoon Rain (45 mm/hr)</option>
+                    <option value="extreme_monsoon">Scenario 3 — Extreme Cyclonic Downpour (85 mm/hr)</option>
+                    <option value="drainage_obstruction">Scenario 4 — Drainage Obstruction (25% Capacity)</option>
+                    <option value="reservoir_discharge">Scenario 5 — Chembarambakkam Sluice Surge (25,000 cfs)</option>
+                    <option value="michaung_replay">Scenario 6 — Cyclone Michaung Dec 2023 Replay</option>
+                    <option value="sensor_failure">Scenario 7 — Monitoring Data Dropout Simulation</option>
+                </select>
+                <p id="scenario-desc" class="text-[11px] text-slate-400 mt-1 italic">Typical Northeast Monsoon downpour leading to localized curb waterlogging.</p>
+            </div>
+
+            <!-- Parametric Sliders -->
+            <div class="space-y-3 pt-2 border-t border-slate-800">
+                <!-- Rainfall Intensity -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300 flex items-center gap-1"><i data-lucide="cloud-rain" class="w-3.5 h-3.5 text-cyan-400"></i> Rainfall Intensity:</span>
+                        <span id="val-rain" class="font-mono text-cyan-300 font-bold">45 mm/hr</span>
+                    </div>
+                    <input type="range" id="input-rain" min="0" max="120" step="5" value="45" oninput="updateParam('rain', this.value)" class="w-full accent-cyan-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <!-- Storm Duration -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300 flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-blue-400"></i> Duration:</span>
+                        <span id="val-duration" class="font-mono text-blue-300 font-bold">4.0 hrs</span>
+                    </div>
+                    <input type="range" id="input-duration" min="1" max="24" step="1" value="4" oninput="updateParam('duration', this.value)" class="w-full accent-blue-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <!-- Runoff Coefficient -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300 flex items-center gap-1"><i data-lucide="waves" class="w-3.5 h-3.5 text-indigo-400"></i> Runoff Coeff (C):</span>
+                        <span id="val-runoff" class="font-mono text-indigo-300 font-bold">0.82</span>
+                    </div>
+                    <input type="range" id="input-runoff" min="0.30" max="0.95" step="0.05" value="0.82" oninput="updateParam('runoff', this.value)" class="w-full accent-indigo-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <!-- Drainage Capacity -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300 flex items-center gap-1"><i data-lucide="filter" class="w-3.5 h-3.5 text-amber-400"></i> Drainage Effectiveness:</span>
+                        <span id="val-drainage" class="font-mono text-amber-300 font-bold">85%</span>
+                    </div>
+                    <input type="range" id="input-drainage" min="10" max="100" step="5" value="85" oninput="updateParam('drainage', this.value)" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <!-- Chembarambakkam Reservoir Discharge -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300 flex items-center gap-1"><i data-lucide="shield-alert" class="w-3.5 h-3.5 text-red-400"></i> Reservoir Outflow:</span>
+                        <span id="val-chembaram" class="font-mono text-red-300 font-bold">3,500 cfs</span>
+                    </div>
+                    <input type="range" id="input-chembaram" min="0" max="35000" step="1000" value="3500" oninput="updateParam('chembaram', this.value)" class="w-full accent-red-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex space-x-2 pt-2">
+                <button onclick="runScenarioSimulation()" class="flex-1 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium text-xs shadow-lg shadow-cyan-900/30 flex items-center justify-center gap-1.5 transition">
+                    <i data-lucide="play" class="w-3.5 h-3.5"></i> Run Screening Model
+                </button>
+                <button onclick="resetScenarioToBaseline()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs border border-slate-700 transition" title="Reset to Normal">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+
+            <!-- Computed Screening Metrics Card -->
+            <div class="bg-slate-900/90 rounded-lg p-3 border border-cyan-900/50 space-y-2 mt-2">
+                <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-1.5">
+                    <span class="font-semibold text-slate-300 flex items-center gap-1"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-cyan-400"></i> Model Output Summary</span>
+                    <span id="calc-time" class="text-[10px] text-slate-400 font-mono">0.03 ms</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">Accumulated Volume:</span>
+                        <span id="stat-volume" class="font-mono text-cyan-300 font-bold text-sm">70.3 MCM</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">Inundated Area:</span>
+                        <span id="stat-area" class="font-mono text-blue-300 font-bold text-sm">74.8 km²</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">Max Flood Depth:</span>
+                        <span id="stat-max-depth" class="font-mono text-amber-300 font-bold text-sm">1.19 m</span>
+                    </div>
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">High Risk Zones:</span>
+                        <span id="stat-high-risk" class="font-mono text-red-400 font-bold text-sm">8 of 10</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-400 pt-1 border-t border-slate-800 leading-tight">
+                    *Mass-balance depression screening model; not a 2D shallow-water solver.
+                </p>
+            </div>
+        </div>
+
+        <!-- Tab 2: Map Layers Toggle -->
+        <div id="sidebar-tab-layers" class="hidden flex-1 p-4 overflow-y-auto scrollbar-thin space-y-3">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Geospatial Layer Visibility</h4>
+            <div class="space-y-2 text-xs">
+                <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800 hover:border-cyan-700 cursor-pointer">
+                    <span class="flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-cyan-400"></i> 3D Building Extrusions</span>
+                    <input type="checkbox" id="layer-buildings" checked onchange="toggleLayer('buildings', this.checked)" class="accent-cyan-500 w-4 h-4 rounded">
+                </label>
+                <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800 hover:border-cyan-700 cursor-pointer">
+                    <span class="flex items-center gap-2"><i data-lucide="waves" class="w-4 h-4 text-blue-400"></i> Rivers & Waterways (Adyar/Cooum)</span>
+                    <input type="checkbox" id="layer-waterways" checked onchange="toggleLayer('waterways', this.checked)" class="accent-cyan-500 w-4 h-4 rounded">
+                </label>
+                <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800 hover:border-cyan-700 cursor-pointer">
+                    <span class="flex items-center gap-2"><i data-lucide="tree-pine" class="w-4 h-4 text-emerald-400"></i> Pallikaranai Wetland Reserve</span>
+                    <input type="checkbox" id="layer-wetlands" checked onchange="toggleLayer('wetlands', this.checked)" class="accent-cyan-500 w-4 h-4 rounded">
+                </label>
+                <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800 hover:border-cyan-700 cursor-pointer">
+                    <span class="flex items-center gap-2"><i data-lucide="cloud-rain" class="w-4 h-4 text-amber-400"></i> Rain Gauges (CFM-DSS)</span>
+                    <input type="checkbox" id="layer-stations" checked onchange="toggleLayer('stations', this.checked)" class="accent-cyan-500 w-4 h-4 rounded">
+                </label>
+                <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800 hover:border-cyan-700 cursor-pointer">
+                    <span class="flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4 text-red-400"></i> Major Reservoirs (WRD)</span>
+                    <input type="checkbox" id="layer-reservoirs" checked onchange="toggleLayer('reservoirs', this.checked)" class="accent-cyan-500 w-4 h-4 rounded">
+                </label>
+                <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800 hover:border-cyan-700 cursor-pointer">
+                    <span class="flex items-center gap-2"><i data-lucide="droplets" class="w-4 h-4 text-cyan-300"></i> Modeled Flood Inundation</span>
+                    <input type="checkbox" id="layer-inundation" checked onchange="toggleLayer('inundation', this.checked)" class="accent-cyan-500 w-4 h-4 rounded">
+                </label>
+                <label class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800 hover:border-cyan-700 cursor-pointer">
+                    <span class="flex items-center gap-2"><i data-lucide="shapes" class="w-4 h-4 text-purple-400"></i> Sub-Basin Catchment Boundaries</span>
+                    <input type="checkbox" id="layer-catchments" checked onchange="toggleLayer('catchments', this.checked)" class="accent-cyan-500 w-4 h-4 rounded">
+                </label>
+            </div>
+
+            <!-- Basemap Selector -->
+            <div class="pt-3 border-t border-slate-800">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Basemap Style</label>
+                <select id="basemap-style" onchange="changeBasemap(this.value)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2 focus:outline-none">
+                    <option value="dark" selected>Dark Cartographic (High Contrast)</option>
+                    <option value="osm">OpenStreetMap Standard</option>
+                    <option value="terrain">Geospatial Terrain Contours</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tab 3: Selected Location Info -->
+        <div id="sidebar-tab-info" class="hidden flex-1 p-4 overflow-y-auto scrollbar-thin space-y-3">
+            <div id="location-detail-card" class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 id="loc-name" class="text-base font-bold text-cyan-300">Velachery</h3>
+                        <p id="loc-subbasin" class="text-xs text-slate-400">Kovalam / South Coastal Sub-Basin</p>
+                    </div>
+                    <span id="loc-badge" class="px-2 py-0.5 rounded text-xs font-bold bg-red-950 text-red-300 border border-red-800">Severe Risk</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">Elevation:</span>
+                        <span id="loc-elev" class="font-mono text-slate-200 font-bold">6.2 m ASL</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">Est. Flood Depth:</span>
+                        <span id="loc-depth" class="font-mono text-cyan-300 font-bold">0.85 m</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">2015 Flood Peak:</span>
+                        <span id="loc-peak2015" class="font-mono text-amber-300 font-bold">1.45 m</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[11px]">2023 Michaung Peak:</span>
+                        <span id="loc-peak2023" class="font-mono text-red-400 font-bold">1.62 m</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h5 class="text-xs font-semibold text-slate-300 mb-1">Primary Hydrological Hazard:</h5>
+                    <p id="loc-hazard" class="text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-2 rounded border border-slate-800">
+                        Topographic saucer depression, stormwater canal bottlenecks, lake surplus spill.
+                    </p>
+                </div>
+
+                <div>
+                    <h5 class="text-xs font-semibold text-slate-300 mb-1">Critical Infrastructure:</h5>
+                    <ul id="loc-infra" class="text-xs text-slate-400 space-y-1 list-disc list-inside">
+                        <li>Velachery MRTS Terminal Station</li>
+                        <li>Phoenix Marketcity Commercial Area</li>
+                        <li>Velachery Lake Surplus Drain</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Map Color Legend & Compass (Bottom Left) -->
+    <div class="absolute bottom-6 left-[25.5rem] z-20 glass-panel px-3.5 py-2 rounded-lg text-xs flex items-center space-x-3 shadow-xl border border-slate-700/60 hidden md:flex">
+        <span class="font-bold text-slate-300 text-[11px] uppercase tracking-wider">Inundation Depth:</span>
+        <div class="flex items-center space-x-1.5">
+            <span class="w-3 h-3 rounded-full bg-[#10b981]"></span>
+            <span class="text-[11px] text-slate-300">&lt; 0.05m (Dry)</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+            <span class="w-3 h-3 rounded-full bg-[#06b6d4]"></span>
+            <span class="text-[11px] text-slate-300">0.05–0.15m (Shallow)</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+            <span class="w-3 h-3 rounded-full bg-[#3b82f6]"></span>
+            <span class="text-[11px] text-slate-300">0.15–0.30m (Moderate)</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+            <span class="w-3 h-3 rounded-full bg-[#f59e0b]"></span>
+            <span class="text-[11px] text-slate-300">0.30–0.60m (High)</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+            <span class="w-3 h-3 rounded-full bg-[#ef4444]"></span>
+            <span class="text-[11px] text-slate-300">&gt; 0.60m (Severe)</span>
+        </div>
+    </div>
+
+    <!-- Timeline Progression Control Bar (Bottom Center) -->
+    <div class="absolute bottom-6 right-6 z-20 glass-panel px-4 py-2.5 rounded-xl shadow-2xl flex items-center space-x-3 border border-slate-700/60">
+        <button onclick="toggleTimelinePlay()" id="btn-timeline-play" class="w-8 h-8 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white flex items-center justify-center transition">
+            <i data-lucide="play" class="w-4 h-4" id="icon-timeline-play"></i>
+        </button>
+        <div>
+            <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+                <span>Simulation Time: <strong id="timeline-hour" class="text-cyan-300 font-mono">T + 4.0h</strong></span>
+                <span id="timeline-phase" class="text-amber-400 font-medium">Peak Inundation Phase</span>
+            </div>
+            <input type="range" id="timeline-slider" min="0" max="12" step="0.5" value="4" oninput="seekTimeline(this.value)" class="w-64 accent-cyan-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+        </div>
+        <button onclick="resetCameraView()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition" title="Reset View">
+            <i data-lucide="compass" class="w-4 h-4"></i>
+        </button>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // State
+        let map;
+        let is3DMode = true;
+        let timelinePlaying = false;
+        let timelineInterval = null;
+        let currentScenarioResult = null;
+        let currentSelectedLocId = "velachery";
+
+        // Coordinates & Map Defaults
+        const CHENNAI_CENTER = [80.2180, 12.9815]; // Velachery coordinates as anchor
+        const DEFAULT_PITCH = 60;
+        const DEFAULT_BEARING = -20;
+        const DEFAULT_ZOOM = 13.5;
+
+        // Initialize MapLibre
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            initMap();
+        });
+
+        function initMap() {
+            // Style with dark canvas fallback
+            const style = {
+                version: 8,
+                sources: {
+                    "osm-tiles": {
+                        type: "raster",
+                        tiles: [
+                            "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+                            "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
+                        ],
+                        tileSize: 256,
+                        attribution: "© OpenStreetMap contributors, © CARTO"
+                    }
+                },
+                layers: [
+                    {
+                        id: "osm-layer",
+                        type: "raster",
+                        source: "osm-tiles",
+                        minzoom: 0,
+                        maxzoom: 19
+                    }
+                ]
+            };
+
+            map = new maplibregl.Map({
+                container: "map",
+                style: style,
+                center: CHENNAI_CENTER,
+                zoom: DEFAULT_ZOOM,
+                pitch: DEFAULT_PITCH,
+                bearing: DEFAULT_BEARING,
+                maxPitch: 80
+            });
+
+            map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
+
+            map.on("load", async () => {
+                console.log("[CivicTwin-R] MapLibre 3D engine initialized.");
+                await loadGeospatialLayers();
+                await runScenarioSimulation();
+            });
+        }
+
+        async function loadGeospatialLayers() {
+            try {
+                // 1. Waterways (Adyar, Cooum, Buckingham Canal, Pallikaranai Marsh)
+                const waterwaysResp = await fetch("/api/urban/geo/waterways");
+                const waterwaysData = await waterwaysResp.json();
+
+                map.addSource("waterways-src", { type: "geojson", data: waterwaysData });
+
+                // Wetland polygon fill
+                map.addLayer({
+                    id: "wetlands-layer",
+                    type: "fill",
+                    source: "waterways-src",
+                    filter: ["==", "$type", "Polygon"],
+                    paint: {
+                        "fill-color": ["get", "fill_color"],
+                        "fill-opacity": ["get", "fill_opacity"]
+                    }
+                });
+
+                // Waterways stroke / line
+                map.addLayer({
+                    id: "waterways-layer",
+                    type: "line",
+                    source: "waterways-src",
+                    paint: {
+                        "line-color": ["get", "color"],
+                        "line-width": ["get", "stroke_width"]
+                    }
+                });
+
+                // 2. 3D Buildings Extrusion Layer
+                const buildingsResp = await fetch("/api/urban/geo/buildings");
+                const buildingsData = await buildingsResp.json();
+
+                map.addSource("buildings-src", { type: "geojson", data: buildingsData });
+
+                map.addLayer({
+                    id: "buildings-layer",
+                    type: "fill-extrusion",
+                    source: "buildings-src",
+                    paint: {
+                        "fill-extrusion-color": [
+                            "match",
+                            ["get", "type"],
+                            "commercial", "#38bdf8",
+                            "it_park", "#818cf8",
+                            "residential", "#64748b",
+                            "transit", "#f59e0b",
+                            "#0284c7"
+                        ],
+                        "fill-extrusion-height": ["get", "height_m"],
+                        "fill-extrusion-base": 0,
+                        "fill-extrusion-opacity": 0.85
+                    }
+                });
+
+                // Building click popup
+                map.on("click", "buildings-layer", (e) => {
+                    const props = e.features[0].properties;
+                    new maplibregl.Popup()
+                        .setLngLat(e.lngLat)
+                        .setHTML(`
+                            <div class="text-xs">
+                                <h4 class="font-bold text-cyan-300">${props.name}</h4>
+                                <p class="text-slate-400">Locality: ${props.locality}</p>
+                                <p class="text-slate-300">Height: <strong class="font-mono text-cyan-400">${props.height_m}m</strong> (${props.floors} storeys)</p>
+                                <span class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 uppercase">${props.type}</span>
+                            </div>
+                        `)
+                        .addTo(map);
+                });
+
+                // 3. Sub-basin catchments
+                const catchmentsResp = await fetch("/api/urban/geo/catchments");
+                const catchmentsData = await catchmentsResp.json();
+                map.addSource("catchments-src", { type: "geojson", data: catchmentsData });
+
+                map.addLayer({
+                    id: "catchments-layer",
+                    type: "line",
+                    source: "catchments-src",
+                    paint: {
+                        "line-color": "#a855f7",
+                        "line-width": 2,
+                        "line-dasharray": [3, 2]
+                    }
+                });
+
+                // 4. Place Markers for 10 Key Locations
+                const locsResp = await fetch("/api/urban/locations");
+                const locsData = await locsResp.json();
+
+                locsData.locations.forEach(loc => {
+                    const el = document.createElement("div");
+                    el.className = "location-marker";
+                    el.title = `${loc.name} (${loc.elevation_m}m ASL)`;
+                    el.onclick = () => selectLocation(loc.id);
+
+                    new maplibregl.Marker({ element: el })
+                        .setLngLat(loc.coordinates)
+                        .addTo(map);
+                });
+
+                // 5. Place Markers for Rain Gauges
+                const stationsResp = await fetch("/api/urban/stations");
+                const stationsData = await stationsResp.json();
+
+                stationsData.stations.forEach(st => {
+                    const el = document.createElement("div");
+                    el.className = "station-marker";
+                    el.title = `Station: ${st.station_name} (${st.rainfall_mm} mm)`;
+                    el.onclick = () => {
+                        new maplibregl.Popup()
+                            .setLngLat(st.coordinates)
+                            .setHTML(`
+                                <div class="text-xs">
+                                    <h4 class="font-bold text-blue-300">${st.station_name}</h4>
+                                    <p class="text-[11px] text-slate-400 font-mono">${st.station_id} | ${st.subbasin}</p>
+                                    <p class="text-slate-200 mt-1">Observed Rainfall: <strong class="text-cyan-400 font-mono text-sm">${st.rainfall_mm} mm</strong></p>
+                                    <p class="text-[10px] text-slate-400">Timestamp: ${st.time_of_measurement}</p>
+                                    <span class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] bg-blue-950 text-blue-300 border border-blue-800">${st.provenance}</span>
+                                </div>
+                            `)
+                            .addTo(map);
+                    };
+
+                    new maplibregl.Marker({ element: el })
+                        .setLngLat(st.coordinates)
+                        .addTo(map);
+                });
+
+                // 6. Major Reservoirs Markers
+                const resResp = await fetch("/api/urban/reservoirs");
+                const resData = await resResp.json();
+
+                resData.reservoirs.forEach(r => {
+                    const el = document.createElement("div");
+                    el.className = "reservoir-marker";
+                    el.innerHTML = "DAM";
+                    el.title = `${r.reservoir_name} (${r.storage_fill_pct}% full)`;
+                    el.onclick = () => {
+                        new maplibregl.Popup()
+                            .setLngLat(r.coordinates)
+                            .setHTML(`
+                                <div class="text-xs">
+                                    <h4 class="font-bold text-cyan-300">${r.reservoir_name} Reservoir</h4>
+                                    <p class="text-slate-400">${r.tamil_name} (${r.tank_id})</p>
+                                    <div class="mt-1 space-y-0.5 font-mono text-[11px]">
+                                        <div>Live Storage: <span class="text-cyan-400 font-bold">${r.storage_capacity_live_mcm} MCM</span></div>
+                                        <div>Gross Capacity: <span class="text-slate-300">${r.storage_capacity_gross_mcm} MCM</span></div>
+                                        <div>Fill Level: <span class="text-amber-400 font-bold">${r.storage_fill_pct}%</span></div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-1">${r.role}</p>
+                                    <span class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800">${r.provenance}</span>
+                                </div>
+                            `)
+                            .addTo(map);
+                    };
+
+                    new maplibregl.Marker({ element: el })
+                        .setLngLat(r.coordinates)
+                        .addTo(map);
+                });
+
+            } catch (err) {
+                console.error("[CivicTwin-R] Error loading geospatial layers:", err);
+            }
+        }
+
+        // Scenario Simulation Execution
+        async function runScenarioSimulation() {
+            const rain = parseFloat(document.getElementById("input-rain").value);
+            const duration = parseFloat(document.getElementById("input-duration").value);
+            const runoff = parseFloat(document.getElementById("input-runoff").value);
+            const drainage = parseFloat(document.getElementById("input-drainage").value);
+            const chembaram = parseFloat(document.getElementById("input-chembaram").value);
+            const preset = document.getElementById("scenario-preset").value;
+
+            const payload = {
+                scenario_id: preset,
+                rainfall_intensity_mm_hr: rain,
+                duration_hours: duration,
+                runoff_coefficient: runoff,
+                drainage_capacity_pct: drainage,
+                chembarambakkam_discharge_cusecs: chembaram
+            };
+
+            try {
+                const resp = await fetch("/api/urban/scenario", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await resp.json();
+                currentScenarioResult = data;
+                updateSimulationView(data);
+            } catch (err) {
+                console.error("[CivicTwin-R] Scenario calculation error:", err);
+            }
+        }
+
+        function updateSimulationView(data) {
+            // Update Summary Card
+            document.getElementById("stat-volume").innerText = `${data.summary.total_accumulated_volume_mcm} MCM`;
+            document.getElementById("stat-area").innerText = `${data.summary.total_inundated_area_km2} km²`;
+            document.getElementById("stat-max-depth").innerText = `${data.summary.max_depth_m} m`;
+            document.getElementById("stat-high-risk").innerText = `${data.summary.high_risk_locations_count} of 10`;
+            document.getElementById("calc-time").innerText = `${data.summary.computation_time_ms} ms`;
+
+            // Update or Add Inundation Layer
+            if (map.getSource("inundation-src")) {
+                map.getSource("inundation-src").setData(data.flood_overlay_geojson);
+            } else {
+                map.addSource("inundation-src", {
+                    type: "geojson",
+                    data: data.flood_overlay_geojson
+                });
+
+                map.addLayer({
+                    id: "inundation-layer",
+                    type: "fill",
+                    source: "inundation-src",
+                    paint: {
+                        "fill-color": ["get", "color"],
+                        "fill-opacity": ["get", "fill_opacity"]
+                    }
+                });
+
+                map.addLayer({
+                    id: "inundation-outline",
+                    type: "line",
+                    source: "inundation-src",
+                    paint: {
+                        "line-color": ["get", "color"],
+                        "line-width": 2
+                    }
+                });
+            }
+
+            // Update Selected Location
+            selectLocation(currentSelectedLocId);
+        }
+
+        function selectLocation(locId) {
+            currentSelectedLocId = locId;
+            if (!currentScenarioResult) return;
+
+            const locImpact = currentScenarioResult.location_impacts.find(l => l.id === locId);
+            if (!locImpact) return;
+
+            // Fetch detailed metadata
+            fetch(`/api/urban/locations/${locId}`)
+                .then(r => r.json())
+                .then(loc => {
+                    document.getElementById("loc-name").innerText = `${loc.name} (${loc.tamil_name || ""})`;
+                    document.getElementById("loc-subbasin").innerText = `${loc.subbasin} (${loc.area_km2} km²)`;
+                    document.getElementById("loc-elev").innerText = `${loc.elevation_m} m ASL`;
+                    document.getElementById("loc-depth").innerText = `${locImpact.estimated_depth_m} m (${locImpact.estimated_depth_cm} cm)`;
+                    document.getElementById("loc-peak2015").innerText = `${loc.historical_peak_2015_m} m`;
+                    document.getElementById("loc-peak2023").innerText = `${loc.historical_peak_2023_m} m`;
+                    document.getElementById("loc-hazard").innerText = loc.primary_hazard;
+
+                    const badge = document.getElementById("loc-badge");
+                    badge.innerText = locImpact.risk_level + " Risk";
+                    if (locImpact.risk_level === "Critical") {
+                        badge.className = "px-2 py-0.5 rounded text-xs font-bold bg-red-950 text-red-300 border border-red-800";
+                    } else if (locImpact.risk_level === "High") {
+                        badge.className = "px-2 py-0.5 rounded text-xs font-bold bg-amber-950 text-amber-300 border border-amber-800";
+                    } else if (locImpact.risk_level === "Moderate") {
+                        badge.className = "px-2 py-0.5 rounded text-xs font-bold bg-blue-950 text-blue-300 border border-blue-800";
+                    } else {
+                        badge.className = "px-2 py-0.5 rounded text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-800";
+                    }
+
+                    const infraList = document.getElementById("loc-infra");
+                    infraList.innerHTML = "";
+                    (loc.key_infrastructure || []).forEach(item => {
+                        const li = document.createElement("li");
+                        li.innerText = item;
+                        infraList.appendChild(li);
+                    });
+                });
+        }
+
+        function flyToLocation(locId) {
+            fetch(`/api/urban/locations/${locId}`)
+                .then(r => r.json())
+                .then(loc => {
+                    selectLocation(locId);
+                    map.flyTo({
+                        center: loc.coordinates,
+                        zoom: 14.5,
+                        pitch: 65,
+                        bearing: DEFAULT_BEARING,
+                        essential: true
+                    });
+                });
+        }
+
+        function resetCameraView() {
+            map.flyTo({
+                center: CHENNAI_CENTER,
+                zoom: DEFAULT_ZOOM,
+                pitch: DEFAULT_PITCH,
+                bearing: DEFAULT_BEARING,
+                essential: true
+            });
+        }
+
+        function toggle3DMode() {
+            is3DMode = !is3DMode;
+            map.easeTo({
+                pitch: is3DMode ? DEFAULT_PITCH : 0,
+                bearing: is3DMode ? DEFAULT_BEARING : 0,
+                duration: 1000
+            });
+            document.getElementById("label-3d").innerText = is3DMode ? "3D Tilt (60°)" : "2D Overhead";
+        }
+
+        function toggleLayer(layerName, visible) {
+            const visibility = visible ? "visible" : "none";
+            if (layerName === "buildings" && map.getLayer("buildings-layer")) {
+                map.setLayoutProperty("buildings-layer", "visibility", visibility);
+            } else if (layerName === "waterways" && map.getLayer("waterways-layer")) {
+                map.setLayoutProperty("waterways-layer", "visibility", visibility);
+            } else if (layerName === "wetlands" && map.getLayer("wetlands-layer")) {
+                map.setLayoutProperty("wetlands-layer", "visibility", visibility);
+            } else if (layerName === "catchments" && map.getLayer("catchments-layer")) {
+                map.setLayoutProperty("catchments-layer", "visibility", visibility);
+            } else if (layerName === "inundation" && map.getLayer("inundation-layer")) {
+                map.setLayoutProperty("inundation-layer", "visibility", visibility);
+                if (map.getLayer("inundation-outline")) {
+                    map.setLayoutProperty("inundation-outline", "visibility", visibility);
+                }
+            }
+        }
+
+        function applyPresetScenario(presetId) {
+            fetch(`/api/urban/scenarios/list`)
+                .then(r => r.json())
+                .then(list => {
+                    const sc = list.find(s => s.id === presetId);
+                    if (!sc) return;
+
+                    document.getElementById("input-rain").value = sc.rainfall_intensity_mm_hr;
+                    document.getElementById("input-duration").value = sc.duration_hours;
+                    document.getElementById("input-drainage").value = sc.drainage_capacity_pct;
+                    document.getElementById("input-chembaram").value = sc.chembarambakkam_discharge_cusecs;
+                    document.getElementById("scenario-desc").innerText = sc.description;
+
+                    updateParam("rain", sc.rainfall_intensity_mm_hr);
+                    updateParam("duration", sc.duration_hours);
+                    updateParam("drainage", sc.drainage_capacity_pct);
+                    updateParam("chembaram", sc.chembarambakkam_discharge_cusecs);
+
+                    runScenarioSimulation();
+                });
+        }
+
+        function updateParam(name, val) {
+            if (name === "rain") document.getElementById("val-rain").innerText = `${val} mm/hr`;
+            if (name === "duration") document.getElementById("val-duration").innerText = `${parseFloat(val).toFixed(1)} hrs`;
+            if (name === "runoff") document.getElementById("val-runoff").innerText = `${parseFloat(val).toFixed(2)}`;
+            if (name === "drainage") document.getElementById("val-drainage").innerText = `${val}%`;
+            if (name === "chembaram") document.getElementById("val-chembaram").innerText = `${parseInt(val).toLocaleString()} cfs`;
+        }
+
+        function resetScenarioToBaseline() {
+            document.getElementById("scenario-preset").value = "normal";
+            applyPresetScenario("normal");
+        }
+
+        function switchSidebarTab(tabName) {
+            ["scenarios", "layers", "info"].forEach(t => {
+                const content = document.getElementById(`sidebar-tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (t === tabName) {
+                    content.classList.remove("hidden");
+                    btn.className = "flex-1 py-2.5 px-3 border-b-2 border-cyan-400 text-cyan-400 bg-slate-800/50 flex items-center justify-center gap-1.5";
+                } else {
+                    content.classList.add("hidden");
+                    btn.className = "flex-1 py-2.5 px-3 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center justify-center gap-1.5";
+                }
+            });
+        }
+
+        function toggleTimelinePlay() {
+            timelinePlaying = !timelinePlaying;
+            const icon = document.getElementById("icon-timeline-play");
+            if (timelinePlaying) {
+                icon.setAttribute("data-lucide", "pause");
+                timelineInterval = setInterval(() => {
+                    let cur = parseFloat(document.getElementById("timeline-slider").value);
+                    cur = (cur + 0.5) > 12 ? 0 : (cur + 0.5);
+                    document.getElementById("timeline-slider").value = cur;
+                    seekTimeline(cur);
+                }, 800);
+            } else {
+                icon.setAttribute("data-lucide", "play");
+                clearInterval(timelineInterval);
+            }
+            lucide.createIcons();
+        }
+
+        function seekTimeline(hour) {
+            document.getElementById("timeline-hour").innerText = `T + ${parseFloat(hour).toFixed(1)}h`;
+            if (hour < 2) {
+                document.getElementById("timeline-phase").innerText = "Precipitation Onset";
+            } else if (hour <= 6) {
+                document.getElementById("timeline-phase").innerText = "Peak Inundation Phase";
+            } else {
+                document.getElementById("timeline-phase").innerText = "Receding Drainage Phase";
+            }
+        }
+    </script>
+</body>
+</html>

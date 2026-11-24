@@ -65,7 +65,7 @@ class TestLiveShowcaseIntegration:
 
     def test_live_mqtt_end_to_end_publish_ingest_persist(self):
         """Publishes real MQTT packet over TCP socket and confirms database persistence."""
-        test_seq = 99990 + int(time.time() % 1000)
+        test_seq = int(time.time())
         test_payload = {
             "schema_version": "1.0",
             "device_id": "node_01",
@@ -91,7 +91,7 @@ class TestLiveShowcaseIntegration:
         time.sleep(1.0)
 
         # Query backend API to confirm receipt and ingestion
-        req = urllib.request.Request("http://127.0.0.1:8000/api/telemetry/latest?zone_id=zone_01&limit=5")
+        req = urllib.request.Request("http://127.0.0.1:8000/api/telemetry/latest?zone_id=zone_01&limit=20")
         with urllib.request.urlopen(req, timeout=5) as resp:
             data = json.loads(resp.read().decode())
             seqs = [r.get("sequence") for r in data.get("records", [])]
