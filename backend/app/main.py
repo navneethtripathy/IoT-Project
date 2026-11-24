@@ -75,12 +75,16 @@ async def lifespan(app: FastAPI):
     if not mqtt_connected:
         logger.info("MQTT broker not reached; continuing in standalone simulation mode")
 
-    simulator = SensorSimulator(
-        engine=twin_engine,
-        direct_callback=ingestion.process_message,
-        interval_sec=config.TWIN_TIME_STEP_SEC,
-    )
-    simulator.start()
+    if config.ENABLE_INTERNAL_SIMULATOR or (not mqtt_connected):
+        simulator = SensorSimulator(
+            engine=twin_engine,
+            direct_callback=ingestion.process_message,
+            interval_sec=config.TWIN_TIME_STEP_SEC,
+        )
+        simulator.start()
+        logger.info("Internal sensor simulator started (standalone fallback)")
+    else:
+        logger.info("Internal sensor simulator disabled; relying on native MQTT simulation / physical hardware")
 
     replay_ctrl = HistoricalReplayController(callback=ingestion.process_message)
 
@@ -630,6 +634,7 @@ def predict_tank_trajectory(
 def compare_tank_prediction_vs_measured(
     tank_id: str = Query("tank_01", description="Tank identifier"),
     limit: int = Query(50, ge=5, le=500, description="Telemetry sample window limit"),
+    q_in_cm3_s: Optional[float] = Query(None, description="Optional inlet flow override"),
 ):
     """
     Evaluates digital-twin fidelity by simulating forward from the earliest measurement
@@ -670,7 +675,17 @@ def compare_tank_prediction_vs_measured(
     h0 = measured_levels[0]
     dt = 5.0
     duration = dt * (len(measured_levels) - 1)
-    trajectory = tank.simulate_trajectory(duration_sec=duration, dt_sec=dt, h0_cm=h0)
+
+    # Determine effective inflow rate from stored telemetry or configuration
+    inflows = [r.get("inflow_cm3_s") for r in chronological if r.get("inflow_cm3_s") is not None]
+    if q_in_cm3_s is not None:
+        eff_q_in = q_in_cm3_s
+    elif inflows:
+        eff_q_in = sum(inflows) / len(inflows)
+    else:
+        eff_q_in = tank.default_q_in
+
+    trajectory = tank.simulate_trajectory(duration_sec=duration, dt_sec=dt, q_in=eff_q_in, h0_cm=h0)
     times = [p["time_sec"] for p in trajectory]
     predicted_levels = [p["level_cm"] for p in trajectory]
 
@@ -681,6 +696,7 @@ def compare_tank_prediction_vs_measured(
     eval_metrics["measured_levels_cm"] = measured_levels
     eval_metrics["predicted_levels_cm"] = predicted_levels[:len(measured_levels)]
     eval_metrics["times_sec"] = times[:len(measured_levels)]
+    eval_metrics["q_in_cm3_s"] = round(eff_q_in, 2)
     return eval_metrics
 
 
@@ -690,6 +706,56 @@ def compare_tank_prediction_vs_measured(
 
 SHOWCASE_HTML_PATH = Path(__file__).resolve().parent / "templates" / "showcase.html"
 SIMULATOR_CONTROL_FILE = config._PROJECT_ROOT / ".run" / "simulator_control.json"
+
+
+@app.get("/api/mqtt/recent-messages")
+def get_recent_mqtt_messages(limit: int = Query(50, ge=1, le=100)):
+    """Returns most recent incoming MQTT messages received by IngestionService."""
+    if not ingestion:
+        raise HTTPException(503, "Ingestion service not initialized")
+    return ingestion.get_recent_mqtt_messages(limit=limit)
+
+
+@app.get("/api/database/tables")
+def get_database_tables():
+    """Returns list of tables in active storage backend."""
+    if not storage:
+        raise HTTPException(503, "Storage not initialized")
+    tables = storage.get_table_names()
+    table_info = []
+    for t in tables:
+        schema = storage.get_table_schema(t)
+        count = storage.count() if t == "telemetry" else 0
+        table_info.append({"name": t, "columns": len(schema), "rows": count, "schema": schema})
+    return {"tables": table_info, "backend": storage.backend_type}
+
+
+@app.get("/api/database/records")
+def get_database_records(
+    table: str = Query("telemetry", description="Table name"),
+    zone_id: Optional[str] = Query(None, description="Optional zone filter"),
+    device_id: Optional[str] = Query(None, description="Optional device filter"),
+    limit: int = Query(50, ge=1, le=200, description="Records limit"),
+    offset: int = Query(0, ge=0, description="Pagination offset"),
+):
+    """Returns paginated database records for local inspection."""
+    if not storage:
+        raise HTTPException(503, "Storage not initialized")
+    return storage.query_records_paginated(
+        table_name=table,
+        zone_id=zone_id,
+        device_id=device_id,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@app.get("/api/database/stats")
+def get_database_stats():
+    """Returns storage statistics and database metadata."""
+    if not storage:
+        raise HTTPException(503, "Storage not initialized")
+    return storage.get_database_stats()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -703,40 +769,70 @@ def get_showcase_dashboard():
 
 @app.post("/api/showcase/scenario/{name}")
 def trigger_showcase_scenario(name: str):
-    """Activates controlled showcase scenarios for live demonstration."""
+    """Activates controlled showcase scenarios for live demonstration across all 10 operational profiles."""
     SIMULATOR_CONTROL_FILE.parent.mkdir(parents=True, exist_ok=True)
     control_data = {"scenario": name, "timestamp": datetime.now(timezone.utc).isoformat(), "nodes": {}}
 
-    if name == "normal":
+    if name in ("normal", "normal_dry"):
         control_data["nodes"] = {
-            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 25.0, "reset_level": 15.0},
-            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 35.0, "reset_level": 18.0},
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 25.0, "reset_level": 15.0, "drainage_k_override": 4.5},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 35.0, "reset_level": 18.0, "drainage_k_override": 6.0},
         }
         if scenario_ctrl and scenario_ctrl.is_running:
             scenario_ctrl.stop()
-    elif name == "rising_water":
+    elif name in ("heavy_surge", "rising_water"):
         control_data["nodes"] = {
-            "node_01": {"paused": False, "disconnected": False, "inflow_override": 45.0},
-            "node_02": {"paused": False, "disconnected": False, "inflow_override": 55.0},
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 55.0, "drainage_k_override": 4.5},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 65.0, "drainage_k_override": 6.0},
         }
         if twin_engine:
-            twin_engine.apply_scenario_params("zone_01", inflow_rate=0.45)
-            twin_engine.apply_scenario_params("zone_02", inflow_rate=0.40)
-    elif name == "critical_water":
+            twin_engine.apply_scenario_params("zone_01", inflow_rate=0.55)
+            twin_engine.apply_scenario_params("zone_02", inflow_rate=0.50)
+    elif name in ("drainage_obstruction", "drainage_blocked"):
         control_data["nodes"] = {
-            "node_01": {"paused": False, "disconnected": False, "inflow_override": 75.0, "reset_level": 43.0},
-            "node_02": {"paused": False, "disconnected": False, "inflow_override": 85.0, "reset_level": 52.0},
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 30.0, "drainage_k_override": 1.5},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 40.0, "drainage_k_override": 2.0},
+        }
+    elif name in ("warning_breach", "warning_water"):
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 65.0, "reset_level": 36.0, "drainage_k_override": 4.5},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 75.0, "reset_level": 43.5, "drainage_k_override": 6.0},
+        }
+    elif name in ("critical_inundation", "critical_water"):
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 80.0, "reset_level": 43.5, "drainage_k_override": 4.5},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 90.0, "reset_level": 52.0, "drainage_k_override": 6.0},
         }
         if twin_engine:
             twin_engine.apply_scenario_params("zone_01", inflow_rate=0.85)
             twin_engine.apply_scenario_params("zone_02", inflow_rate=0.80)
+    elif name in ("node1_dropout", "sensor_dropout"):
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": True},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False},
+        }
+    elif name in ("node2_stale", "telemetry_stale"):
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False},
+            "node_02": {"paused": True, "disconnected": False, "sensor_fault": False},
+        }
     elif name == "missing_data_recovery":
         control_data["nodes"] = {
-            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 25.0},
-            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 35.0},
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 25.0, "drainage_k_override": 4.5},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 35.0, "drainage_k_override": 6.0},
+        }
+    elif name in ("rapid_reconnect", "reconnect"):
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False},
+        }
+    elif name in ("return_to_normal", "reset"):
+        control_data["nodes"] = {
+            "node_01": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 25.0, "drainage_k_override": 4.5},
+            "node_02": {"paused": False, "disconnected": False, "sensor_fault": False, "inflow_override": 35.0, "drainage_k_override": 6.0},
         }
     else:
-        raise HTTPException(400, f"Unknown showcase scenario: {name}")
+        raise HTTPException(400, f"Unknown showcase scenario: {name}. Available: normal, heavy_surge, drainage_obstruction, warning_breach, critical_inundation, node1_dropout, node2_stale, missing_data_recovery, rapid_reconnect, return_to_normal")
 
     with open(SIMULATOR_CONTROL_FILE, "w") as f:
         json.dump(control_data, f, indent=2)

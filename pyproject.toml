@@ -42,6 +42,9 @@ exclude = ["data*", "results*", "reports*", "firmware*", "nodered*", "presentati
 [tool.pytest.ini_options]
 testpaths = ["tests", "backend/tests", "digital_twin/tests"]
 addopts = "-W ignore::DeprecationWarning -W ignore::pytest.PytestConfigWarning"
+markers = [
+    "integration: live end-to-end integration tests requiring running services",
+]
 
 [tool.ruff]
 target-version = "py311"

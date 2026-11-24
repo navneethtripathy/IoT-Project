@@ -241,6 +241,7 @@ class MultiNodeMqttSimulator:
             with open(CONTROL_FILE, "r") as f:
                 data = json.load(f)
 
+            modified = False
             with self._lock:
                 for node_id, params in data.get("nodes", {}).items():
                     if node_id in self.nodes:
@@ -253,8 +254,18 @@ class MultiNodeMqttSimulator:
                             node.sensor_fault = params["sensor_fault"]
                         if "inflow_override" in params:
                             node.inflow_override = params["inflow_override"]
+                        if "drainage_k_override" in params:
+                            node.tank.drainage_k = params["drainage_k_override"]
                         if "reset_level" in params:
-                            node.tank.current_level_cm = params["reset_level"]
+                            node.tank.current_level_cm = params.pop("reset_level")
+                            modified = True
+
+            if modified:
+                try:
+                    with open(CONTROL_FILE, "w") as f_out:
+                        json.dump(data, f_out, indent=2)
+                except Exception:
+                    pass
         except Exception as e:
             logger.debug("Control file read skipped: %s", e)
 

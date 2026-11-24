@@ -32,8 +32,9 @@ if [ ! -x "$MOSQUITTO_BIN" ]; then
 fi
 
 if [ -n "$MOSQUITTO_BIN" ]; then
-    "$MOSQUITTO_BIN" -c "$DIR/mqtt/mosquitto_local.conf" > .run/logs/mosquitto.log 2>&1 &
+    nohup "$MOSQUITTO_BIN" -c "$DIR/mqtt/mosquitto_local.conf" < /dev/null > .run/logs/mosquitto.log 2>&1 &
     MOSQ_PID=$!
+    disown $MOSQ_PID 2>/dev/null || true
     echo $MOSQ_PID > .run/mosquitto.pid
     sleep 1
     echo "      [OK] Mosquitto broker running (PID: $MOSQ_PID)"
@@ -43,8 +44,9 @@ fi
 
 # 4. Start FastAPI Backend
 echo "[3/5] Starting FastAPI backend on http://127.0.0.1:8000..."
-$PYTHON_BIN -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 > .run/logs/backend.log 2>&1 &
+nohup $PYTHON_BIN -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 < /dev/null > .run/logs/backend.log 2>&1 &
 BACKEND_PID=$!
+disown $BACKEND_PID 2>/dev/null || true
 echo $BACKEND_PID > .run/backend.pid
 
 # Wait for backend health
@@ -59,17 +61,36 @@ done
 
 # 5. Start Node-RED (if installed)
 echo "[4/5] Starting Node-RED dashboard on http://127.0.0.1:1880..."
-NODERED_BIN="$DIR/nodered_runtime/node_modules/.bin/node-red"
-if [ ! -x "$NODERED_BIN" ]; then
-    NODERED_BIN="$(which node-red || echo "")"
-fi
+NODE_BIN="$(which node || echo "/opt/homebrew/bin/node")"
+RED_JS="$DIR/nodered_runtime/node_modules/node-red/red.js"
 
-if [ -n "$NODERED_BIN" ]; then
-    export BACKEND_URL="${BACKEND_URL:-http://127.0.0.1:8000}"
-    "$NODERED_BIN" --userDir "$DIR/.run/nodered" --port 1880 "$DIR/nodered/flows.json" > .run/logs/nodered.log 2>&1 &
-    NODERED_PID=$!
-    echo $NODERED_PID > .run/nodered.pid
-    sleep 2
+if [ -x "$NODE_BIN" ] && [ -f "$RED_JS" ]; then
+    mkdir -p "$DIR/.run/nodered"
+    if [ ! -e "$DIR/.run/nodered/node_modules" ] && [ -d "$DIR/nodered_runtime/node_modules" ]; then
+        ln -s "$DIR/nodered_runtime/node_modules" "$DIR/.run/nodered/node_modules"
+    fi
+    $PYTHON_BIN -c '
+import os, sys, subprocess
+NODE_BIN = sys.argv[1]
+RED_JS = sys.argv[2]
+DIR = sys.argv[3]
+env = dict(os.environ)
+env["NODE_PATH"] = os.path.join(DIR, "nodered_runtime/node_modules")
+env["BACKEND_URL"] = os.environ.get("BACKEND_URL", "http://127.0.0.1:8000")
+with open(".run/logs/nodered.log", "a") as log:
+    p = subprocess.Popen(
+        [NODE_BIN, RED_JS, "--userDir", os.path.join(DIR, ".run/nodered"), "--port", "1880", os.path.join(DIR, "nodered/flows.json")],
+        stdin=subprocess.DEVNULL,
+        stdout=log,
+        stderr=log,
+        env=env,
+        start_new_session=True
+    )
+    with open(".run/nodered.pid", "w") as f:
+        f.write(str(p.pid))
+' "$NODE_BIN" "$RED_JS" "$DIR"
+    NODERED_PID=$(cat .run/nodered.pid 2>/dev/null || echo "")
+    sleep 3
     echo "      [OK] Node-RED engine running (PID: $NODERED_PID)"
 else
     echo "      [INFO] Node-RED runtime not installed; UI available via Showcase Web Center"
@@ -77,8 +98,9 @@ fi
 
 # 6. Start Two-Node Live MQTT Simulator
 echo "[5/5] Starting Two-Node Live Cyber-Physical Simulator..."
-$PYTHON_BIN "$DIR/scripts/mqtt_node_simulator.py" --broker localhost --port 1883 --interval 5.0 > .run/logs/simulator.log 2>&1 &
+nohup $PYTHON_BIN "$DIR/scripts/mqtt_node_simulator.py" --broker localhost --port 1883 --interval 5.0 < /dev/null > .run/logs/simulator.log 2>&1 &
 SIM_PID=$!
+disown $SIM_PID 2>/dev/null || true
 echo $SIM_PID > .run/simulator.pid
 sleep 1
 echo "      [OK] Dual-node simulator active (PID: $SIM_PID)"

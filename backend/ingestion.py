@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import logging
 import threading
+from collections import deque
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Callable
 
@@ -38,6 +39,7 @@ class IngestionService:
         self._node_diagnostics: dict[str, dict] = {}
         self._zone_alert_states: dict[str, AlertLevel] = {}
         self._alerts: list[Alert] = []
+        self._recent_mqtt_messages: deque[dict] = deque(maxlen=100)
         self._stats = {
             "messages_received": 0,
             "messages_valid": 0,
@@ -83,6 +85,17 @@ class IngestionService:
     def process_raw(self, topic: str, payload: bytes) -> Optional[IngestedTelemetry]:
         with self._lock:
             self._stats["messages_received"] += 1
+            try:
+                p_text = payload.decode("utf-8")
+            except Exception:
+                p_text = str(payload)
+            self._recent_mqtt_messages.append({
+                "topic": topic,
+                "payload": p_text,
+                "size_bytes": len(payload),
+                "type": "telemetry",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
 
         try:
             data = json.loads(payload)
@@ -263,6 +276,17 @@ class IngestionService:
         """Processes node health heartbeat payloads from ESP32 or simulated nodes."""
         with self._lock:
             self._stats["status_messages_received"] += 1
+            try:
+                p_text = payload.decode("utf-8")
+            except Exception:
+                p_text = str(payload)
+            self._recent_mqtt_messages.append({
+                "topic": topic,
+                "payload": p_text,
+                "size_bytes": len(payload),
+                "type": "status",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
         try:
             data = json.loads(payload)
             msg = NodeStatusPayload(**data)
@@ -289,6 +313,17 @@ class IngestionService:
         """Processes edge-warning alert events published directly by nodes."""
         with self._lock:
             self._stats["edge_alerts_received"] += 1
+            try:
+                p_text = payload.decode("utf-8")
+            except Exception:
+                p_text = str(payload)
+            self._recent_mqtt_messages.append({
+                "topic": topic,
+                "payload": p_text,
+                "size_bytes": len(payload),
+                "type": "alert",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
         try:
             data = json.loads(payload)
             msg = NodeAlertPayload(**data)
@@ -409,6 +444,11 @@ class IngestionService:
         with self._lock:
             return dict(self._node_diagnostics)
 
+    def get_recent_mqtt_messages(self, limit: int = 50) -> list[dict]:
+        """Returns most recently received MQTT messages across all topics."""
+        with self._lock:
+            return list(reversed(self._recent_mqtt_messages))[:limit]
+
     def get_health(self) -> dict:
         return {
             "status": "running",
@@ -433,9 +473,13 @@ class MQTTIngestionClient:
         try:
             import paho.mqtt.client as mqtt
 
+            import os
+            import uuid
+
+            unique_client_id = f"{config.MQTT_CLIENT_ID}_ingestion_{os.getpid()}_{uuid.uuid4().hex[:6]}"
             self._client = mqtt.Client(
                 mqtt.CallbackAPIVersion.VERSION2,
-                client_id=config.MQTT_CLIENT_ID + "_ingestion",
+                client_id=unique_client_id,
             )
 
             if config.MQTT_USERNAME:

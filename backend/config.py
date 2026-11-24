@@ -45,6 +45,7 @@ LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
 TWIN_TIME_STEP_SEC: float = float(os.getenv("TWIN_TIME_STEP_SEC", "5"))
 TWIN_DEFAULT_SCENARIO: str = os.getenv("TWIN_DEFAULT_SCENARIO", "normal")
 RANDOM_SEED: int = int(os.getenv("RANDOM_SEED", "42"))
+ENABLE_INTERNAL_SIMULATOR: bool = os.getenv("ENABLE_INTERNAL_SIMULATOR", "false").lower() == "true"
 
 # Node-RED
 NODERED_PORT: int = int(os.getenv("NODERED_PORT", "1880"))

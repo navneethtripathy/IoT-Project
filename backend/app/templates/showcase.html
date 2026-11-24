@@ -6,6 +6,8 @@
   <title>CivicTwin-R — Engineering Showcase Control Center</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #0b1120; color: #f1f5f9; }
@@ -14,6 +16,7 @@
     .tank-fill { transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
     .pulse-dot { animation: pulse 2s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.9); } }
+    #canvas-container { position: relative; width: 100%; height: 520px; border-radius: 0.75rem; overflow: hidden; background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -67,14 +70,17 @@
 
   <!-- NAVIGATION TABS -->
   <nav class="glass border-b border-slate-800 px-6 py-2 overflow-x-auto flex items-center gap-2 text-xs font-medium">
-    <button onclick="switchTab('overview')" class="tab-btn px-3 py-1.5 rounded-md transition text-cyan-400 bg-slate-800/80 border border-cyan-800/50" data-tab="overview">1. Overview & System Health</button>
-    <button onclick="switchTab('nodes')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="nodes">2. Dual-Node Telemetry</button>
-    <button onclick="switchTab('twin')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="twin">3. Digital Twin ODE Prediction</button>
-    <button onclick="switchTab('reconstruction')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="reconstruction">4. Missing-Data Reconstruction</button>
-    <button onclick="switchTab('reliability')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="reliability">5. Freshness & Edge Warnings</button>
-    <button onclick="switchTab('chennai')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="chennai">6. Chennai Basin Grounding</button>
-    <button onclick="switchTab('scenarios')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="scenarios">7. Showcase Laboratory Scenarios</button>
-    <button onclick="switchTab('benchmarks')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="benchmarks">8. Scientific Benchmarks</button>
+    <button onclick="switchTab('overview')" class="tab-btn px-3 py-1.5 rounded-md transition text-cyan-400 bg-slate-800/80 border border-cyan-800/50" data-tab="overview">1. Overview</button>
+    <button onclick="switchTab('nodes')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="nodes">2. Dual-Node Gauges</button>
+    <button onclick="switchTab('twin3d')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="twin3d">3. Interactive 3D Digital Twin</button>
+    <button onclick="switchTab('twin')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="twin">4. Digital Twin ODE Prediction</button>
+    <button onclick="switchTab('reconstruction')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="reconstruction">5. Gap Reconstruction</button>
+    <button onclick="switchTab('reliability')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="reliability">6. Freshness & Alerts</button>
+    <button onclick="switchTab('chennai')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="chennai">7. Chennai Basin</button>
+    <button onclick="switchTab('scenarios')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="scenarios">8. Showcase Laboratory Scenarios</button>
+    <button onclick="switchTab('database')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="database">9. Database Explorer</button>
+    <button onclick="switchTab('mqtt')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="mqtt">10. MQTT Streamer</button>
+    <button onclick="switchTab('benchmarks')" class="tab-btn px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white hover:bg-slate-800" data-tab="benchmarks">11. Benchmarks</button>
   </nav>
 
   <!-- MAIN VIEW CONTAINER -->
@@ -82,7 +88,6 @@
 
     <!-- 1. OVERVIEW & SYSTEM HEALTH TAB -->
     <section id="view-overview" class="view-panel space-y-6">
-      <!-- SYSTEM TOPOLOGY BANNER -->
       <div class="glass p-5 rounded-xl border border-slate-800 shadow-xl relative overflow-hidden">
         <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -98,10 +103,10 @@
             <button onclick="triggerShowcaseScenario('normal')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-emerald-600/20 transition flex items-center gap-1.5">
               <span>&#9654;</span> Run Normal Baseline
             </button>
-            <button onclick="triggerShowcaseScenario('rising_water')" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-amber-600/20 transition flex items-center gap-1.5">
+            <button onclick="triggerShowcaseScenario('heavy_surge')" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-amber-600/20 transition flex items-center gap-1.5">
               <span>&#9888;</span> Inject Inflow Surge
             </button>
-            <button onclick="triggerShowcaseScenario('critical_water')" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-rose-600/20 transition flex items-center gap-1.5">
+            <button onclick="triggerShowcaseScenario('critical_inundation')" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-rose-600/20 transition flex items-center gap-1.5">
               <span>&#10071;</span> Trigger Critical Breach
             </button>
           </div>
@@ -137,7 +142,7 @@
             <div class="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">Tier 5: Control</div>
             <div class="font-semibold text-white mt-1">FastAPI & Node-RED</div>
             <div class="text-[11px] text-slate-400 mt-0.5">REST API & Live Dials</div>
-            <span class="inline-block mt-2 px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-emerald-300">25+ Endpoints</span>
+            <span class="inline-block mt-2 px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-emerald-300">30+ Endpoints</span>
           </div>
         </div>
       </div>
@@ -148,55 +153,52 @@
           <div class="text-xs text-slate-400 font-medium">Telemetry Stored</div>
           <div id="metric-stored" class="text-2xl font-bold text-white mono mt-1">--</div>
           <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Persisting to SQLite WAL
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Ingested to SQLite
           </div>
         </div>
         <div class="glass p-4 rounded-xl border border-slate-800">
-          <div class="text-xs text-slate-400 font-medium">Valid Ingested Packets</div>
+          <div class="text-xs text-slate-400 font-medium">Valid Packets</div>
           <div id="metric-valid" class="text-2xl font-bold text-emerald-400 mono mt-1">--</div>
-          <div class="text-[11px] text-slate-400 mt-1">Zero schema dropouts</div>
+          <div class="text-[11px] text-slate-400 mt-1">Pydantic v2 Validated</div>
         </div>
         <div class="glass p-4 rounded-xl border border-slate-800">
-          <div class="text-xs text-slate-400 font-medium">Duplicates / Out-of-Order</div>
-          <div id="metric-duplicates" class="text-2xl font-bold text-amber-400 mono mt-1">0</div>
-          <div class="text-[11px] text-slate-400 mt-1">Dropped via seq tracking</div>
+          <div class="text-xs text-slate-400 font-medium">Duplicate Deduplicated</div>
+          <div id="metric-duplicates" class="text-2xl font-bold text-cyan-400 mono mt-1">--</div>
+          <div class="text-[11px] text-slate-400 mt-1">Zero Double-Counting</div>
         </div>
         <div class="glass p-4 rounded-xl border border-slate-800">
-          <div class="text-xs text-slate-400 font-medium">Active Warning Alerts</div>
-          <div id="metric-alerts" class="text-2xl font-bold text-rose-400 mono mt-1">0</div>
-          <div class="text-[11px] text-slate-400 mt-1">Hysteresis (70% / 85%)</div>
+          <div class="text-xs text-slate-400 font-medium">Active Edge Alerts</div>
+          <div id="metric-alerts" class="text-2xl font-bold text-amber-400 mono mt-1">0</div>
+          <div class="text-[11px] text-slate-400 mt-1">Hysteresis Filtered</div>
         </div>
       </div>
 
       <!-- RECENT ALERTS FEED -->
-      <div class="glass p-5 rounded-xl border border-slate-800">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <span>&#128276;</span> Real-Time Alert Log & Hysteresis State Transitions
-          </h3>
-          <span class="text-xs text-slate-400 mono">Thresholds: 70.0% Warn | 85.0% Crit (3% Band)</span>
-        </div>
-        <div id="alerts-container" class="space-y-2 max-h-48 overflow-y-auto text-xs mono">
-          <div class="text-slate-400 py-2">No critical threshold breaches. System operational within normal parameters.</div>
+      <div class="glass p-5 rounded-xl border border-slate-800 space-y-3">
+        <h3 class="font-bold text-sm text-white flex items-center gap-2">
+          <span>&#128276;</span> Recent Edge Alerts & State Transitions
+        </h3>
+        <div id="alerts-container" class="space-y-2 text-xs mono">
+          <div class="text-slate-500 italic p-3 text-center">No alerts triggered. Water levels nominal.</div>
         </div>
       </div>
     </section>
 
     <!-- 2. DUAL-NODE TELEMETRY TAB -->
     <section id="view-nodes" class="view-panel hidden space-y-6">
-      <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="glass p-5 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 class="text-xl font-bold text-white tracking-tight">Two-Node Live Telemetry & Tank Physical Dynamics</h2>
-          <p class="text-sm text-slate-400">Independent laboratory prototypes publishing over native MQTT. Dual sequence tracking ensures zero cross-talk.</p>
+          <h2 class="text-xl font-bold text-white tracking-tight">Cyber-Physical Monitored Nodes</h2>
+          <p class="text-sm text-slate-400 mt-0.5">Real-time ultrasonic water level observation across laboratory test tanks.</p>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="controlNode('node_01', 'disconnect')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-800/60 rounded text-xs mono">
-            Simulate Node 1 Dropout
+        <div class="flex items-center gap-2 mono text-xs">
+          <button onclick="controlNode('node_01', 'disconnect')" class="px-3 py-1.5 bg-rose-900/60 hover:bg-rose-800 text-rose-300 rounded border border-rose-700">
+            Disconnect Node 1
           </button>
-          <button onclick="controlNode('node_02', 'disconnect')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-800/60 rounded text-xs mono">
-            Simulate Node 2 Dropout
+          <button onclick="controlNode('node_01', 'reconnect')" class="px-3 py-1.5 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-300 rounded border border-emerald-700">
+            Reconnect Node 1
           </button>
-          <button onclick="controlNode('both', 'reconnect')" class="px-3 py-1.5 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-300 border border-emerald-700/60 rounded text-xs mono">
+          <button onclick="controlNode('both', 'reconnect')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-600">
             Reconnect Both Nodes
           </button>
         </div>
@@ -224,10 +226,8 @@
             <!-- Physical Tank Column Visualizer -->
             <div class="col-span-1 flex flex-col items-center">
               <div class="w-20 h-48 rounded-lg bg-slate-900 border-2 border-slate-700 relative overflow-hidden flex flex-col justify-end p-1 shadow-inner">
-                <!-- 85% Crit Line -->
-                <div class="absolute w-full border-t border-dashed border-rose-500 top-[15%] left-0 z-10"></div>
-                <!-- 70% Warn Line -->
-                <div class="absolute w-full border-t border-dashed border-amber-500 top-[30%] left-0 z-10"></div>
+                <div class="absolute w-full border-t border-dashed border-rose-500 top-[15%] left-0 z-10" title="85% Critical"></div>
+                <div class="absolute w-full border-t border-dashed border-amber-500 top-[30%] left-0 z-10" title="70% Warning"></div>
                 <div id="tank1-fill" class="tank-fill w-full bg-gradient-to-t from-cyan-600 to-cyan-400 rounded-md" style="height: 30%;"></div>
               </div>
               <div class="text-[11px] text-slate-400 mono mt-2">Max Height: 50cm</div>
@@ -258,7 +258,6 @@
             </div>
           </div>
 
-          <!-- Physical Parameters -->
           <div class="pt-2 border-t border-slate-800 grid grid-cols-3 gap-2 text-center mono text-[11px] text-slate-400">
             <div>Area: <span class="text-slate-200">299.87 cm²</span></div>
             <div>Discharge k: <span class="text-slate-200">4.5 cm².⁵/s</span></div>
@@ -285,10 +284,8 @@
             <!-- Physical Tank Column Visualizer -->
             <div class="col-span-1 flex flex-col items-center">
               <div class="w-20 h-48 rounded-lg bg-slate-900 border-2 border-slate-700 relative overflow-hidden flex flex-col justify-end p-1 shadow-inner">
-                <!-- 85% Crit Line -->
-                <div class="absolute w-full border-t border-dashed border-rose-500 top-[15%] left-0 z-10"></div>
-                <!-- 70% Warn Line -->
-                <div class="absolute w-full border-t border-dashed border-amber-500 top-[30%] left-0 z-10"></div>
+                <div class="absolute w-full border-t border-dashed border-rose-500 top-[15%] left-0 z-10" title="85% Critical"></div>
+                <div class="absolute w-full border-t border-dashed border-amber-500 top-[30%] left-0 z-10" title="70% Warning"></div>
                 <div id="tank2-fill" class="tank-fill w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-md" style="height: 30%;"></div>
               </div>
               <div class="text-[11px] text-slate-400 mono mt-2">Max Height: 60cm</div>
@@ -319,7 +316,6 @@
             </div>
           </div>
 
-          <!-- Physical Parameters -->
           <div class="pt-2 border-t border-slate-800 grid grid-cols-3 gap-2 text-center mono text-[11px] text-slate-400">
             <div>Area: <span class="text-slate-200">450.13 cm²</span></div>
             <div>Discharge k: <span class="text-slate-200">6.0 cm².⁵/s</span></div>
@@ -329,7 +325,90 @@
       </div>
     </section>
 
-    <!-- 3. DIGITAL TWIN ODE PREDICTION TAB -->
+    <!-- 3. INTERACTIVE 3D DIGITAL TWIN (THREE.JS / WEBGL) -->
+    <section id="view-twin3d" class="view-panel hidden space-y-6">
+      <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+              <span>&#128392;</span> Live Interactive 3D Cyber-Physical Tank Digital Twin
+            </h2>
+            <p class="text-sm text-slate-400 mt-0.5">
+              Three.js WebGL simulation of the physical dual-cylinder laboratory tanks. Dynamic water height updates directly from live MQTT telemetry.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 mono text-xs">
+            <button onclick="reset3DCamera()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-600 transition">
+              Reset Camera
+            </button>
+            <button onclick="set3DView('front')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-600 transition">
+              Front View
+            </button>
+            <button onclick="set3DView('top')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-600 transition">
+              Top View
+            </button>
+            <button onclick="toggle3DFullscreen()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-medium transition">
+              Fullscreen
+            </button>
+          </div>
+        </div>
+
+        <!-- 3D CANVAS VIEWPORT WITH HUD OVERLAYS -->
+        <div id="canvas-container" class="border border-slate-700/80 relative shadow-2xl">
+          <!-- Canvas attached by JS -->
+          <div id="three-canvas" class="w-full h-full"></div>
+
+          <!-- FLOATING 3D HUD OVERLAY: TANK 1 -->
+          <div class="absolute top-4 left-4 p-3 rounded-lg bg-slate-900/90 border border-cyan-800/80 backdrop-blur-md mono text-xs pointer-events-none space-y-1">
+            <div class="font-bold text-cyan-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Tank 1 (Saidapet)
+            </div>
+            <div class="text-slate-300">Level: <span id="hud-tank1-level" class="text-white font-bold">-- cm</span> (<span id="hud-tank1-pct" class="text-cyan-300">--%</span>)</div>
+            <div class="text-slate-400 text-[11px]">Diameter: 19.54cm | Max: 50.0cm</div>
+            <div class="text-slate-400 text-[11px]">Inflow: <span id="hud-tank1-inflow" class="text-emerald-400">25.0 cm³/s</span></div>
+            <div id="hud-tank1-alert" class="inline-block px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 mt-1">NORMAL</div>
+          </div>
+
+          <!-- FLOATING 3D HUD OVERLAY: TANK 2 -->
+          <div class="absolute top-4 right-4 p-3 rounded-lg bg-slate-900/90 border border-blue-800/80 backdrop-blur-md mono text-xs pointer-events-none space-y-1 text-right">
+            <div class="font-bold text-blue-400 flex items-center justify-end gap-1.5">
+              Tank 2 (Cooum) <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+            </div>
+            <div class="text-slate-300">Level: <span id="hud-tank2-level" class="text-white font-bold">-- cm</span> (<span id="hud-tank2-pct" class="text-blue-300">--%</span>)</div>
+            <div class="text-slate-400 text-[11px]">Diameter: 23.94cm | Max: 60.0cm</div>
+            <div class="text-slate-400 text-[11px]">Inflow: <span id="hud-tank2-inflow" class="text-emerald-400">35.0 cm³/s</span></div>
+            <div id="hud-tank2-alert" class="inline-block px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 mt-1">NORMAL</div>
+          </div>
+
+          <!-- CONTROLS HINT -->
+          <div class="absolute bottom-3 left-4 text-[11px] mono text-slate-400 pointer-events-none bg-slate-900/60 px-2 py-1 rounded">
+            Left-Drag: Rotate | Right-Drag: Pan | Scroll: Zoom
+          </div>
+        </div>
+
+        <!-- 3D COMPONENT LEGEND -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs mono">
+          <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800">
+            <div class="text-cyan-400 font-bold">Acrylic Cylinder</div>
+            <div class="text-slate-400 text-[11px] mt-1">Physical laboratory transparent tanks (19.54cm & 23.94cm dia).</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800">
+            <div class="text-blue-400 font-bold">Dynamic Fluid Column</div>
+            <div class="text-slate-400 text-[11px] mt-1">Real-time water mesh adjusting height from JSN-SR04T telemetry.</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800">
+            <div class="text-amber-400 font-bold">Threshold Indicators</div>
+            <div class="text-slate-400 text-[11px] mt-1">Yellow ring at 70% (Warning) & Red ring at 85% (Critical).</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800">
+            <div class="text-emerald-400 font-bold">ESP32 & Transducer</div>
+            <div class="text-slate-400 text-[11px] mt-1">Microcontroller box with LED indicator & ultrasonic echo pulse cone.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. DIGITAL TWIN ODE PREDICTION TAB -->
     <section id="view-twin" class="view-panel hidden space-y-6">
       <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -368,14 +447,13 @@
           </div>
         </div>
 
-        <!-- CHART CANVAS -->
         <div class="h-80 w-full relative">
           <canvas id="twinChart"></canvas>
         </div>
       </div>
     </section>
 
-    <!-- 4. MISSING-DATA RECONSTRUCTION TAB -->
+    <!-- 5. MISSING-DATA RECONSTRUCTION TAB -->
     <section id="view-reconstruction" class="view-panel hidden space-y-6">
       <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
         <div>
@@ -385,7 +463,6 @@
           </p>
         </div>
 
-        <!-- RECONSTRUCTION COMPARISON CHART -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           <div class="h-80 w-full relative">
             <canvas id="reconChart"></canvas>
@@ -414,7 +491,7 @@
       </div>
     </section>
 
-    <!-- 5. FRESHNESS & RELIABILITY TAB -->
+    <!-- 6. FRESHNESS & RELIABILITY TAB -->
     <section id="view-reliability" class="view-panel hidden space-y-6">
       <div class="glass p-5 rounded-xl border border-slate-800 space-y-6">
         <div>
@@ -422,7 +499,6 @@
           <p class="text-sm text-slate-400 mt-0.5">Autonomous fault detection and LED signalling state machine operating without backend round-trip dependency.</p>
         </div>
 
-        <!-- 4-STATE FRESHNESS DIAGRAM -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center mono text-xs">
           <div class="p-4 rounded-xl bg-emerald-950/40 border border-emerald-700/60">
             <div class="w-8 h-8 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm mb-2">1</div>
@@ -450,7 +526,6 @@
           </div>
         </div>
 
-        <!-- EDGE WARNING & LED SIGNALLING TABLE -->
         <div class="border border-slate-800 rounded-lg overflow-hidden">
           <table class="w-full text-left text-xs mono">
             <thead class="bg-slate-900 border-b border-slate-800 text-slate-400">
@@ -492,7 +567,7 @@
       </div>
     </section>
 
-    <!-- 6. CHENNAI BASIN GROUNDING TAB -->
+    <!-- 7. CHENNAI BASIN GROUNDING TAB -->
     <section id="view-chennai" class="view-panel hidden space-y-6">
       <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
         <div>
@@ -538,118 +613,301 @@
           </div>
         </div>
 
-        <!-- HISTORICAL STORM RAINFALL CHART -->
         <div class="h-72 w-full relative mt-4">
           <canvas id="chennaiChart"></canvas>
         </div>
       </div>
     </section>
 
-    <!-- 7. SHOWCASE LABORATORY SCENARIOS TAB -->
+    <!-- 8. SHOWCASE LABORATORY SCENARIOS TAB (ALL 10 SCENARIOS) -->
     <section id="view-scenarios" class="view-panel hidden space-y-6">
       <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
         <div>
-          <h2 class="text-xl font-bold text-white tracking-tight">One-Click Demonstration Scenarios (Showcase Mode)</h2>
+          <h2 class="text-xl font-bold text-white tracking-tight">Complete 10-Scenario Cyber-Physical Laboratory</h2>
           <p class="text-sm text-slate-400 mt-0.5">
-            Execute controlled scenarios that genuinely alter the underlying physics, MQTT telemetry, and alert state.
+            Execute controlled operational scenarios that alter physical inflow, drainage orifice resistance, network links, and edge sensor health.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Scenario 1 -->
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">SCENARIO 1</span>
-              <span class="text-xs text-slate-400 mono">Normal</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 text-xs">
+          <!-- 1. Normal -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">SCENARIO 1</span>
+              <h4 class="font-bold text-sm text-white mt-1">Normal Baseline</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Nominal inflows (25 / 35 cm³/s). Stable Torricelli equilibrium.</p>
             </div>
-            <h4 class="font-bold text-sm text-white">Baseline Equilibrium</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Sets nominal inflow (25 cm³/s). Water level stabilizes at Torricelli equilibrium (30.86 cm). Alerts clear to NORMAL.
-            </p>
-            <button onclick="triggerShowcaseScenario('normal')" class="w-full py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-xs font-semibold transition">
-              Activate Scenario 1
+            <button onclick="triggerShowcaseScenario('normal')" class="w-full py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded font-semibold transition mt-2">
+              Trigger Baseline
             </button>
           </div>
 
-          <!-- Scenario 2 -->
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-950 text-amber-400 border border-amber-800">SCENARIO 2</span>
-              <span class="text-xs text-slate-400 mono">Warn Breach</span>
+          <!-- 2. Surge -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800">SCENARIO 2</span>
+              <h4 class="font-bold text-sm text-white mt-1">Rainfall Surge</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Runoff surges inflow Q_in to 55 / 65 cm³/s. Water levels rise.</p>
             </div>
-            <h4 class="font-bold text-sm text-white">Monsoon Inflow Surge</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Increases inflow Q_in to 45 cm³/s. Water rises past 70% threshold. Evaluator triggers WARNING and 1 Hz LED blink.
-            </p>
-            <button onclick="triggerShowcaseScenario('rising_water')" class="w-full py-2 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs font-semibold transition">
-              Activate Scenario 2
+            <button onclick="triggerShowcaseScenario('heavy_surge')" class="w-full py-1.5 bg-amber-700 hover:bg-amber-600 text-white rounded font-semibold transition mt-2">
+              Trigger Surge
             </button>
           </div>
 
-          <!-- Scenario 3 -->
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-950 text-rose-400 border border-rose-800">SCENARIO 3</span>
-              <span class="text-xs text-slate-400 mono">Critical Breach</span>
+          <!-- 3. Drainage Obstruction -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-950 text-orange-400 border border-orange-800">SCENARIO 3</span>
+              <h4 class="font-bold text-sm text-white mt-1">Drainage Block</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Orifice debris obstruction. Discharge k cut by 60%.</p>
             </div>
-            <h4 class="font-bold text-sm text-white">Flash Flood Peak</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Surges inflow to 75 cm³/s. Water height breaches 85% critical threshold (42.5cm). Solid LED alert illuminates.
-            </p>
-            <button onclick="triggerShowcaseScenario('critical_water')" class="w-full py-2 bg-rose-700 hover:bg-rose-600 text-white rounded text-xs font-semibold transition">
-              Activate Scenario 3
+            <button onclick="triggerShowcaseScenario('drainage_obstruction')" class="w-full py-1.5 bg-orange-700 hover:bg-orange-600 text-white rounded font-semibold transition mt-2">
+              Trigger Blockage
             </button>
           </div>
 
-          <!-- Scenario 4 -->
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700">SCENARIO 4</span>
-              <span class="text-xs text-slate-400 mono">Dropout</span>
+          <!-- 4. Early Warning Breach -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-950 text-yellow-400 border border-yellow-800">SCENARIO 4</span>
+              <h4 class="font-bold text-sm text-white mt-1">Warning Breach</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Crosses 70% height threshold. 1 Hz warning LED activated.</p>
             </div>
-            <h4 class="font-bold text-sm text-white">Node 1 Communication Loss</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Silences Node 1. Freshness engine transitions from FRESH &rarr; STALE (30s) &rarr; OFFLINE (90s). Node 2 unaffected.
-            </p>
-            <button onclick="controlNode('node_01', 'disconnect')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-semibold transition border border-slate-700">
-              Activate Scenario 4
+            <button onclick="triggerShowcaseScenario('warning_breach')" class="w-full py-1.5 bg-yellow-600 hover:bg-yellow-500 text-white rounded font-semibold transition mt-2">
+              Trigger Warning
             </button>
           </div>
 
-          <!-- Scenario 5 -->
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-purple-950 text-purple-400 border border-purple-800">SCENARIO 5</span>
-              <span class="text-xs text-slate-400 mono">Echo Fault</span>
+          <!-- 5. Critical Inundation -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-950 text-rose-400 border border-rose-800">SCENARIO 5</span>
+              <h4 class="font-bold text-sm text-white mt-1">Critical Inundation</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Breaches 85% critical threshold. Solid red alert illuminated.</p>
             </div>
-            <h4 class="font-bold text-sm text-white">Ultrasonic Sensor Fault</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Injects hardware echo timeout. Emits null measurements rather than fake zero. 5 Hz rapid strobe LED fault triggered.
-            </p>
-            <button onclick="controlNode('node_01', 'sensor_fault')" class="w-full py-2 bg-purple-800 hover:bg-purple-700 text-white rounded text-xs font-semibold transition">
-              Activate Scenario 5
+            <button onclick="triggerShowcaseScenario('critical_inundation')" class="w-full py-1.5 bg-rose-700 hover:bg-rose-600 text-white rounded font-semibold transition mt-2">
+              Trigger Critical
             </button>
           </div>
 
-          <!-- Scenario 6 -->
-          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">SCENARIO 6</span>
-              <span class="text-xs text-slate-400 mono">Recovery</span>
+          <!-- 6. Node 1 Dropout -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-400 border border-purple-800">SCENARIO 6</span>
+              <h4 class="font-bold text-sm text-white mt-1">Node 1 Timeout</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Ultrasonic echo timeout. Emits null readings, 5 Hz strobe LED.</p>
             </div>
-            <h4 class="font-bold text-sm text-white">Digital Twin Gap Recovery</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Executes Setting A forward RK4 physics integration to reconstruct missing interval while node is recovering.
-            </p>
-            <button onclick="triggerShowcaseScenario('missing_data_recovery')" class="w-full py-2 bg-cyan-700 hover:bg-cyan-600 text-white rounded text-xs font-semibold transition">
-              Activate Scenario 6
+            <button onclick="triggerShowcaseScenario('node1_dropout')" class="w-full py-1.5 bg-purple-800 hover:bg-purple-700 text-white rounded font-semibold transition mt-2">
+              Trigger Fault
+            </button>
+          </div>
+
+          <!-- 7. Node 2 Stale -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">SCENARIO 7</span>
+              <h4 class="font-bold text-sm text-white mt-1">Node 2 Stale Link</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Silences Node 2 packets. Freshness transitions FRESH &rarr; STALE.</p>
+            </div>
+            <button onclick="triggerShowcaseScenario('node2_stale')" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-semibold transition mt-2 border border-slate-700">
+              Trigger Stale
+            </button>
+          </div>
+
+          <!-- 8. Gap Reconstruction -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-400 border border-cyan-800">SCENARIO 8</span>
+              <h4 class="font-bold text-sm text-white mt-1">Twin Gap Recovery</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Reconstructs missing data via forward ODE RK4 integration.</p>
+            </div>
+            <button onclick="triggerShowcaseScenario('missing_data_recovery')" class="w-full py-1.5 bg-cyan-700 hover:bg-cyan-600 text-white rounded font-semibold transition mt-2">
+              Recover Data
+            </button>
+          </div>
+
+          <!-- 9. Rapid Reconnect -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-950 text-teal-400 border border-teal-800">SCENARIO 9</span>
+              <h4 class="font-bold text-sm text-white mt-1">Rapid Reconnect</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Restores all IoT nodes, resets sequence synchronization.</p>
+            </div>
+            <button onclick="triggerShowcaseScenario('rapid_reconnect')" class="w-full py-1.5 bg-teal-700 hover:bg-teal-600 text-white rounded font-semibold transition mt-2">
+              Reconnect Nodes
+            </button>
+          </div>
+
+          <!-- 10. Return to Normal -->
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-2 flex flex-col justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">SCENARIO 10</span>
+              <h4 class="font-bold text-sm text-white mt-1">Return to Normal</h4>
+              <p class="text-slate-400 text-[11px] mt-1">Restores nominal inflow & drainage, steady state clears alerts.</p>
+            </div>
+            <button onclick="triggerShowcaseScenario('return_to_normal')" class="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-semibold transition mt-2">
+              Return to Normal
             </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 8. SCIENTIFIC BENCHMARKS TAB -->
+    <!-- 9. LOCAL DATABASE EXPLORER TAB -->
+    <section id="view-database" class="view-panel hidden space-y-6">
+      <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+              <span>&#128451;</span> Dedicated Local Database Inspection Explorer
+            </h2>
+            <p class="text-sm text-slate-400 mt-0.5">
+              Interactive read-only inspection of persistent SQLite tables, schemas, sequence tracking, and data provenance.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 mono text-xs">
+            <button onclick="refreshDatabaseView()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-medium transition">
+              Refresh Database
+            </button>
+            <a href="/api/telemetry/export" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-600 transition">
+              Export CSV &darr;
+            </a>
+          </div>
+        </div>
+
+        <!-- DATABASE METADATA TILES -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs mono">
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+            <span class="text-slate-400">Database Engine:</span>
+            <div id="db-engine" class="text-base font-bold text-white mt-1">SQLite 3 (WAL Mode)</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+            <span class="text-slate-400">Database File Size:</span>
+            <div id="db-size" class="text-base font-bold text-cyan-400 mt-1">-- KB</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+            <span class="text-slate-400">Total Telemetry Records:</span>
+            <div id="db-rows" class="text-base font-bold text-emerald-400 mt-1">--</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+            <span class="text-slate-400">Integrity Status:</span>
+            <div id="db-integrity" class="text-base font-bold text-emerald-400 mt-1">VERIFIED (OK)</div>
+          </div>
+        </div>
+
+        <!-- EXPLORER CONTROLS & FILTERING -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs mono pt-2">
+          <div class="flex items-center gap-2">
+            <label class="text-slate-400">Filter Node:</label>
+            <select id="db-node-filter" onchange="loadDatabaseRecords(0)" class="bg-slate-900 text-slate-200 border border-slate-700 rounded px-2.5 py-1">
+              <option value="">All Monitored Nodes</option>
+              <option value="node_01">node_01 (Tank 1)</option>
+              <option value="node_02">node_02 (Tank 2)</option>
+            </select>
+            <label class="text-slate-400 ml-2">Page Size:</label>
+            <select id="db-page-size" onchange="loadDatabaseRecords(0)" class="bg-slate-900 text-slate-200 border border-slate-700 rounded px-2.5 py-1">
+              <option value="25">25 rows</option>
+              <option value="50" selected>50 rows</option>
+              <option value="100">100 rows</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="db-prev-btn" onclick="prevDatabasePage()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 disabled:opacity-40">
+              &larr; Prev
+            </button>
+            <span id="db-page-info" class="text-slate-400">Page 1</span>
+            <button id="db-next-btn" onclick="nextDatabasePage()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 disabled:opacity-40">
+              Next &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- DATABASE RECORDS TABLE -->
+        <div class="border border-slate-800 rounded-lg overflow-x-auto">
+          <table class="w-full text-left text-xs mono">
+            <thead class="bg-slate-900 border-b border-slate-800 text-slate-400">
+              <tr>
+                <th class="p-2.5">ID</th>
+                <th class="p-2.5">Device ID</th>
+                <th class="p-2.5">Zone ID</th>
+                <th class="p-2.5">Seq #</th>
+                <th class="p-2.5">Level (cm)</th>
+                <th class="p-2.5">Fill (%)</th>
+                <th class="p-2.5">Distance (cm)</th>
+                <th class="p-2.5">Status</th>
+                <th class="p-2.5">Source Provenance</th>
+                <th class="p-2.5">Timestamp (UTC)</th>
+              </tr>
+            </thead>
+            <tbody id="db-records-body" class="divide-y divide-slate-800 text-slate-300">
+              <tr>
+                <td colspan="10" class="p-4 text-center text-slate-500 italic">Loading database records...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. LIVE MQTT MONITOR TAB -->
+    <section id="view-mqtt" class="view-panel hidden space-y-6">
+      <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+              <span>&#128225;</span> Native MQTT Live Monitoring & Packet Streamer
+            </h2>
+            <p class="text-sm text-slate-400 mt-0.5">
+              Real-time feed of live MQTT packets arriving on Mosquitto broker (127.0.0.1:1883).
+            </p>
+          </div>
+          <div class="flex items-center gap-2 mono text-xs">
+            <span id="mqtt-stream-status" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+              STREAMING ACTIVE
+            </span>
+            <button onclick="toggleMqttStream()" id="btn-toggle-mqtt" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-600 transition">
+              Pause Stream
+            </button>
+            <button onclick="fetchRecentMqttMessages()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-medium transition">
+              Refresh Packets
+            </button>
+          </div>
+        </div>
+
+        <!-- MQTT TOPICS & PROTOCOL METRICS -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs mono">
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+            <span class="text-slate-400">Broker Endpoint:</span>
+            <div class="text-base font-bold text-white mt-1">localhost:1883 (TCP)</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+            <span class="text-slate-400">Quality of Service:</span>
+            <div class="text-base font-bold text-cyan-400 mt-1">QoS 1 (At Least Once)</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+            <span class="text-slate-400">Subscribed Topics:</span>
+            <div class="text-base font-bold text-emerald-400 mt-1">6 Topic Filters</div>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
+            <span class="text-slate-400">Client ID Prefix:</span>
+            <div class="text-base font-bold text-purple-300 mt-1">civictwin_backend</div>
+          </div>
+        </div>
+
+        <!-- LIVE MQTT MESSAGE FEED -->
+        <div class="border border-slate-800 rounded-lg overflow-hidden">
+          <div class="bg-slate-900 p-3 border-b border-slate-800 flex items-center justify-between text-xs mono">
+            <span class="text-slate-400 font-semibold">Latest Received MQTT Packets</span>
+            <span class="text-slate-500 text-[11px]">Auto-refreshed every 2.0s</span>
+          </div>
+          <div id="mqtt-messages-container" class="max-h-96 overflow-y-auto divide-y divide-slate-800 text-xs mono p-1 bg-slate-950/60">
+            <div class="p-4 text-center text-slate-500 italic">Listening for MQTT messages on port 1883...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. SCIENTIFIC BENCHMARKS TAB -->
     <section id="view-benchmarks" class="view-panel hidden space-y-6">
       <div class="glass p-5 rounded-xl border border-slate-800 space-y-4">
         <div>
@@ -657,7 +915,6 @@
           <p class="text-sm text-slate-400 mt-0.5">Automated test matrix results and multi-seed reconstruction error metrics across Setting A and B.</p>
         </div>
 
-        <!-- RECONSTRUCTION EXPERIMENT EVIDENCE TABLE -->
         <div class="border border-slate-800 rounded-lg overflow-hidden">
           <table class="w-full text-left text-xs mono">
             <thead class="bg-slate-900 border-b border-slate-800 text-slate-400">
@@ -741,9 +998,12 @@
         btn.classList.add('text-cyan-400', 'bg-slate-800/80', 'border', 'border-cyan-800/50');
         btn.classList.remove('text-slate-400');
       }
+      if (tabId === 'twin3d') init3DScene();
       if (tabId === 'twin') initTwinChart();
       if (tabId === 'reconstruction') initReconChart();
       if (tabId === 'chennai') initChennaiChart();
+      if (tabId === 'database') refreshDatabaseView();
+      if (tabId === 'mqtt') fetchRecentMqttMessages();
     }
 
     // Toast alert
@@ -789,7 +1049,395 @@
       }
     }
 
-    // Fetch live telemetry from FastAPI
+    // -------------------------------------------------------------
+    // THREE.JS INTERACTIVE 3D DIGITAL TWIN IMPLEMENTATION
+    // -------------------------------------------------------------
+    let scene3D, camera3D, renderer3D, controls3D, is3DInitialized = false;
+    let waterMesh1, waterMesh2, led1, led2, stream1, stream2;
+    let liveLevelTank1 = 15.0, liveLevelTank2 = 18.0;
+
+    function init3DScene() {
+      if (is3DInitialized) {
+        onWindowResize3D();
+        return;
+      }
+      const container = document.getElementById('three-canvas');
+      if (!container) return;
+
+      const width = container.clientWidth || 800;
+      const height = container.clientHeight || 520;
+
+      scene3D = new THREE.Scene();
+      camera3D = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+      camera3D.position.set(0, 45, 95);
+
+      renderer3D = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer3D.setSize(width, height);
+      renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer3D.shadowMap.enabled = true;
+      renderer3D.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      container.innerHTML = '';
+      container.appendChild(renderer3D.domElement);
+
+      controls3D = new THREE.OrbitControls(camera3D, renderer3D.domElement);
+      controls3D.enableDamping = true;
+      controls3D.dampingFactor = 0.05;
+      controls3D.maxPolarAngle = Math.PI / 2 - 0.05;
+      controls3D.minDistance = 25;
+      controls3D.maxDistance = 200;
+      controls3D.target.set(0, 25, 0);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+      scene3D.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+      dirLight.position.set(40, 70, 50);
+      dirLight.castShadow = true;
+      dirLight.shadow.mapSize.width = 1024;
+      dirLight.shadow.mapSize.height = 1024;
+      scene3D.add(dirLight);
+
+      const bluePointLight = new THREE.PointLight(0x06b6d4, 1.2, 80);
+      bluePointLight.position.set(0, 30, 20);
+      scene3D.add(bluePointLight);
+
+      // Laboratory Bench Surface
+      const benchGeo = new THREE.BoxGeometry(90, 2.5, 45);
+      const benchMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.6 });
+      const bench = new THREE.Mesh(benchGeo, benchMat);
+      bench.position.set(0, -1.25, 0);
+      bench.receiveShadow = true;
+      scene3D.add(bench);
+
+      // Grid ground
+      const grid = new THREE.GridHelper(90, 18, 0x06b6d4, 0x334155);
+      grid.position.set(0, 0.05, 0);
+      scene3D.add(grid);
+
+      // Build Tank 1 (Saidapet: Dia 19.54cm -> R 9.77, Max H 50cm) at x = -20
+      buildTank3D(-20, 9.77, 50.0, 35.0, 42.5, 1);
+
+      // Build Tank 2 (Cooum: Dia 23.94cm -> R 11.97, Max H 60cm) at x = 20
+      buildTank3D(20, 11.97, 60.0, 42.0, 51.0, 2);
+
+      window.addEventListener('resize', onWindowResize3D);
+      is3DInitialized = true;
+      animate3D();
+    }
+
+    function buildTank3D(xPos, radius, maxH, warnH, critH, tankNum) {
+      // Scale down slightly for visual viewport fit: 1 cm = 0.8 Three units
+      const s = 0.8;
+      const r = radius * s;
+      const h = maxH * s;
+      const warnY = warnH * s;
+      const critY = critH * s;
+
+      const group = new THREE.Group();
+      group.position.set(xPos, 0, 0);
+
+      // 1. Transparent Acrylic Outer Cylinder
+      const outerGeo = new THREE.CylinderGeometry(r, r, h, 36, 1, true);
+      const outerMat = new THREE.MeshPhysicalMaterial({
+        color: 0x94a3b8,
+        transparent: true,
+        opacity: 0.28,
+        roughness: 0.1,
+        transmission: 0.85,
+        thickness: 0.6,
+        side: THREE.DoubleSide
+      });
+      const outerMesh = new THREE.Mesh(outerGeo, outerMat);
+      outerMesh.position.set(0, h / 2, 0);
+      group.add(outerMesh);
+
+      // 2. Base Plate
+      const baseGeo = new THREE.CylinderGeometry(r + 1, r + 1, 1, 32);
+      const baseMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8, roughness: 0.2 });
+      const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+      baseMesh.position.set(0, 0.5, 0);
+      group.add(baseMesh);
+
+      // 3. Warning Threshold Ring (Yellow)
+      const warnGeo = new THREE.TorusGeometry(r + 0.15, 0.2, 8, 36);
+      const warnMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+      const warnRing = new THREE.Mesh(warnGeo, warnMat);
+      warnRing.rotation.x = Math.PI / 2;
+      warnRing.position.set(0, warnY, 0);
+      group.add(warnRing);
+
+      // 4. Critical Threshold Ring (Red)
+      const critGeo = new THREE.TorusGeometry(r + 0.15, 0.2, 8, 36);
+      const critMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+      const critRing = new THREE.Mesh(critGeo, critMat);
+      critRing.rotation.x = Math.PI / 2;
+      critRing.position.set(0, critY, 0);
+      group.add(critRing);
+
+      // 5. Dynamic Water Cylinder
+      const initialWaterH = 15.0 * s;
+      const waterGeo = new THREE.CylinderGeometry(r - 0.2, r - 0.2, 1, 32);
+      const waterMat = new THREE.MeshStandardMaterial({
+        color: tankNum === 1 ? 0x06b6d4 : 0x3b82f6,
+        transparent: true,
+        opacity: 0.75,
+        roughness: 0.15,
+        metalness: 0.1
+      });
+      const waterMesh = new THREE.Mesh(waterGeo, waterMat);
+      waterMesh.position.set(0, initialWaterH / 2, 0);
+      waterMesh.scale.set(1, initialWaterH, 1);
+      group.add(waterMesh);
+
+      if (tankNum === 1) waterMesh1 = waterMesh;
+      else waterMesh2 = waterMesh;
+
+      // 6. Top Mounting Bracket
+      const topBracketGeo = new THREE.BoxGeometry(r * 2.2, 0.8, 4);
+      const bracketMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.7, roughness: 0.3 });
+      const bracket = new THREE.Mesh(topBracketGeo, bracketMat);
+      bracket.position.set(0, h + 0.4, 0);
+      group.add(bracket);
+
+      // 7. JSN-SR04T Ultrasonic Sensor Transducer
+      const sensorGeo = new THREE.CylinderGeometry(1.2, 1.2, 1.8, 16);
+      const sensorMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.8, roughness: 0.2 });
+      const sensor = new THREE.Mesh(sensorGeo, sensorMat);
+      sensor.position.set(0, h + 1.2, 0);
+      group.add(sensor);
+
+      // 8. Virtual ESP32 Microcontroller Enclosure
+      const espGeo = new THREE.BoxGeometry(4.5, 2.0, 3.0);
+      const espMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 });
+      const esp = new THREE.Mesh(espGeo, espMat);
+      esp.position.set(0, h + 2.8, 0);
+      group.add(esp);
+
+      // 9. Multi-state Edge Alert LED (GPIO 2)
+      const ledGeo = new THREE.SphereGeometry(0.5, 16, 16);
+      const ledMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+      const led = new THREE.Mesh(ledGeo, ledMat);
+      led.position.set(0, h + 3.8, 1.2);
+      group.add(led);
+
+      if (tankNum === 1) led1 = led;
+      else led2 = led;
+
+      // 10. Water Inlet Pipe at Top
+      const pipeGeo = new THREE.CylinderGeometry(0.8, 0.8, 8, 16);
+      const pipeMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8, roughness: 0.2 });
+      const pipe = new THREE.Mesh(pipeGeo, pipeMat);
+      pipe.rotation.z = Math.PI / 2;
+      pipe.position.set(-r - 3, h - 2, 0);
+      group.add(pipe);
+
+      // 11. Orifice Drainage Valve at Bottom
+      const drainGeo = new THREE.CylinderGeometry(0.6, 0.6, 5, 16);
+      const drain = new THREE.Mesh(drainGeo, pipeMat);
+      drain.rotation.z = Math.PI / 2;
+      drain.position.set(r + 2, 2, 0);
+      group.add(drain);
+
+      scene3D.add(group);
+    }
+
+    function onWindowResize3D() {
+      const container = document.getElementById('three-canvas');
+      if (!container || !renderer3D || !camera3D) return;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      camera3D.aspect = width / height;
+      camera3D.updateProjectionMatrix();
+      renderer3D.setSize(width, height);
+    }
+
+    function animate3D() {
+      requestAnimationFrame(animate3D);
+      if (controls3D) controls3D.update();
+
+      // Smooth interpolation of 3D water levels
+      const s = 0.8;
+      if (waterMesh1) {
+        const targetH = Math.max(0.5, liveLevelTank1 * s);
+        waterMesh1.scale.y += (targetH - waterMesh1.scale.y) * 0.1;
+        waterMesh1.position.y = waterMesh1.scale.y / 2;
+      }
+      if (waterMesh2) {
+        const targetH = Math.max(0.5, liveLevelTank2 * s);
+        waterMesh2.scale.y += (targetH - waterMesh2.scale.y) * 0.1;
+        waterMesh2.position.y = waterMesh2.scale.y / 2;
+      }
+
+      if (renderer3D && scene3D && camera3D) {
+        renderer3D.render(scene3D, camera3D);
+      }
+    }
+
+    function reset3DCamera() {
+      if (camera3D && controls3D) {
+        camera3D.position.set(0, 45, 95);
+        controls3D.target.set(0, 25, 0);
+      }
+    }
+
+    function set3DView(view) {
+      if (!camera3D || !controls3D) return;
+      if (view === 'front') {
+        camera3D.position.set(0, 28, 100);
+        controls3D.target.set(0, 28, 0);
+      } else if (view === 'top') {
+        camera3D.position.set(0, 115, 0.1);
+        controls3D.target.set(0, 0, 0);
+      }
+    }
+
+    function toggle3DFullscreen() {
+      const el = document.getElementById('canvas-container');
+      if (!document.fullscreenElement) {
+        el.requestFullscreen().catch(e => console.warn(e));
+      } else {
+        document.exitFullscreen();
+      }
+      setTimeout(onWindowResize3D, 200);
+    }
+
+    // -------------------------------------------------------------
+    // DATABASE EXPLORER JAVASCRIPT CONTROLLER
+    // -------------------------------------------------------------
+    let dbCurrentOffset = 0;
+    async function refreshDatabaseView() {
+      try {
+        const sRes = await fetch('/api/database/stats');
+        if (sRes.ok) {
+          const stats = await sRes.json();
+          document.getElementById('db-size').innerText = `${stats.size_kb} KB`;
+          document.getElementById('db-rows').innerText = stats.total_telemetry_rows || 0;
+          document.getElementById('db-engine').innerText = `SQLite (${stats.journal_mode ? stats.journal_mode.toUpperCase() : 'WAL'})`;
+        }
+        await loadDatabaseRecords(0);
+      } catch (e) {
+        console.warn('Database view refresh error:', e);
+      }
+    }
+
+    async function loadDatabaseRecords(offset = 0) {
+      dbCurrentOffset = offset;
+      const nodeFilter = document.getElementById('db-node-filter').value;
+      const pageSize = parseInt(document.getElementById('db-page-size').value, 10) || 50;
+
+      let url = `/api/database/records?limit=${pageSize}&offset=${offset}`;
+      if (nodeFilter) url += `&device_id=${nodeFilter}`;
+
+      try {
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          const tbody = document.getElementById('db-records-body');
+          const rows = data.rows || [];
+
+          if (rows.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-slate-500 italic">No telemetry records match the current filter.</td></tr>';
+          } else {
+            tbody.innerHTML = rows.map(r => `
+              <tr class="hover:bg-slate-800/50 transition">
+                <td class="p-2.5 text-slate-400">${r.id}</td>
+                <td class="p-2.5 font-bold text-white">${r.device_id}</td>
+                <td class="p-2.5 text-cyan-400">${r.zone_id}</td>
+                <td class="p-2.5 text-slate-300">#${r.sequence}</td>
+                <td class="p-2.5 text-emerald-400 font-bold">${r.water_level_cm !== null ? Number(r.water_level_cm).toFixed(2) : '--'}</td>
+                <td class="p-2.5 text-slate-200">${r.water_level_pct !== null ? Number(r.water_level_pct).toFixed(1) + '%' : '--'}</td>
+                <td class="p-2.5 text-slate-400">${r.distance_cm !== null ? Number(r.distance_cm).toFixed(2) : '--'}</td>
+                <td class="p-2.5">
+                  <span class="px-1.5 py-0.5 rounded text-[10px] ${r.sensor_status === 'valid' ? 'bg-emerald-950 text-emerald-400' : 'bg-rose-950 text-rose-400'}">${r.sensor_status}</span>
+                </td>
+                <td class="p-2.5 text-slate-400 text-[11px]">${r.source}</td>
+                <td class="p-2.5 text-slate-400 text-[11px]">${r.event_timestamp ? r.event_timestamp.replace('T', ' ').substring(0, 19) : ''}</td>
+              </tr>
+            `).join('');
+          }
+
+          const pageNum = Math.floor(offset / pageSize) + 1;
+          const totalPages = Math.ceil((data.total || 1) / pageSize);
+          document.getElementById('db-page-info').innerText = `Page ${pageNum} of ${totalPages} (${data.total} total rows)`;
+          document.getElementById('db-prev-btn').disabled = offset <= 0;
+          document.getElementById('db-next-btn').disabled = offset + pageSize >= (data.total || 0);
+        }
+      } catch (e) {
+        console.warn('Database records fetch error:', e);
+      }
+    }
+
+    function prevDatabasePage() {
+      const pageSize = parseInt(document.getElementById('db-page-size').value, 10) || 50;
+      const nextOffset = Math.max(0, dbCurrentOffset - pageSize);
+      loadDatabaseRecords(nextOffset);
+    }
+
+    function nextDatabasePage() {
+      const pageSize = parseInt(document.getElementById('db-page-size').value, 10) || 50;
+      loadDatabaseRecords(dbCurrentOffset + pageSize);
+    }
+
+    // -------------------------------------------------------------
+    // MQTT LIVE MONITOR JAVASCRIPT CONTROLLER
+    // -------------------------------------------------------------
+    let mqttStreamActive = true;
+    function toggleMqttStream() {
+      mqttStreamActive = !mqttStreamActive;
+      const btn = document.getElementById('btn-toggle-mqtt');
+      const pill = document.getElementById('mqtt-stream-status');
+      if (mqttStreamActive) {
+        btn.innerText = 'Pause Stream';
+        pill.innerText = 'STREAMING ACTIVE';
+        pill.className = 'px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800';
+      } else {
+        btn.innerText = 'Resume Stream';
+        pill.innerText = 'STREAM PAUSED';
+        pill.className = 'px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800';
+      }
+    }
+
+    async function fetchRecentMqttMessages() {
+      try {
+        const res = await fetch('/api/mqtt/recent-messages?limit=40');
+        if (res.ok) {
+          const messages = await res.json();
+          const container = document.getElementById('mqtt-messages-container');
+          if (messages.length === 0) {
+            container.innerHTML = '<div class="p-4 text-center text-slate-500 italic">No MQTT messages captured yet.</div>';
+          } else {
+            container.innerHTML = messages.map(m => {
+              let parsedJson = null;
+              try { parsedJson = JSON.parse(m.payload); } catch(e) {}
+              const isStatus = m.topic.endsWith('/status');
+              const isAlert = m.topic.endsWith('/alerts');
+              const badgeColor = isAlert ? 'bg-rose-950 text-rose-300 border-rose-800' : isStatus ? 'bg-purple-950 text-purple-300 border-purple-800' : 'bg-cyan-950 text-cyan-300 border-cyan-800';
+
+              return `
+                <div class="p-2.5 hover:bg-slate-900/80 transition space-y-1">
+                  <div class="flex items-center justify-between text-[11px]">
+                    <div class="flex items-center gap-2">
+                      <span class="px-1.5 py-0.5 rounded border text-[10px] font-bold ${badgeColor}">${m.type ? m.type.toUpperCase() : 'TELEMETRY'}</span>
+                      <span class="text-white font-semibold">${m.topic}</span>
+                    </div>
+                    <span class="text-slate-500">${m.timestamp ? m.timestamp.substring(11, 23) : ''} UTC (${m.size_bytes}B)</span>
+                  </div>
+                  <pre class="text-[11px] text-slate-300 bg-slate-900/90 p-2 rounded border border-slate-800 overflow-x-auto">${parsedJson ? JSON.stringify(parsedJson, null, 2) : m.payload}</pre>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+      } catch (e) {
+        console.warn('MQTT recent fetch error:', e);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // TELEMETRY REFRESH LOOP & 3D HUD BINDING
+    // -------------------------------------------------------------
     async function fetchLiveTelemetry() {
       try {
         // Health
@@ -814,7 +1462,7 @@
           }
         }
 
-        // Zones
+        // Zones & Dual-Node Telemetry
         const zRes = await fetch('/api/zones');
         if (zRes.ok) {
           const zData = await zRes.json();
@@ -825,34 +1473,68 @@
           if (z1) {
             const h = z1.water_level_cm || 0;
             const pct = Math.min(100, Math.max(0, z1.water_level_pct || (h / 50 * 100)));
+            liveLevelTank1 = h;
             document.getElementById('node1-level-cm').innerText = h.toFixed(1) + ' cm';
             document.getElementById('node1-level-pct').innerText = pct.toFixed(1) + ' %';
             document.getElementById('node1-dist-cm').innerText = (50.0 - h).toFixed(1) + ' cm';
             document.getElementById('tank1-fill').style.height = pct + '%';
             document.getElementById('node1-alert').innerText = (z1.alert_level || 'normal').toUpperCase();
+
+            // 3D HUD update
+            document.getElementById('hud-tank1-level').innerText = h.toFixed(1) + ' cm';
+            document.getElementById('hud-tank1-pct').innerText = pct.toFixed(1) + '%';
+            document.getElementById('hud-tank1-alert').innerText = (z1.alert_level || 'normal').toUpperCase();
+
+            // LED color update
+            if (led1) {
+              if (z1.alert_level === 'critical') led1.material.color.setHex(0xef4444);
+              else if (z1.alert_level === 'warning') led1.material.color.setHex(0xf59e0b);
+              else led1.material.color.setHex(0x10b981);
+            }
+
             if (z1.alert_level === 'critical') {
               document.getElementById('node1-alert').className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-rose-900 text-rose-200';
+              document.getElementById('hud-tank1-alert').className = 'inline-block px-1.5 py-0.5 rounded text-[10px] bg-rose-950 text-rose-300 font-bold border border-rose-800';
             } else if (z1.alert_level === 'warning') {
               document.getElementById('node1-alert').className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-amber-900 text-amber-200';
+              document.getElementById('hud-tank1-alert').className = 'inline-block px-1.5 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 font-bold border border-amber-800';
             } else {
               document.getElementById('node1-alert').className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-slate-300';
+              document.getElementById('hud-tank1-alert').className = 'inline-block px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300';
             }
           }
 
           if (z2) {
             const h = z2.water_level_cm || 0;
             const pct = Math.min(100, Math.max(0, z2.water_level_pct || (h / 60 * 100)));
+            liveLevelTank2 = h;
             document.getElementById('node2-level-cm').innerText = h.toFixed(1) + ' cm';
             document.getElementById('node2-level-pct').innerText = pct.toFixed(1) + ' %';
             document.getElementById('node2-dist-cm').innerText = (60.0 - h).toFixed(1) + ' cm';
             document.getElementById('tank2-fill').style.height = pct + '%';
             document.getElementById('node2-alert').innerText = (z2.alert_level || 'normal').toUpperCase();
+
+            // 3D HUD update
+            document.getElementById('hud-tank2-level').innerText = h.toFixed(1) + ' cm';
+            document.getElementById('hud-tank2-pct').innerText = pct.toFixed(1) + '%';
+            document.getElementById('hud-tank2-alert').innerText = (z2.alert_level || 'normal').toUpperCase();
+
+            // LED color update
+            if (led2) {
+              if (z2.alert_level === 'critical') led2.material.color.setHex(0xef4444);
+              else if (z2.alert_level === 'warning') led2.material.color.setHex(0xf59e0b);
+              else led2.material.color.setHex(0x10b981);
+            }
+
             if (z2.alert_level === 'critical') {
               document.getElementById('node2-alert').className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-rose-900 text-rose-200';
+              document.getElementById('hud-tank2-alert').className = 'inline-block px-1.5 py-0.5 rounded text-[10px] bg-rose-950 text-rose-300 font-bold border border-rose-800';
             } else if (z2.alert_level === 'warning') {
               document.getElementById('node2-alert').className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-amber-900 text-amber-200';
+              document.getElementById('hud-tank2-alert').className = 'inline-block px-1.5 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 font-bold border border-amber-800';
             } else {
               document.getElementById('node2-alert').className = 'px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-slate-300';
+              document.getElementById('hud-tank2-alert').className = 'inline-block px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300';
             }
           }
         }
@@ -896,6 +1578,11 @@
           }
         }
 
+        // MQTT Monitor Auto-poll
+        if (mqttStreamActive && !document.getElementById('view-mqtt').classList.contains('hidden')) {
+          fetchRecentMqttMessages();
+        }
+
       } catch (e) {
         console.warn('Telemetry poll error:', e);
       }
@@ -909,7 +1596,7 @@
       twinChartInstance = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: Array.from({length: 60}, (_, i) => `${i*2}s`),
+          labels: Array.from({length: 50}, (_, i) => `${i*5}s`),
           datasets: [
             {
               label: 'Measured Telemetry (cm)',
@@ -1052,7 +1739,7 @@
     // Support hash navigation
     if (window.location.hash) {
       const tabName = window.location.hash.replace('#', '');
-      if (['overview', 'nodes', 'twin', 'reconstruction', 'reliability', 'chennai', 'scenarios', 'benchmarks'].includes(tabName)) {
+      if (['overview', 'nodes', 'twin3d', 'twin', 'reconstruction', 'reliability', 'chennai', 'scenarios', 'database', 'mqtt', 'benchmarks'].includes(tabName)) {
         switchTab(tabName);
       }
     }

@@ -65,6 +65,35 @@ class StorageBackend(abc.ABC):
         """True if operating as an automatic fallback."""
         return False
 
+    def get_table_names(self) -> list[str]:
+        return ["telemetry"]
+
+    def get_table_schema(self, table_name: str) -> list[dict]:
+        return []
+
+    def query_records_paginated(
+        self,
+        table_name: str = "telemetry",
+        zone_id: Optional[str] = None,
+        device_id: Optional[str] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> dict:
+        return {"table": table_name, "total": 0, "limit": limit, "offset": offset, "rows": []}
+
+    def get_database_stats(self) -> dict:
+        return {
+            "backend": self.backend_type,
+            "db_path": "memory",
+            "size_bytes": 0,
+            "size_kb": 0.0,
+            "total_telemetry_rows": 0,
+            "earliest_timestamp": None,
+            "latest_timestamp": None,
+            "records_by_device": {},
+            "journal_mode": "none",
+        }
+
     def close(self):
         """Clean up resources."""
         pass
@@ -86,6 +115,7 @@ class SQLiteStorage(StorageBackend):
         water_level_pct REAL,
         rain_sensor_raw INTEGER,
         rain_indicator_pct REAL,
+        inflow_cm3_s REAL,
         sensor_status TEXT NOT NULL,
         source TEXT NOT NULL,
         is_reconstructed INTEGER DEFAULT 0,
@@ -99,6 +129,8 @@ class SQLiteStorage(StorageBackend):
     _CREATE_INDEX = """
     CREATE INDEX IF NOT EXISTS idx_telemetry_zone_time
         ON telemetry(zone_id, event_timestamp);
+    CREATE INDEX IF NOT EXISTS idx_telemetry_device_time
+        ON telemetry(device_id, event_timestamp);
     """
 
     def __init__(self, db_path: str, is_fallback: bool = False):
@@ -110,7 +142,11 @@ class SQLiteStorage(StorageBackend):
         self._conn.row_factory = sqlite3.Row
         self._conn.execute(self._CREATE_TABLE)
         self._migrate_telemetry_table()
-        self._conn.execute(self._CREATE_INDEX)
+        for idx in [
+            "CREATE INDEX IF NOT EXISTS idx_telemetry_zone_time ON telemetry(zone_id, event_timestamp);",
+            "CREATE INDEX IF NOT EXISTS idx_telemetry_device_time ON telemetry(device_id, event_timestamp);",
+        ]:
+            self._conn.execute(idx)
         self._conn.commit()
         logger.info("SQLite storage initialized at: %s (fallback=%s)", db_path, is_fallback)
 
@@ -122,6 +158,7 @@ class SQLiteStorage(StorageBackend):
         migrations = {
             "rain_sensor_raw": "ALTER TABLE telemetry ADD COLUMN rain_sensor_raw INTEGER",
             "rain_indicator_pct": "ALTER TABLE telemetry ADD COLUMN rain_indicator_pct REAL",
+            "inflow_cm3_s": "ALTER TABLE telemetry ADD COLUMN inflow_cm3_s REAL",
         }
         for column, statement in migrations.items():
             if column not in columns:
@@ -143,10 +180,10 @@ class SQLiteStorage(StorageBackend):
                        (device_id, zone_id, sequence, event_timestamp,
                         ingestion_timestamp, distance_cm, water_level_cm,
                         water_level_pct, rain_sensor_raw, rain_indicator_pct,
-                        sensor_status, source,
+                        inflow_cm3_s, sensor_status, source,
                         is_reconstructed, reconstruction_method,
                         scenario_id, quality_flags)
-                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     (
                         record.device_id,
                         record.zone_id,
@@ -158,6 +195,7 @@ class SQLiteStorage(StorageBackend):
                         record.water_level_pct,
                         record.rain_sensor_raw,
                         record.rain_indicator_pct,
+                        record.inflow_cm3_s,
                         record.sensor_status.value,
                         record.source.value,
                         1 if record.is_reconstructed else 0,
@@ -181,9 +219,10 @@ class SQLiteStorage(StorageBackend):
     def query_latest(self, zone_id: str, limit: int = 1) -> list[dict]:
         with self._lock:
             cur = self._conn.execute(
-                """SELECT * FROM telemetry WHERE zone_id = ?
+                """SELECT * FROM telemetry
+                   WHERE device_id = ? OR zone_id = ?
                    ORDER BY event_timestamp DESC LIMIT ?""",
-                (zone_id, limit),
+                (zone_id, zone_id, limit),
             )
             return self._rows_to_dicts(cur.fetchall())
 
@@ -197,9 +236,9 @@ class SQLiteStorage(StorageBackend):
         with self._lock:
             cur = self._conn.execute(
                 """SELECT * FROM telemetry
-                   WHERE zone_id = ? AND event_timestamp >= ? AND event_timestamp <= ?
+                   WHERE (device_id = ? OR zone_id = ?) AND event_timestamp >= ? AND event_timestamp <= ?
                    ORDER BY event_timestamp ASC LIMIT ?""",
-                (zone_id, start.isoformat(), end.isoformat(), limit),
+                (zone_id, zone_id, start.isoformat(), end.isoformat(), limit),
             )
             return self._rows_to_dicts(cur.fetchall())
 
@@ -223,8 +262,8 @@ class SQLiteStorage(StorageBackend):
         with self._lock:
             if zone_id:
                 cur = self._conn.execute(
-                    "SELECT * FROM telemetry WHERE zone_id = ? ORDER BY event_timestamp ASC",
-                    (zone_id,),
+                    "SELECT * FROM telemetry WHERE device_id = ? OR zone_id = ? ORDER BY event_timestamp ASC",
+                    (zone_id, zone_id),
                 )
             else:
                 cur = self._conn.execute(
@@ -246,12 +285,95 @@ class SQLiteStorage(StorageBackend):
         with self._lock:
             if zone_id:
                 cur = self._conn.execute(
-                    "SELECT COUNT(*) FROM telemetry WHERE zone_id = ?",
-                    (zone_id,),
+                    "SELECT COUNT(*) FROM telemetry WHERE device_id = ? OR zone_id = ?",
+                    (zone_id, zone_id),
                 )
             else:
                 cur = self._conn.execute("SELECT COUNT(*) FROM telemetry")
             return cur.fetchone()[0]
+
+    def get_table_names(self) -> list[str]:
+        with self._lock:
+            cur = self._conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';")
+            return [row["name"] for row in cur.fetchall()]
+
+    def get_table_schema(self, table_name: str) -> list[dict]:
+        with self._lock:
+            allowed = self.get_table_names()
+            if table_name not in allowed:
+                return []
+            cur = self._conn.execute(f"PRAGMA table_info({table_name})")
+            return [dict(row) for row in cur.fetchall()]
+
+    def query_records_paginated(
+        self,
+        table_name: str = "telemetry",
+        zone_id: Optional[str] = None,
+        device_id: Optional[str] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> dict:
+        with self._lock:
+            allowed_tables = self.get_table_names()
+            if table_name not in allowed_tables:
+                table_name = "telemetry"
+
+            conditions = []
+            params = []
+            if zone_id:
+                conditions.append("zone_id = ?")
+                params.append(zone_id)
+            if device_id:
+                conditions.append("device_id = ?")
+                params.append(device_id)
+
+            where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+
+            count_cur = self._conn.execute(f"SELECT COUNT(*) FROM {table_name} {where_clause}", params)
+            total_count = count_cur.fetchone()[0]
+
+            query_sql = f"SELECT * FROM {table_name} {where_clause} ORDER BY id DESC LIMIT ? OFFSET ?"
+            cur = self._conn.execute(query_sql, params + [limit, offset])
+            rows = self._rows_to_dicts(cur.fetchall())
+
+            return {
+                "table": table_name,
+                "total": total_count,
+                "limit": limit,
+                "offset": offset,
+                "rows": rows,
+            }
+
+    def get_database_stats(self) -> dict:
+        with self._lock:
+            size_bytes = Path(self._db_path).stat().st_size if Path(self._db_path).exists() else 0
+            cur = self._conn.execute("SELECT COUNT(*) FROM telemetry")
+            telemetry_count = cur.fetchone()[0]
+
+            cur = self._conn.execute("SELECT MIN(event_timestamp), MAX(event_timestamp) FROM telemetry")
+            row = cur.fetchone()
+            min_ts = row[0] if row else None
+            max_ts = row[1] if row else None
+
+            cur = self._conn.execute("SELECT device_id, COUNT(*) as cnt FROM telemetry GROUP BY device_id")
+            device_counts = {r["device_id"]: r["cnt"] for r in cur.fetchall()}
+
+            try:
+                jmode = self._conn.execute("PRAGMA journal_mode").fetchone()[0]
+            except Exception:
+                jmode = "unknown"
+
+            return {
+                "backend": self.backend_type,
+                "db_path": self._db_path,
+                "size_bytes": size_bytes,
+                "size_kb": round(size_bytes / 1024, 1),
+                "total_telemetry_rows": telemetry_count,
+                "earliest_timestamp": min_ts,
+                "latest_timestamp": max_ts,
+                "records_by_device": device_counts,
+                "journal_mode": jmode,
+            }
 
     def close(self):
         with self._lock:
@@ -280,7 +402,10 @@ class MemoryStorage(StorageBackend):
 
     def query_latest(self, zone_id: str, limit: int = 1) -> list[dict]:
         with self._lock:
-            matched = [r for r in self._records if r.zone_id == zone_id]
+            matched = [
+                r for r in self._records
+                if r.zone_id == zone_id or r.device_id == zone_id
+            ]
             matched.sort(key=lambda r: r.timestamp, reverse=True)
             return [self._to_dict(r) for r in matched[:limit]]
 
@@ -290,7 +415,7 @@ class MemoryStorage(StorageBackend):
         with self._lock:
             matched = [
                 r for r in self._records
-                if r.zone_id == zone_id and start <= r.timestamp <= end
+                if (r.zone_id == zone_id or r.device_id == zone_id) and start <= r.timestamp <= end
             ]
             matched.sort(key=lambda r: r.timestamp)
             return [self._to_dict(r) for r in matched[:limit]]

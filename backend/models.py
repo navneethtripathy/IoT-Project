@@ -113,6 +113,7 @@ class TelemetryMessage(BaseModel):
     water_level_pct: Optional[float] = None
     rain_sensor_raw: Optional[int] = Field(default=None, ge=0, le=4095)
     rain_indicator_pct: Optional[float] = Field(default=None, ge=0.0, le=100.0)
+    inflow_cm3_s: Optional[float] = None
     sensor_status: SensorStatus = SensorStatus.VALID
     source: DataSource = DataSource.PYTHON_SIMULATED
     quality_flags: list[str] = Field(default_factory=list)
