@@ -18,6 +18,7 @@ import logging
 import math
 import random
 import signal
+import sqlite3
 import sys
 import threading
 import time
@@ -43,6 +44,25 @@ logger = logging.getLogger("civictwin.mqtt_sim")
 CONTROL_FILE = PROJECT_ROOT / ".run" / "simulator_control.json"
 
 
+def _initial_sequence_for_node(node_id: str) -> int:
+    """Return a monotonic starting sequence strictly above persisted SQLite rows."""
+    base = int(time.time())
+    db_path = Path(config.SQLITE_DB_PATH)
+    if not db_path.exists():
+        return base
+    try:
+        with sqlite3.connect(str(db_path), timeout=2.0) as conn:
+            row = conn.execute(
+                "SELECT COALESCE(MAX(sequence), 0) FROM telemetry WHERE device_id = ?",
+                (node_id,),
+            ).fetchone()
+            max_seq = int(row[0]) if row and row[0] is not None else 0
+            return max(base, max_seq)
+    except sqlite3.Error as exc:
+        logger.debug("Could not inspect max sequence for %s: %s", node_id, exc)
+        return base
+
+
 class SimulatedNode:
     """Represents a simulated IoT node running tank physics and local edge logic."""
 
@@ -53,12 +73,13 @@ class SimulatedNode:
         tank_model: PhysicalTankModel,
         seed: int = 42,
         speed_multiplier: float = 1.0,
+        initial_sequence: int = 0,
     ):
         self.node_id = node_id
         self.zone_id = zone_id
         self.tank = tank_model
         self.rng = random.Random(seed + hash(node_id))
-        self.sequence = 0
+        self.sequence = initial_sequence
         self.is_paused = False
         self.is_disconnected = False
         self.sensor_fault = False
@@ -197,8 +218,20 @@ class MultiNodeMqttSimulator:
         tank2 = PhysicalTankModel(geometry=geom2, drainage_k=6.0, initial_level_cm=18.0, default_q_in_cm3_s=35.0)
 
         self.nodes = {
-            "node_01": SimulatedNode("node_01", "zone_01", tank1, seed=seed),
-            "node_02": SimulatedNode("node_02", "zone_02", tank2, seed=seed + 100),
+            "node_01": SimulatedNode(
+                "node_01",
+                "zone_01",
+                tank1,
+                seed=seed,
+                initial_sequence=_initial_sequence_for_node("node_01"),
+            ),
+            "node_02": SimulatedNode(
+                "node_02",
+                "zone_02",
+                tank2,
+                seed=seed + 100,
+                initial_sequence=_initial_sequence_for_node("node_02"),
+            ),
         }
 
         self._lock = threading.Lock()

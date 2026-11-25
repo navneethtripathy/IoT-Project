@@ -348,6 +348,8 @@ class TestRestApiExtensions:
         data = resp.json()
         assert isinstance(data, list)
         assert len(data) >= 2  # node_01 and node_02
+        node_ids = [item["node_id"] for item in data]
+        assert len(node_ids) == len(set(node_ids))
         states = {item["node_id"]: item["freshness_state"] for item in data}
         assert "node_01" in states
         assert "node_02" in states

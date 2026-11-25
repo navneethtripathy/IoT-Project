@@ -526,11 +526,13 @@ class TestStorage:
 
     def test_sqlite_duplicate_rejection(self):
         with tempfile.NamedTemporaryFile(suffix=".db") as tmp:
-            store = SQLiteStorage(tmp.name)
+            secondary = MemoryStorage()
+            store = SQLiteStorage(tmp.name, secondary_storage=secondary)
             rec = self._make_record("z1", 1)
-            assert store.store(rec)
-            store.store(rec)
+            assert store.store(rec) is True
+            assert store.store(rec) is False
             assert store.count() == 1
+            assert secondary.count() == 1
             store.close()
 
     def test_query_all_latest(self):

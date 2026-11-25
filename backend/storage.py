@@ -183,7 +183,7 @@ class SQLiteStorage(StorageBackend):
             try:
                 src_val = record.source.value if hasattr(record.source, "value") else str(record.source)
                 status_val = record.sensor_status.value if hasattr(record.sensor_status, "value") else str(record.sensor_status)
-                self._conn.execute(
+                cur = self._conn.execute(
                     """INSERT OR IGNORE INTO telemetry
                        (device_id, zone_id, sequence, event_timestamp,
                         ingestion_timestamp, distance_cm, water_level_cm,
@@ -213,6 +213,9 @@ class SQLiteStorage(StorageBackend):
                     ),
                 )
                 self._conn.commit()
+                if cur.rowcount == 0:
+                    logger.debug("Duplicate record ignored: %s seq=%d", record.device_id, record.sequence)
+                    return False
                 stored = True
             except sqlite3.IntegrityError:
                 logger.debug("Duplicate record: %s seq=%d", record.device_id, record.sequence)

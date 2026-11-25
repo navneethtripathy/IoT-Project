@@ -362,7 +362,8 @@ class IngestionService:
                         "sensor_status": "offline",
                     }
             for zid, zdata in self._zone_status.items():
-                if zid not in tracked_entities:
+                dev_id = zdata.get("device_id")
+                if zid not in tracked_entities and (not dev_id or dev_id not in tracked_entities):
                     tracked_entities[zid] = zdata
 
             for entity_id, status in tracked_entities.items():
