@@ -122,3 +122,29 @@ class TestLiveShowcaseIntegration:
             assert data["tank_id"] == "tank_01"
             assert len(data["predicted_levels_cm"]) > 10
             assert data["provenance"] == "TWIN_ESTIMATED"
+
+    def test_live_urban_twin_and_service_status(self):
+        """Verifies live /urban-twin page, /api/services/status, and /api/urban/scenario execution."""
+        with urllib.request.urlopen("http://127.0.0.1:8000/urban-twin", timeout=5) as resp:
+            assert resp.status == 200
+            html = resp.read().decode()
+            assert "/static/vendor/maplibre-gl.js" in html
+
+        with urllib.request.urlopen("http://127.0.0.1:8000/api/services/status", timeout=5) as resp:
+            assert resp.status == 200
+            sv = json.loads(resp.read().decode())["services"]
+            assert sv["fastapi"]["status"] == "online"
+            assert sv["mqtt_broker"]["status"] == "connected"
+            assert sv["nodered"]["status"] == "online"
+            assert sv["influxdb"]["connected"] is True
+
+        req = urllib.request.Request(
+            "http://127.0.0.1:8000/api/urban/scenario",
+            data=json.dumps({"scenario_id": "heavy_rainfall"}).encode(),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            assert resp.status == 200
+            d = json.loads(resp.read().decode())
+            assert d["summary"]["stored_water_volume_mcm"] > 10.0

@@ -17,6 +17,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 from pydantic import BaseModel, Field
 
@@ -116,6 +117,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+_STATIC_DIR = Path(__file__).resolve().parent / "static"
+if _STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
 
 
 @app.get("/health")
@@ -813,145 +818,546 @@ def get_influx_latest(
     return {"backend": "influxdb", "count": len(records), "records": records}
 
 
+@app.get("/api/services/status")
+def get_services_status():
+    """Live runtime status checks for every service (no hardcoded placeholder greens)."""
+    import socket
+    import urllib.request
+
+    # 1. MQTT TCP & client check
+    mqtt_tcp_up = False
+    try:
+        with socket.create_connection((config.MQTT_BROKER_HOST, config.MQTT_BROKER_PORT), timeout=0.4):
+            mqtt_tcp_up = True
+    except OSError:
+        mqtt_tcp_up = False
+
+    # 2. InfluxDB live check
+    sec = getattr(storage, "secondary_storage", None) if storage else None
+    influx_target = sec if sec else (storage if storage and storage.backend_type == "influxdb" else None)
+    influx_ok = bool(influx_target and hasattr(influx_target, "is_healthy") and influx_target.is_healthy())
+    influx_count = influx_target.count() if influx_ok else 0
+
+    # 3. Node-RED HTTP UI check (127.0.0.1:1880/ui)
+    nodered_ok = False
+    nodered_editor_ok = False
+    for path_probe, flag in [("/ui/", "ui"), ("/", "ed")]:
+        try:
+            with urllib.request.urlopen(f"http://127.0.0.1:1880{path_probe}", timeout=0.5) as resp:
+                if resp.status < 400:
+                    if flag == "ui":
+                        nodered_ok = True
+                    else:
+                        nodered_editor_ok = True
+        except Exception:
+            pass
+
+    # 4. Simulator health via ingestion stats & node freshness
+    ing_health = ingestion.get_health() if ingestion else {}
+    msg_count = ing_health.get("stats", {}).get("messages_valid", 0)
+    db_stats = storage.get_database_stats() if storage else {}
+
+    return {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "services": {
+            "fastapi": {
+                "status": "online",
+                "url": "http://127.0.0.1:8000",
+                "docs_url": "http://127.0.0.1:8000/docs",
+            },
+            "mqtt_broker": {
+                "status": "connected" if (mqtt_client and mqtt_client.is_connected and mqtt_tcp_up) else ("reachable" if mqtt_tcp_up else "offline"),
+                "host": config.MQTT_BROKER_HOST,
+                "port": config.MQTT_BROKER_PORT,
+                "client_connected": bool(mqtt_client and mqtt_client.is_connected),
+                "tcp_reachable": mqtt_tcp_up,
+            },
+            "sqlite": {
+                "status": "online" if storage else "offline",
+                "records_stored": storage.count() if storage else 0,
+                "db_size_kb": db_stats.get("file_size_kb", 0),
+            },
+            "influxdb": {
+                "status": "connected" if influx_ok else ("disabled" if not config.INFLUXDB_ENABLED else "offline"),
+                "connected": influx_ok,
+                "url": config.INFLUXDB_URL,
+                "bucket": config.INFLUXDB_BUCKET,
+                "records_count": influx_count,
+            },
+            "nodered": {
+                "status": "online" if (nodered_ok or nodered_editor_ok) else "offline",
+                "dashboard_reachable": nodered_ok,
+                "editor_reachable": nodered_editor_ok,
+                "ui_url": "http://127.0.0.1:1880/ui",
+                "editor_url": "http://127.0.0.1:1880",
+            },
+            "simulator": {
+                "status": "active" if (simulator is not None or msg_count > 0) else "idle",
+                "internal_fallback_running": simulator is not None,
+                "valid_messages_ingested": msg_count,
+            },
+        },
+    }
+
+
 @app.get("/urban-twin", response_class=HTMLResponse)
 def get_urban_twin_page():
-    """Serves the Chennai Urban 3D Digital Twin Interface."""
+    """Serves the offline-first Chennai Urban 3D Digital Twin Command Center."""
     if not URBAN_TWIN_HTML_PATH.exists():
         raise HTTPException(404, "Chennai urban twin template not found")
     return FileResponse(URBAN_TWIN_HTML_PATH)
 
 
+_GEO_PROCESSED_DIR = config._PROJECT_ROOT / "data" / "geo" / "processed"
+_ACTIVE_SCENARIO_RESULT: dict = {}
+_SEARCH_INDEX_CACHE: Optional[list] = None
+
+
+def _get_default_urban_result():
+    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS
+    if "last" not in _ACTIVE_SCENARIO_RESULT:
+        _ACTIVE_SCENARIO_RESULT["last"] = terrain_engine.run_scenario(PREDEFINED_SCENARIOS["heavy_rainfall"])
+    return _ACTIVE_SCENARIO_RESULT["last"]
+
+
+def _get_search_index() -> list:
+    global _SEARCH_INDEX_CACHE
+    if _SEARCH_INDEX_CACHE is not None:
+        return _SEARCH_INDEX_CACHE
+    items = []
+    from digital_twin.terrain_hydrology import FOCUS_LOCATIONS
+    for loc in FOCUS_LOCATIONS:
+        items.append({
+            "name": loc["name"],
+            "tamil_name": loc.get("tamil_name", ""),
+            "category": "Focus Basin",
+            "id": loc["id"],
+            "coordinates": loc["coordinates"],
+            "zoom": 13.8,
+        })
+    places_p = _GEO_PROCESSED_DIR / "osm_places_index.json"
+    if places_p.exists():
+        for pl in json.loads(places_p.read_text()):
+            items.append({
+                "name": pl["name"],
+                "category": f"OSM {pl.get('place_type', 'place').title()}",
+                "coordinates": pl["coordinates"],
+                "zoom": 14.2,
+            })
+    st_p = _GEO_PROCESSED_DIR / "verified_stations.json"
+    if st_p.exists():
+        for st in json.loads(st_p.read_text()):
+            items.append({
+                "name": st["station_name"],
+                "category": f"CFM-DSS {st['station_kind']}",
+                "coordinates": st["coordinates"],
+                "zoom": 14.5,
+            })
+    br_p = _GEO_PROCESSED_DIR / "osm_bridges.geojson"
+    if br_p.exists():
+        gj = json.loads(br_p.read_text())
+        seen_br = set()
+        for f in gj.get("features", []):
+            nm = (f.get("properties") or {}).get("name")
+            if nm and nm.lower() not in seen_br:
+                seen_br.add(nm.lower())
+                coords = (f.get("geometry") or {}).get("coordinates", [])
+                if coords and isinstance(coords[0], list):
+                    mid = coords[len(coords) // 2]
+                    items.append({"name": nm, "category": "Bridge", "coordinates": mid, "zoom": 15.2})
+    bldg_p = _GEO_PROCESSED_DIR / "osm_buildings_south.geojson"
+    if bldg_p.exists():
+        gj = json.loads(bldg_p.read_text())
+        seen_b = set()
+        for f in gj.get("features", []):
+            nm = (f.get("properties") or {}).get("name")
+            if nm and nm.lower() not in seen_b and len(seen_b) < 2500:
+                seen_b.add(nm.lower())
+                g = f.get("geometry") or {}
+                c = g.get("coordinates", [])
+                ring = c[0] if g.get("type") == "Polygon" and c else (c[0][0] if g.get("type") == "MultiPolygon" and c else None)
+                if ring:
+                    items.append({"name": nm, "category": "OSM Building", "coordinates": ring[0], "zoom": 16.0})
+    _SEARCH_INDEX_CACHE = items
+    return items
+
+
 # ── Chennai Urban Geospatial Digital Twin REST APIs ───────────────────────
 @app.get("/api/urban/locations")
 def get_urban_locations():
-    """Returns the 10 prioritized Chennai focus locations with elevation, population and flood metrics."""
-    from digital_twin.chennai_geo_data import CHENNAI_LOCATIONS
-    return {"count": len(CHENNAI_LOCATIONS), "locations": CHENNAI_LOCATIONS}
+    """Returns prioritized South Chennai focus locations grounded with Copernicus DEM elevation."""
+    from digital_twin.terrain_hydrology import FOCUS_LOCATIONS, terrain_engine
+    locs = []
+    for loc in FOCUS_LOCATIONS:
+        entry = dict(loc)
+        pt_info = terrain_engine.query_point(loc["coordinates"][0], loc["coordinates"][1])
+        entry["elevation_m"] = pt_info.get("copernicus_dsm_elevation_m")
+        locs.append(entry)
+    return {"count": len(locs), "locations": locs}
 
 
 @app.get("/api/urban/locations/{location_id}")
 def get_urban_location(location_id: str):
-    """Returns individual location details for a Chennai locality."""
-    from digital_twin.urban_hydrology import urban_engine
-    loc = urban_engine.get_location_by_id(location_id)
-    if not loc:
-        raise HTTPException(404, f"Location '{location_id}' not found")
-    return loc
+    """Returns individual location details for a Chennai focus locality."""
+    from digital_twin.terrain_hydrology import FOCUS_LOCATIONS, terrain_engine
+    for loc in FOCUS_LOCATIONS:
+        if loc["id"] == location_id:
+            entry = dict(loc)
+            pt_info = terrain_engine.query_point(loc["coordinates"][0], loc["coordinates"][1])
+            entry["elevation_m"] = pt_info.get("copernicus_dsm_elevation_m")
+            entry["terrain_info"] = pt_info
+            return entry
+    raise HTTPException(404, f"Location '{location_id}' not found")
 
 
 @app.get("/api/urban/stations")
 def get_urban_stations():
-    """Returns verified Automatic Rain Gauge stations from CFM-DSS/IMD with coordinates."""
-    from digital_twin.chennai_geo_data import RAINFALL_STATIONS
-    return {"count": len(RAINFALL_STATIONS), "stations": RAINFALL_STATIONS}
+    """Returns strictly geolocated official CFM-DSS meteorological & flood stations."""
+    st_path = _GEO_PROCESSED_DIR / "verified_stations.json"
+    if not st_path.exists():
+        raise HTTPException(404, "Processed verified_stations.json not found")
+    stations = json.loads(st_path.read_text())
+    return {
+        "count": len(stations),
+        "observation_mode": "historical_verified_coordinates",
+        "note": "CFM-DSS WFS geolocated stations only; non-geolocated CSV ARG series are surfaced via /api/urban/historical/arg-analytics.",
+        "stations": stations,
+    }
 
 
 @app.get("/api/urban/reservoirs")
 def get_urban_reservoirs():
-    """Returns official Chennai major reservoirs with storage and capacities from WRD."""
-    from digital_twin.chennai_geo_data import CHENNAI_RESERVOIRS
-    return {"count": len(CHENNAI_RESERVOIRS), "reservoirs": CHENNAI_RESERVOIRS}
+    """Returns real preserved WRD reservoir capacities merged with geospatial coordinates."""
+    import csv
+    csv_path = config.PROCESSED_DIR / "chennai_reservoirs.csv"
+    if not csv_path.exists():
+        raise HTTPException(404, "Preserved chennai_reservoirs.csv not found")
+
+    coords_lookup = {
+        "RedHills": [80.1850, 13.1980],
+        "Cholavaram": [80.1460, 13.2250],
+        "Thervoy Kandigai": [79.9690, 13.3470],
+        "Chembarambakkam": [80.0680, 13.0120],
+        "Poondi": [79.8630, 13.1950],
+    }
+    reservoirs = []
+    with open(csv_path) as f:
+        for row in csv.DictReader(f):
+            nm = row["reservoir_name"].strip()
+            live = float(row["storage_capacity_live_mcm"])
+            gross = float(row["storage_capacity_gross_mcm"])
+            dead = float(row["storage_capacity_dead_mcm"])
+            fill_pct = float(row["storage_fill_pct"])
+            reservoirs.append({
+                "tank_id": row["tank_id"],
+                "reservoir_name": nm,
+                "storage_capacity_live_mcm": live,
+                "storage_capacity_gross_mcm": gross,
+                "storage_capacity_dead_mcm": dead,
+                "storage_fill_pct": fill_pct,
+                "coordinates": coords_lookup.get(nm, [80.068, 13.012]),
+                "in_south_pilot_domain": nm == "Chembarambakkam",
+                "source": row["source"],
+                "provenance": row["provenance"],
+            })
+    return {"count": len(reservoirs), "reservoirs": reservoirs}
 
 
-@app.get("/api/urban/geo/waterways")
-def get_urban_waterways_geojson():
-    """Returns GeoJSON FeatureCollection of rivers, canals, marshes, and major lakes."""
-    from digital_twin.chennai_geo_data import WATERWAYS_GEOJSON
-    return WATERWAYS_GEOJSON
+@app.get("/api/urban/historical/michaung")
+def get_urban_historical_michaung():
+    """Returns complete 144 hourly Cyclone Michaung rainfall observations from preserved CSV."""
+    import csv
+    michaung_path = config.PROCESSED_DIR / "chennai_michaung_hourly.csv"
+    if not michaung_path.exists():
+        raise HTTPException(404, "Preserved chennai_michaung_hourly.csv not found")
+    with open(michaung_path) as f:
+        rows = list(csv.DictReader(f))
+    records = [
+        {
+            "timestamp_local": r["timestamp_local"],
+            "hourly_precipitation_mm": float(r["hourly_precipitation_mm"]),
+            "cumulative_rainfall_mm": float(r["cumulative_rainfall_mm"]),
+        }
+        for r in rows
+    ]
+    peak = max((r["hourly_precipitation_mm"] for r in records), default=0.0)
+    cum = records[-1]["cumulative_rainfall_mm"] if records else 0.0
+    return {
+        "event_id": "cyclone_michaung_2023",
+        "event_name": "Cyclone Michaung (Dec 1–6, 2023)",
+        "records_count": len(records),
+        "peak_hourly_mm_hr": round(peak, 2),
+        "cumulative_mm": round(cum, 2),
+        "station_coordinates": [80.2707, 13.0827],
+        "provenance": "ERA5_IMD_Calibrated (observed historical rainfall)",
+        "records": records,
+    }
 
 
-@app.get("/api/urban/geo/catchments")
-def get_urban_catchments_geojson():
-    """Returns GeoJSON FeatureCollection of Chennai sub-basin catchment boundaries."""
-    from digital_twin.chennai_geo_data import CATCHMENTS_GEOJSON
-    return CATCHMENTS_GEOJSON
+@app.get("/api/urban/historical/arg-analytics")
+def get_urban_arg_analytics():
+    """Aggregates preserved chennai_arg_rainfall.csv by subbasin (explicitly non-spatial; no coordinates)."""
+    import csv
+    csv_path = config.PROCESSED_DIR / "chennai_arg_rainfall.csv"
+    if not csv_path.exists():
+        raise HTTPException(404, "Preserved chennai_arg_rainfall.csv not found")
+    subbasins: dict = {}
+    stations_seen = set()
+    total_rows = 0
+    with open(csv_path) as f:
+        for r in csv.DictReader(f):
+            total_rows += 1
+            sb = r["subbasin"].strip()
+            st_id = r["station_id"].strip()
+            stations_seen.add(st_id)
+            rain = float(r["rainfall_mm"])
+            prev = float(r["previous_rainfall_mm"])
+            entry = subbasins.setdefault(sb, {"subbasin": sb, "records": 0, "stations": set(), "max_rain_mm": 0.0, "sum_rain_mm": 0.0, "max_prev_mm": 0.0})
+            entry["records"] += 1
+            entry["stations"].add(st_id)
+            entry["max_rain_mm"] = max(entry["max_rain_mm"], rain)
+            entry["max_prev_mm"] = max(entry["max_prev_mm"], prev)
+            entry["sum_rain_mm"] += rain
+    summary = []
+    for sb, d in sorted(subbasins.items(), key=lambda x: x[1]["max_rain_mm"], reverse=True):
+        summary.append({
+            "subbasin": sb,
+            "station_count": len(d["stations"]),
+            "record_count": d["records"],
+            "mean_rainfall_mm": round(d["sum_rain_mm"] / max(1, d["records"]), 2),
+            "max_rainfall_mm": round(d["max_rain_mm"], 2),
+            "max_previous_rainfall_mm": round(d["max_prev_mm"], 2),
+        })
+    return {
+        "has_coordinates": False,
+        "provenance": "CFM-DSS_ARG",
+        "note": "Preserved chennai_arg_rainfall.csv contains 328 rows across 13 subbasins without lat/lon coordinates; displayed as non-spatial analytics rather than fabricated map pins.",
+        "total_records": total_rows,
+        "unique_stations": len(stations_seen),
+        "subbasins_count": len(summary),
+        "subbasins": summary,
+    }
 
 
-@app.get("/api/urban/geo/buildings")
-def get_urban_buildings_geojson():
-    """Returns GeoJSON 3D building footprints with estimated extrusion heights for pilot area."""
-    from digital_twin.chennai_geo_data import BUILDINGS_GEOJSON
-    return BUILDINGS_GEOJSON
+@app.get("/api/urban/historical-events")
+def get_urban_historical_events():
+    """Summary endpoint returning Cyclone Michaung overview metrics."""
+    m = get_urban_historical_michaung()
+    return {
+        "event_id": m["event_id"],
+        "event_name": m["event_name"],
+        "peak_hourly_intensity_mm_hr": m["peak_hourly_mm_hr"],
+        "cumulative_precipitation_mm": m["cumulative_mm"],
+        "records_count": m["records_count"],
+        "sample_records": m["records"][:12],
+        "provenance": m["provenance"],
+    }
+
+
+_GEO_LAYER_FILES = {
+    "hillshade": ("chennai_terrain_hillshade.png", "image/png"),
+    "terrain_hillshade.png": ("chennai_terrain_hillshade.png", "image/png"),
+    "dem_metadata": ("dem_metadata.json", "application/json"),
+    "gcc_boundary": ("gcc_boundary.geojson", "application/json"),
+    "watersheds": ("watersheds_south.geojson", "application/json"),
+    "catchments": ("watersheds_south.geojson", "application/json"),
+    "wards": ("wards_chennai.geojson", "application/json"),
+    "waterways": ("waterways_official.geojson", "application/json"),
+    "waterbodies": ("waterbodies_official.geojson", "application/json"),
+    "flood_spots": ("historical_flood_spots.geojson", "application/json"),
+    "roads_major": ("osm_roads_major.geojson", "application/json"),
+    "streets_pilot": ("osm_streets_pilot.geojson", "application/json"),
+    "bridges": ("osm_bridges.geojson", "application/json"),
+    "parks": ("osm_parks_landuse.geojson", "application/json"),
+    "buildings": ("osm_buildings_south.geojson", "application/json"),
+    "places": ("osm_places_index.json", "application/json"),
+    "manifest": ("acquisition_manifest.json", "application/json"),
+}
+
+
+@app.get("/api/urban/geo/{layer}")
+def get_urban_geo_layer(layer: str):
+    """Serves processed offline geospatial assets (Copernicus DEM relief, WFS polygons, OSM features)."""
+    if layer not in _GEO_LAYER_FILES:
+        raise HTTPException(404, f"Geospatial layer '{layer}' not found")
+    fname, media_type = _GEO_LAYER_FILES[layer]
+    fpath = _GEO_PROCESSED_DIR / fname
+    if not fpath.exists():
+        raise HTTPException(404, f"Processed file missing: {fname}")
+    return FileResponse(fpath, media_type=media_type)
+
+
+@app.get("/api/urban/search")
+def search_urban_features(q: str = Query(..., min_length=1, max_length=80), limit: int = Query(12, ge=1, le=30)):
+    """Fast prefix/substring search across South Chennai basins, OSM neighborhoods, WFS stations, bridges & buildings."""
+    ql = q.strip().lower()
+    idx = _get_search_index()
+    prefix_hits = [x for x in idx if x["name"].lower().startswith(ql)]
+    sub_hits = [x for x in idx if ql in x["name"].lower() and not x["name"].lower().startswith(ql)]
+    results = (prefix_hits + sub_hits)[:limit]
+    return {"query": q, "count": len(results), "results": results}
+
+
+@app.get("/api/urban/point")
+def inspect_urban_point(lon: float = Query(...), lat: float = Query(...), scenario_id: Optional[str] = Query(None)):
+    """Inspect Copernicus DSM elevation, UTM coordinates, surface mask, and modeled depth at (lon, lat)."""
+    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS, normalize_scenario_id
+    active = _get_default_urban_result()
+    if scenario_id:
+        nid = normalize_scenario_id(scenario_id)
+        if nid in PREDEFINED_SCENARIOS:
+            active = terrain_engine.run_scenario(PREDEFINED_SCENARIOS[nid])
+    return terrain_engine.query_point(lon, lat, active_result=active)
 
 
 @app.get("/api/urban/scenarios/list")
 def list_urban_scenarios():
-    """Returns list of available predefined urban flood scenarios."""
-    from digital_twin.urban_hydrology import PREDEFINED_SCENARIOS
+    """Returns all 8 scientific predefined scenarios for the Landlab 2D OverlandFlow twin."""
+    from digital_twin.terrain_hydrology import PREDEFINED_SCENARIOS
     return [
         {
             "id": p.scenario_id,
             "name": p.scenario_name,
+            "mode": p.mode,
             "description": p.description,
             "rainfall_intensity_mm_hr": p.rainfall_intensity_mm_hr,
             "duration_hours": p.duration_hours,
-            "drainage_capacity_pct": p.drainage_capacity_pct,
+            "infiltration_rate_mm_hr": p.infiltration_rate_mm_hr,
+            "drainage_efficiency_pct": p.drainage_efficiency_pct,
             "chembarambakkam_discharge_cusecs": p.chembarambakkam_discharge_cusecs,
+            "mannings_n": p.mannings_n,
         }
         for p in PREDEFINED_SCENARIOS.values()
     ]
 
 
-@app.get("/api/urban/historical-events")
-def get_urban_historical_events():
-    """Returns historical Cyclone Michaung storm series and 2015 flood benchmarks."""
-    try:
-        michaung_path = config.PROCESSED_DIR / "chennai_michaung_hourly.csv"
-        records = []
-        if michaung_path.exists():
-            import csv
-            with open(michaung_path) as f:
-                reader = list(csv.DictReader(f))
-                records = reader[:144]
-        return {
-            "event_id": "cyclone_michaung_2023",
-            "event_name": "Cyclone Michaung (Dec 1-6, 2023)",
-            "peak_hourly_intensity_mm_hr": 46.8,
-            "cumulative_precipitation_mm": 472.0,
-            "records_count": len(records),
-            "sample_records": records[:12],
-            "provenance": "CFM-DSS_HourlyObservations",
-        }
-    except Exception as e:
-        return {"error": str(e), "status": "unavailable"}
-
-
 @app.post("/api/urban/scenario")
 def execute_urban_scenario(payload: Optional[dict] = None):
-    """
-    Executes the mass-balance urban flood screening model for Chennai.
-    Accepts custom parameters or a predefined scenario_id.
-    """
-    from digital_twin.urban_hydrology import urban_engine, PREDEFINED_SCENARIOS, UrbanScenarioParams
+    """Executes the Landlab 2D OverlandFlow terrain simulation over South Chennai UTM 44N DEM."""
+    from digital_twin.terrain_hydrology import (
+        terrain_engine,
+        PREDEFINED_SCENARIOS,
+        HydroScenarioConfig,
+        normalize_scenario_id,
+        strip_internal_grids,
+    )
     payload = payload or {}
-    scenario_id = payload.get("scenario_id", "heavy_rain")
+    raw_id = payload.get("scenario_id", "heavy_rainfall")
+    scenario_id = normalize_scenario_id(raw_id)
 
-    if scenario_id in PREDEFINED_SCENARIOS and not any(k in payload for k in ["rainfall_intensity_mm_hr", "chembarambakkam_discharge_cusecs"]):
-        params = PREDEFINED_SCENARIOS[scenario_id]
+    custom_keys = {
+        "rainfall_intensity_mm_hr",
+        "duration_hours",
+        "infiltration_rate_mm_hr",
+        "drainage_efficiency_pct",
+        "drainage_capacity_pct",
+        "chembarambakkam_discharge_cusecs",
+        "mannings_n",
+    }
+    if scenario_id in PREDEFINED_SCENARIOS and not any(k in payload for k in custom_keys):
+        cfg = PREDEFINED_SCENARIOS[scenario_id]
     else:
-        params = UrbanScenarioParams(
+        drain_pct = float(payload.get("drainage_efficiency_pct", payload.get("drainage_capacity_pct", 100.0)))
+        cfg = HydroScenarioConfig(
             scenario_id=scenario_id,
-            scenario_name=payload.get("scenario_name", f"Custom ({scenario_id})"),
+            scenario_name=payload.get("scenario_name", f"Custom Scenario ({scenario_id})"),
+            mode=payload.get("mode", "historical_replay" if scenario_id == "michaung_replay" else "scenario_simulation"),
             rainfall_intensity_mm_hr=float(payload.get("rainfall_intensity_mm_hr", 45.0)),
             duration_hours=float(payload.get("duration_hours", 4.0)),
-            runoff_coefficient=float(payload.get("runoff_coefficient", 0.82)),
-            drainage_capacity_pct=float(payload.get("drainage_capacity_pct", 85.0)),
-            infiltration_rate_mm_hr=float(payload.get("infiltration_rate_mm_hr", 4.0)),
-            chembarambakkam_discharge_cusecs=float(payload.get("chembarambakkam_discharge_cusecs", 3500.0)),
-            description=payload.get("description", "Custom user-defined flood scenario."),
+            infiltration_rate_mm_hr=float(payload.get("infiltration_rate_mm_hr", 5.0)),
+            drainage_efficiency_pct=drain_pct,
+            nominal_drain_cap_mm_hr=float(payload.get("nominal_drain_cap_mm_hr", 12.0)),
+            chembarambakkam_discharge_cusecs=float(payload.get("chembarambakkam_discharge_cusecs", 0.0)),
+            mannings_n=float(payload.get("mannings_n", 0.045)),
+            description=payload.get("description", "Custom interactive urban flood simulation scenario."),
+            provenance_tags=["user_defined_scenario", "terrain_routed_landlab"],
         )
 
-    return urban_engine.run_scenario(params)
+    try:
+        res = terrain_engine.run_scenario(cfg)
+    except ValueError as ve:
+        raise HTTPException(422, str(ve))
+
+    _ACTIVE_SCENARIO_RESULT["last"] = res
+    _ACTIVE_SCENARIO_RESULT[scenario_id] = res
+    return strip_internal_grids(res)
+
+
+@app.post("/api/urban/scenario/compare")
+def compare_urban_scenarios(payload: dict):
+    """Computes explicit cell-by-cell numerical difference between two scenarios."""
+    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS, normalize_scenario_id
+    b_id = normalize_scenario_id(payload.get("baseline_id", "heavy_rainfall"))
+    a_id = normalize_scenario_id(payload.get("alternate_id", "reduced_drainage"))
+    r_base = _ACTIVE_SCENARIO_RESULT.get(b_id) or (terrain_engine.run_scenario(PREDEFINED_SCENARIOS[b_id]) if b_id in PREDEFINED_SCENARIOS else None)
+    r_alt = _ACTIVE_SCENARIO_RESULT.get(a_id) or (terrain_engine.run_scenario(PREDEFINED_SCENARIOS[a_id]) if a_id in PREDEFINED_SCENARIOS else None)
+    if not r_base or not r_alt:
+        raise HTTPException(404, "Baseline or alternate scenario not found")
+    return terrain_engine.compare_scenarios(r_base, r_alt)
+
+
+@app.post("/api/urban/scenario/save")
+def save_urban_scenario(payload: dict):
+    """Persists a scenario configuration to data/geo/processed/saved_scenarios.json."""
+    from digital_twin.terrain_hydrology import terrain_engine, HydroScenarioConfig
+    saved_name = str(payload.get("saved_name", "")).strip()
+    if not saved_name:
+        raise HTTPException(422, "saved_name is required")
+    cfg = HydroScenarioConfig(
+        scenario_id=payload.get("scenario_id", f"saved_{int(datetime.now().timestamp())}"),
+        scenario_name=payload.get("scenario_name", saved_name),
+        mode=payload.get("mode", "scenario_simulation"),
+        rainfall_intensity_mm_hr=float(payload.get("rainfall_intensity_mm_hr", 45.0)),
+        duration_hours=float(payload.get("duration_hours", 4.0)),
+        infiltration_rate_mm_hr=float(payload.get("infiltration_rate_mm_hr", 5.0)),
+        drainage_efficiency_pct=float(payload.get("drainage_efficiency_pct", 100.0)),
+        chembarambakkam_discharge_cusecs=float(payload.get("chembarambakkam_discharge_cusecs", 0.0)),
+        mannings_n=float(payload.get("mannings_n", 0.045)),
+        description=payload.get("description", f"Saved scenario: {saved_name}"),
+    )
+    cfg.validate()
+    return terrain_engine.save_scenario_config(saved_name, cfg)
+
+
+@app.get("/api/urban/scenarios/saved")
+def get_saved_urban_scenarios():
+    from digital_twin.terrain_hydrology import terrain_engine
+    saved = terrain_engine.list_saved_scenarios()
+    return {"count": len(saved), "scenarios": saved}
+
+
+@app.get("/api/urban/scenario/{scenario_id}/export")
+def export_urban_scenario(scenario_id: str, fmt: str = Query("geojson", pattern="^(geojson|summary)$")):
+    """Downloads active/cached scenario flood polygons GeoJSON or summary JSON."""
+    from fastapi.responses import JSONResponse
+    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS, normalize_scenario_id, strip_internal_grids
+    nid = normalize_scenario_id(scenario_id)
+    res = _ACTIVE_SCENARIO_RESULT.get(nid)
+    if not res and nid in PREDEFINED_SCENARIOS:
+        res = terrain_engine.run_scenario(PREDEFINED_SCENARIOS[nid])
+    if not res:
+        raise HTTPException(404, f"Scenario '{scenario_id}' not found")
+    if fmt == "geojson":
+        return JSONResponse(
+            content=res["flood_overlay_geojson"],
+            headers={"Content-Disposition": f'attachment; filename="civictwin_{nid}_flood.geojson"'},
+        )
+    return JSONResponse(
+        content=strip_internal_grids(res),
+        headers={"Content-Disposition": f'attachment; filename="civictwin_{nid}_summary.json"'},
+    )
 
 
 @app.get("/api/urban/scenario/{scenario_id}")
 def get_urban_scenario_result(scenario_id: str):
-    """Retrieves computed flood results for a specific scenario ID."""
-    from digital_twin.urban_hydrology import urban_engine, PREDEFINED_SCENARIOS
-    if scenario_id not in PREDEFINED_SCENARIOS:
+    """Retrieves computed Landlab 2D flood results for a predefined scenario ID or alias."""
+    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS, normalize_scenario_id, strip_internal_grids
+    nid = normalize_scenario_id(scenario_id)
+    if nid not in PREDEFINED_SCENARIOS:
         raise HTTPException(404, f"Scenario '{scenario_id}' not found")
-    params = PREDEFINED_SCENARIOS[scenario_id]
-    return urban_engine.run_scenario(params)
+    res = terrain_engine.run_scenario(PREDEFINED_SCENARIOS[nid])
+    _ACTIVE_SCENARIO_RESULT[nid] = res
+    return strip_internal_grids(res)
 
 
 @app.get("/", response_class=HTMLResponse)

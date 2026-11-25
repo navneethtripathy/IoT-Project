@@ -109,7 +109,12 @@ with open(".run/logs/nodered.log", "a") as log:
         f.write(str(p.pid))
 ' "$NODE_BIN" "$RED_JS" "$DIR"
     NODERED_PID=$(cat .run/nodered.pid 2>/dev/null || echo "")
-    sleep 3
+    for i in {1..20}; do
+        if curl -s http://127.0.0.1:1880/ > /dev/null 2>&1; then
+            break
+        fi
+        sleep 0.5
+    done
     echo "      [OK] Node-RED engine running (PID: $NODERED_PID)"
 else
     echo "      [INFO] Node-RED runtime not installed; UI available via Showcase Web Center"
@@ -121,7 +126,7 @@ nohup $PYTHON_BIN "$DIR/scripts/mqtt_node_simulator.py" --broker localhost --por
 SIM_PID=$!
 disown $SIM_PID 2>/dev/null || true
 echo $SIM_PID > .run/simulator.pid
-sleep 1
+sleep 2
 echo "      [OK] Dual-node simulator active (PID: $SIM_PID)"
 
 # 8. Run Verification Check
@@ -133,12 +138,13 @@ echo ""
 echo "================================================================================"
 echo "  CivicTwin-R Showcase is LIVE and READY FOR DEMONSTRATION!"
 echo "================================================================================"
-echo "  * Dedicated 3D Chennai Urban Twin     : http://127.0.0.1:8000/urban-twin"
+echo "  * Primary 3D Chennai Urban Twin       : http://127.0.0.1:8000/urban-twin"
 echo "  * Engineering Showcase Control Center : http://127.0.0.1:8000/showcase"
 echo "  * InfluxDB 2.x Time-Series UI         : http://127.0.0.1:8086"
 echo "  * Interactive Swagger API Docs        : http://127.0.0.1:8000/docs"
-if [ -n "$NODERED_BIN" ]; then
-echo "  * Node-RED Operational Dashboard      : http://127.0.0.1:1880/ui"
+if [ -n "$NODERED_PID" ]; then
+echo "  * Node-RED Flow Editor                : http://127.0.0.1:1880/"
+echo "  * Node-RED Operational Dashboard      : http://127.0.0.1:1880/ui/"
 fi
 echo "================================================================================"
 echo "  Logs: .run/logs/ (mosquitto.log, backend.log, simulator.log, nodered.log)"

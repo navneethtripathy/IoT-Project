@@ -1,0 +1,6725 @@
+[
+  {
+    "name": "Alwarpet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.254549,
+      13.03386
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Teynampet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.249846,
+      13.044324
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gopalapuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.258203,
+      13.049732
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nandanam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.240256,
+      13.028629
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Raja Annamalai Puram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.253937,
+      13.024478
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Abhiramapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.2583,
+      13.031024
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "CIT Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.260472,
+      13.04131
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Poonamallee",
+    "place_type": "town",
+    "coordinates": [
+      80.100686,
+      13.04174
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Porur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.158286,
+      13.032458
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Avadi",
+    "place_type": "city",
+    "coordinates": [
+      80.093573,
+      13.119014
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mullai Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.037462,
+      13.139906
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mylapore",
+    "place_type": "suburb",
+    "coordinates": [
+      80.270017,
+      13.031647
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mandaveli",
+    "place_type": "suburb",
+    "coordinates": [
+      80.262788,
+      13.025844
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mahalinga Puram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.236404,
+      13.056783
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nungambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.240487,
+      13.062063
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kodambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.224283,
+      13.049207
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ashok Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.21457,
+      13.035927
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Saidapet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.223954,
+      13.020817
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "East Abhiramapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.261791,
+      13.034268
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Santhome",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.275738,
+      13.029837
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Royapettah",
+    "place_type": "suburb",
+    "coordinates": [
+      80.263971,
+      13.055472
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Triplicane",
+    "place_type": "suburb",
+    "coordinates": [
+      80.27507,
+      13.060429
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thousand Lights",
+    "place_type": "suburb",
+    "coordinates": [
+      80.255711,
+      13.058783
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pudupet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.26696,
+      13.071202
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Egmore",
+    "place_type": "suburb",
+    "coordinates": [
+      80.257691,
+      13.072832
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Island Grounds",
+    "place_type": "suburb",
+    "coordinates": [
+      80.279362,
+      13.0742
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chepauk",
+    "place_type": "suburb",
+    "coordinates": [
+      80.283118,
+      13.064513
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chetpet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.243797,
+      13.071745
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Choolaimedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.225169,
+      13.061333
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "MRC Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.270652,
+      13.019669
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Saligramam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.20373,
+      13.056989
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Aminjikarai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.220545,
+      13.07214
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Arumbakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.208131,
+      13.074371
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Anna Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.20734,
+      13.088249
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Padi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.192042,
+      13.103585
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Villivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.209044,
+      13.104048
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "ICF Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.220238,
+      13.099531
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Perambur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.242016,
+      13.112724
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sowcarpet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.278309,
+      13.088497
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vallalar Nagar (Mint)",
+    "place_type": "suburb",
+    "coordinates": [
+      80.278777,
+      13.101926
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gandhinagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.253863,
+      13.008993
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Besant Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.268226,
+      12.999691
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Adyar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.257779,
+      13.00645
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Little Mount",
+    "place_type": "suburb",
+    "coordinates": [
+      80.226688,
+      13.014186
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Guindy",
+    "place_type": "suburb",
+    "coordinates": [
+      80.220365,
+      13.00871
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiruvanmiyur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.264421,
+      12.985895
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kotturpuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.243551,
+      13.01937
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannammapet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.228078,
+      13.032326
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "CIT Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.234283,
+      13.029384
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "NSK Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.216713,
+      13.077751
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Shenoy Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.227255,
+      13.078667
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kilpauk",
+    "place_type": "suburb",
+    "coordinates": [
+      80.237986,
+      13.083215
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "George Town",
+    "place_type": "suburb",
+    "coordinates": [
+      80.282243,
+      13.092092
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Park Town",
+    "place_type": "suburb",
+    "coordinates": [
+      80.272393,
+      13.086573
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Royapuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.294028,
+      13.114619
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vyasarpadi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.258722,
+      13.113047
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Basin Bridge",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.269908,
+      13.108047
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Washermanpet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.281481,
+      13.11363
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Parrys Corner",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.288055,
+      13.089546
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "West Saidapet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.220424,
+      13.025258
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Todhunter Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.230809,
+      13.022615
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jothiammal Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.228897,
+      13.019511
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tambaram",
+    "place_type": "city",
+    "coordinates": [
+      80.115053,
+      12.924528
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "East Tambaram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.131453,
+      12.926515
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chromepet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.135642,
+      12.949684
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pallavaram",
+    "place_type": "town",
+    "coordinates": [
+      80.145118,
+      12.965467
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Selaiyur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.137954,
+      12.917811
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chitlapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.141383,
+      12.933098
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Hasthinapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.151985,
+      12.937282
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Rajakilpakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.154427,
+      12.917844
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Medavakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.187216,
+      12.920214
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Perumbakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.19947,
+      12.906846
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sithalapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.187199,
+      12.889027
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sholinganallur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.230688,
+      12.898142
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Madambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.158679,
+      12.90633
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiruneermalai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.113541,
+      12.963094
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pammal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.136365,
+      12.976231
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Adambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.209121,
+      12.982221
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Irumbuliyur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.108898,
+      12.912203
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Perungalathur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.088334,
+      12.905247
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kasturibai Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.250938,
+      13.004044
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Shastri Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.259912,
+      12.998773
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thoraipakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.24071,
+      12.950193
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Perungudi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.241805,
+      12.971024
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nehru Nagar Industrial Estate",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.247542,
+      12.974216
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Venus Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.25492,
+      13.040107
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Seethammal Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.250978,
+      13.035012
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Poes Garden",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.253316,
+      13.043707
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Anna Nagar East",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.221413,
+      13.084969
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Anna Nagar West",
+    "place_type": "suburb",
+    "coordinates": [
+      80.192298,
+      13.094079
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ayanavaram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.23541,
+      13.094616
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Lock Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.281598,
+      13.066503
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ganapathy Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.259732,
+      13.050851
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ambattur",
+    "place_type": "town",
+    "coordinates": [
+      80.163959,
+      13.105565
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mogappair East",
+    "place_type": "suburb",
+    "coordinates": [
+      80.184078,
+      13.083514
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Korattur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.184627,
+      13.111548
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Foreshore Estate",
+    "place_type": "suburb",
+    "coordinates": [
+      80.277687,
+      13.024921
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Srinagar Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.230278,
+      13.013467
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nanganallur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.184902,
+      12.980124
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Madipakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.200129,
+      12.961135
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannan Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.189316,
+      12.969907
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Balaji Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.190572,
+      12.972164
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Puzhuthivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.206263,
+      12.969143
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ram Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.211813,
+      12.965356
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sadasiva Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202854,
+      12.965129
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ernavur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.306826,
+      13.189789
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tondiarpet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.289585,
+      13.127767
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kodungaiyur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.245294,
+      13.135378
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Manali",
+    "place_type": "town",
+    "coordinates": [
+      80.269419,
+      13.18106
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Old Washermanpet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.289381,
+      13.112276
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tollgate",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.295574,
+      13.142953
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Grace Garden",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.291473,
+      13.11809
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Korukkupet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.283791,
+      13.121534
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "New Washermanpet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.290359,
+      13.133866
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Cherian Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.297156,
+      13.138415
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Muthamizh Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.250294,
+      13.133049
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "MKB Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.263137,
+      13.12318
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pulianthope",
+    "place_type": "suburb",
+    "coordinates": [
+      80.262625,
+      13.100843
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vepery",
+    "place_type": "suburb",
+    "coordinates": [
+      80.262274,
+      13.084295
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Purasawalkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.255033,
+      13.089327
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sembium",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.241216,
+      13.122013
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Agaram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.229756,
+      13.114649
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "GKM Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.220463,
+      13.111949
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Postal Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.219548,
+      13.036329
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "United India Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.22513,
+      13.052083
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Maruthur Gopalan Ramachandran Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.19904,
+      13.03412
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jafferkhanpet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.20542,
+      13.02995
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nesapakkam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.191301,
+      13.03449
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ramapuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.178914,
+      13.031419
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "SBI Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.198937,
+      13.053773
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mehta Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.226807,
+      13.070378
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "NGO Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.217474,
+      13.064739
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Moolakadai",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.241699,
+      13.129168
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Periyar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.225085,
+      13.115991
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Senthil Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202656,
+      13.12164
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Valasaravakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.175212,
+      13.043023
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Maduravoyal",
+    "place_type": "town",
+    "coordinates": [
+      80.166955,
+      13.064365
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nerkundram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.183899,
+      13.068839
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nandambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.191188,
+      13.016648
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Manapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.174493,
+      13.014753
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mugalivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.168516,
+      13.02058
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Madanandapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.153556,
+      13.024621
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Moulivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.141393,
+      13.022269
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kolapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.152899,
+      13.009707
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tharapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.127102,
+      12.994779
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kundrathur",
+    "place_type": "town",
+    "coordinates": [
+      80.097311,
+      12.99577
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thandalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.118201,
+      13.00153
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kovur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.120858,
+      13.011362
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Periyapanicheri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.131218,
+      13.011107
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chinnapanicheri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.119833,
+      13.01976
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Paraniputhur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.13059,
+      13.021961
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thelliyaragaram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.142959,
+      13.032268
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Srinivasapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.130739,
+      13.032241
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Iyappanthangal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.133653,
+      13.03577
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kattupakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.124303,
+      13.040055
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mangadu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.109658,
+      13.031441
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ganapathy Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.094368,
+      13.04103
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sikkarayapuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.102531,
+      13.016774
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kollacheri",
+    "place_type": "suburb",
+    "coordinates": [
+      80.09995,
+      13.006533
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sirukalathur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.076207,
+      12.995526
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kalattipettai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.066909,
+      12.986794
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tharavur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.055189,
+      12.983308
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Periya Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.061497,
+      12.973463
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nazarathpet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.078535,
+      13.042259
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Madavilagam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.067744,
+      13.050742
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chembarambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.055425,
+      13.032562
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pappanchathiram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.037976,
+      13.030296
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Neduncheri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.052333,
+      13.043963
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thirumazhisai",
+    "place_type": "town",
+    "coordinates": [
+      80.060757,
+      13.054014
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Melmanambedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.041507,
+      13.071774
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Amudurmedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.056709,
+      13.098643
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Annaikattucheri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.058268,
+      13.104249
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sorancheri A",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.075247,
+      13.095684
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Voyalanallur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.070864,
+      13.085836
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nemilicheri",
+    "place_type": "suburb",
+    "coordinates": [
+      80.043726,
+      13.126231
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Aspiran Garden",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.237039,
+      13.08627
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kilpauk Garden",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.231106,
+      13.084541
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiruverkadu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.124196,
+      13.072549
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Aziz Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.228114,
+      13.048697
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kamarajar Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.220129,
+      13.049974
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Virugambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.191693,
+      13.052264
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Lakshmi Hayagriva Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.212138,
+      12.985429
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karanodai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.157848,
+      13.248104
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thirumudivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.081544,
+      12.964867
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Palanthandalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.07039,
+      12.95993
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Erumaiyur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.081599,
+      12.954739
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tirusulam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.167078,
+      12.973828
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Bakhtavachalam Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.179105,
+      12.97786
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Anakaputhur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.129755,
+      12.980616
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Velayudam Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202848,
+      13.049755
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ullagaram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.19672,
+      12.976587
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Moovarasampettai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.183359,
+      12.969366
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ellaiamman Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.251936,
+      13.046986
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Evening Bazaar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.27872,
+      13.084932
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sharma Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.253303,
+      13.122985
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Raj Bhavan",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.226399,
+      13.00794
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kottivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.261503,
+      12.970505
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Palavakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.256027,
+      12.95999
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Neelankarai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.257469,
+      12.945495
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vijaynagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.220988,
+      12.975743
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sunnambu Kolathur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.196346,
+      12.942667
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Narayanapuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.208384,
+      12.941797
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jalladiampet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.201692,
+      12.919753
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.230657,
+      12.917753
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Injambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.251295,
+      12.918937
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Uthandi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.247209,
+      12.868768
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Peerkankaranai",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.100982,
+      12.908086
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vandalur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.08296,
+      12.892149
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mudichur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.068842,
+      12.914985
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Varadarajapuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.067655,
+      12.905987
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Navalur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.227222,
+      12.84559
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Agaramthen",
+    "place_type": "suburb",
+    "coordinates": [
+      80.153976,
+      12.885667
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Voltas Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.186368,
+      12.974499
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Union Carbide Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.193148,
+      12.97398
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kathivakkam",
+    "place_type": "town",
+    "coordinates": [
+      80.31875,
+      13.214181
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ennore",
+    "place_type": "suburb",
+    "coordinates": [
+      80.324113,
+      13.223323
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thazhankuppam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.327242,
+      13.226888
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Keelkattalai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.185269,
+      12.954847
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Santoshapuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.17399,
+      12.915966
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gowriwakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.161974,
+      12.920759
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pazhavanthangal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.189132,
+      12.988352
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thillai Ganga Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.193662,
+      12.989843
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Periamet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.269277,
+      13.084414
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sriram Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.244317,
+      13.003549
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sadanandapuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.109712,
+      12.897366
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nedungundram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.108904,
+      12.879608
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Meenambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.172636,
+      12.986601
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Arunachalapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.260852,
+      13.008735
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Padmanabha Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.258729,
+      13.004551
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karpagam Garden",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.261545,
+      13.007178
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jeevarathinam Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.260695,
+      13.002057
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Parameswari Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.258125,
+      13.002787
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Trustpuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.223336,
+      13.055565
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chintadripet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.270781,
+      13.076126
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Melur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.271809,
+      13.2595
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mathur MMDA Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.247877,
+      13.170586
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Madhavaram Milk Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.238542,
+      13.152411
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Madhavaram",
+    "place_type": "town",
+    "coordinates": [
+      80.232514,
+      13.141356
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kosappur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.235098,
+      13.18183
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chettimedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.22881,
+      13.18339
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Taramani",
+    "place_type": "suburb",
+    "coordinates": [
+      80.240407,
+      12.984907
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Poonthandalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.048961,
+      12.965368
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannadapalayam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.101663,
+      12.938041
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Dharkast",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.069837,
+      12.940832
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ettayapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.063184,
+      12.947328
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Somangalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.038714,
+      12.950507
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vazhuthalambedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.098967,
+      12.97315
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Varadarajapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.08135,
+      13.049224
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Agaramel",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.07832,
+      13.038647
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kumananchavadi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.117528,
+      13.042347
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Rathinamangalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.131642,
+      12.858527
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kandigai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.140273,
+      12.849503
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Doveton",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.258079,
+      13.087322
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Devendra Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.25546,
+      12.978757
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "PTC Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.256519,
+      12.976383
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AGS Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.256433,
+      12.974592
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nava Bharath Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.266667,
+      12.990005
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Bakthavatchalam Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.253094,
+      13.003406
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Venkateswara Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.262057,
+      13.00328
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Damodarapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.262981,
+      13.001807
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kovilanchery",
+    "place_type": "suburb",
+    "coordinates": [
+      80.168806,
+      12.881309
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ponmar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.171469,
+      12.857279
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "VGP Srinivasa Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.157984,
+      12.912649
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Noothanchery",
+    "place_type": "suburb",
+    "coordinates": [
+      80.170484,
+      12.896717
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ottiambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.191851,
+      12.861072
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karanai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.20026,
+      12.857444
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thazhambur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.208883,
+      12.849205
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gangai Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.215924,
+      12.983525
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gangaiamman Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.179458,
+      13.074301
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Saidayankuppam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.292431,
+      13.185479
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mattankuppam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.279743,
+      13.05672
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Rail Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.189912,
+      13.076736
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Venkataraman Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.146885,
+      12.938214
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Manimangalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.041245,
+      12.916831
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karasangal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.044018,
+      12.896871
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mannivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.063543,
+      12.891177
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Padappai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.022046,
+      12.887693
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Choolai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.262142,
+      13.090628
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannigapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.263442,
+      13.107125
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Otteri",
+    "place_type": "suburb",
+    "coordinates": [
+      80.248722,
+      13.096958
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sothuperumbedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.170591,
+      13.254392
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sholavaram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.162218,
+      13.238777
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kamavarpalayam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.169019,
+      13.245796
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Budur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.20045,
+      13.238055
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mettupalayam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.210843,
+      13.230018
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Arumandhai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.221516,
+      13.228383
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mapushkanpet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.215495,
+      13.247806
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sozhipalayam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.173307,
+      13.234842
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vichoor",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.247198,
+      13.219553
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vellivoyal",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.256917,
+      13.226569
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Siruniam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.173403,
+      13.223516
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kummanur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.197146,
+      13.220274
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Perungavoor",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.220227,
+      13.216395
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Red Hills",
+    "place_type": "town",
+    "coordinates": [
+      80.183849,
+      13.192268
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kollumedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.11405,
+      13.161049
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Arikkambedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.12887,
+      13.160825
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vellanur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.100616,
+      13.157655
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Alamadhi",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.110122,
+      13.209838
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Upparipalayam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.137994,
+      13.203387
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannikapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.098079,
+      13.212751
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Veerapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.088517,
+      13.182785
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Seemapuram Colony",
+    "place_type": "suburb",
+    "coordinates": [
+      80.258147,
+      13.258382
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pallipuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.26164,
+      13.245742
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kandakarai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.274738,
+      13.236802
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gounderpalayam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.272648,
+      13.243082
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sirungavoor",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.21626,
+      13.209387
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannampalayam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.225411,
+      13.201563
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Darkas",
+    "place_type": "suburb",
+    "coordinates": [
+      80.212669,
+      13.20136
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Singilimedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.21197,
+      13.206501
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Alinjivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.19864,
+      13.192778
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mahaveer Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.261558,
+      13.082917
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Athur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.14733,
+      13.250125
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.026047,
+      13.153463
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Urur Kuppam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.273289,
+      13.004176
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kaveri Rangan Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.201233,
+      13.053764
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kalaimagal Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.204908,
+      13.025262
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ekkattuthangal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.206551,
+      13.024245
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Navaratna Gardens",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.201086,
+      13.023086
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Burma Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.196276,
+      13.028268
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sapthagiri Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.201651,
+      13.030039
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Y Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.211665,
+      13.086877
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "W Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.2165,
+      13.08667
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "X Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.214149,
+      13.087168
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Q Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.216724,
+      13.091406
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "R Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.214196,
+      13.091454
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "S Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.211908,
+      13.091534
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "V Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.211924,
+      13.089614
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "U Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.21416,
+      13.089513
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "T Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.216599,
+      13.089354
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "E Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.21947,
+      13.086786
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "F Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.221636,
+      13.08683
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Labour Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.209408,
+      13.015472
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Bharathidasan Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.204406,
+      13.033573
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nehru Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.318729,
+      13.215933
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kellys",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.243328,
+      13.082819
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Lotus Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.240377,
+      13.029642
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ganesapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.245009,
+      13.030853
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 10",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.194905,
+      13.04285
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 4",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.200522,
+      13.041976
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 3",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.203687,
+      13.041527
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 2",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202989,
+      13.039379
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 5",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.200887,
+      13.039717
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 8",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.197688,
+      13.040186
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 11",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.194506,
+      13.040635
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 1",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202658,
+      13.037499
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 6",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.199858,
+      13.037779
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 7",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.197329,
+      13.038144
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 12",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.194279,
+      13.038575
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 13",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.20756,
+      13.041004
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiruvottiyur",
+    "place_type": "town",
+    "coordinates": [
+      80.300651,
+      13.156567
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannagi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.239667,
+      12.927645
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Dr Ambedkar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.207484,
+      12.990055
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AGS Officers Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.209705,
+      12.97897
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Parivakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.101378,
+      13.065547
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sitharkadu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.049872,
+      13.0907
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Venkatapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.062579,
+      13.106224
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "VGV Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.090444,
+      13.100241
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Dhanalakshmi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.096078,
+      13.103881
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannapalayam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.100367,
+      13.090793
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mettupalayam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.096276,
+      13.079674
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sundara Chozhapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.116986,
+      13.08237
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ezhil Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.123407,
+      13.105695
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kolladi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.138456,
+      13.085073
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Naduveerapattu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.053479,
+      12.94045
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ayanambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.148871,
+      13.079011
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Athipet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.154558,
+      13.092784
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Rajan Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.208041,
+      13.123894
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jayaram Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.210753,
+      13.120464
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kolathur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.212885,
+      13.123655
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mahatma Gandhi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.211211,
+      13.126863
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ayapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.132508,
+      13.103264
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karukku",
+    "place_type": "suburb",
+    "coordinates": [
+      80.167754,
+      13.118881
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Prithvi Pakkam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.159597,
+      13.117468
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thirumullaivoyal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.131532,
+      13.132762
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Moola Chatram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.249504,
+      13.150911
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Maxworth Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.19949,
+      12.943917
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nookampalayam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.201799,
+      12.884054
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ariyalur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.251137,
+      13.191863
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Theyampakkam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.234611,
+      13.194774
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kanniyampettai",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.25562,
+      13.193129
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Konnimedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.156194,
+      13.190055
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pothur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.154449,
+      13.161404
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannadapalayam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.14484,
+      13.158418
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Upparapalayam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.136275,
+      13.156537
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pammadukulam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.152234,
+      13.176624
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Morai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.085006,
+      13.169294
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kadhavur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.06406,
+      13.178426
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Muthapudupet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.059562,
+      13.147557
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Palavedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.054458,
+      13.154601
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Melappedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.037108,
+      13.155862
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jeth Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.262238,
+      13.027831
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kesavaperumalpuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.254118,
+      13.021125
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kottur Gardens",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.244128,
+      13.020631
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Varadapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.245999,
+      13.015421
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tiruvalluvar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.245819,
+      13.018147
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Srinivasa Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.246967,
+      12.9503
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "PVS Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.244587,
+      12.947176
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Metukuppam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.237046,
+      12.936941
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Puzhal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.203115,
+      13.159114
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Lloyds Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.271599,
+      13.049074
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sundarapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.266632,
+      13.096959
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "VOC Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.262158,
+      13.105469
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Venkatesapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.264024,
+      13.10851
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Narasimha Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.266189,
+      13.104776
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Secretariat Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.24282,
+      13.08945
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Officers Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.228295,
+      13.070316
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pallikaranai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.207769,
+      12.930475
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nemilichery",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.163715,
+      12.946043
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Assisi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.231971,
+      13.164929
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mathur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.243692,
+      13.167864
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kuberan Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.206235,
+      12.957493
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vanagaram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.152582,
+      13.06055
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Alapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.165435,
+      13.049901
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Urapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.072162,
+      12.863668
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Guduvancheri",
+    "place_type": "town",
+    "coordinates": [
+      80.060684,
+      12.843954
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Collector Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.190971,
+      13.088494
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Dwaraka Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.273413,
+      13.195061
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sheela Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202075,
+      12.96505
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ramalinga Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.205851,
+      12.967594
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Avvai Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.253883,
+      12.977378
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Govindaswamy Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.245916,
+      12.96857
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sangam Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.25582,
+      12.967386
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Venkateshpuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.252397,
+      12.968983
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Edayanchavadi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.271451,
+      13.204845
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kadapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.265252,
+      13.198491
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.164404,
+      13.041008
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kathirvedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.203798,
+      13.151257
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nolambur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.168221,
+      13.074718
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Puthagaram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.192311,
+      13.118209
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Surapet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.187217,
+      13.144194
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vadaperumbakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.218332,
+      13.175401
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Payasumbakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.217957,
+      13.186675
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Swaminathan Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.254342,
+      12.971352
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kandaswamy Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.254818,
+      12.966178
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "NATCO Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.257008,
+      12.97073
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kannappa Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.256908,
+      12.975555
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Natesan Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.256686,
+      12.973094
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Judge's Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.248175,
+      12.97596
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "MGR Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.249444,
+      12.979583
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Venkateshwara Nagar Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.244625,
+      12.976997
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tirumalai Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.245578,
+      12.971804
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jayendra Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.248232,
+      12.969828
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vikram Sarabhai Industrial Estate",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.250875,
+      12.980955
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Banu Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.160534,
+      13.136242
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Oragadam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.153283,
+      13.130757
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Madura Kali Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.193832,
+      12.958032
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Heritage Jayendra Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.164748,
+      12.934519
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vaniya Teynampet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.248111,
+      13.038989
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Central Government Officers Quarters, General Pool Accomodation",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.265283,
+      13.002196
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karthikeyapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.194524,
+      12.962594
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Park Square colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.193486,
+      12.965665
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pozhichalur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.14405,
+      12.99053
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pattabiram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.066979,
+      13.124733
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Poompozhil Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.111098,
+      13.14074
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "HVF Estate",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.108452,
+      13.134223
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Zam Bazaar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.271022,
+      13.059296
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karpagam Avenue",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.26783,
+      13.021979
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "West Mambalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.219967,
+      13.040941
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ramakrishna Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.261062,
+      13.024366
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "NCBS Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.189696,
+      12.985463
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chennai",
+    "place_type": "city",
+    "coordinates": [
+      80.280798,
+      13.080091
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vardhaman Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.062308,
+      12.867816
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AA Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.216474,
+      13.083498
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AB Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.214115,
+      13.083593
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AC Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.211354,
+      13.083715
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nanmangalam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.177425,
+      12.937431
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Baby Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.229195,
+      12.980365
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Dhandeeswaram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.224188,
+      12.982639
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Seethapathy Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.227033,
+      12.981951
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Seshadripuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.230669,
+      12.979839
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Seva Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.229321,
+      12.986411
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sony Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.227991,
+      12.98651
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tansi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.224022,
+      12.979209
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Udhayam Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.23217,
+      12.979168
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Bhuvaneswary Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.221953,
+      12.96991
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "VGP Selva Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.221103,
+      12.971222
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "JagannathaPuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.221892,
+      12.984682
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Rajalakshmi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.218743,
+      12.985288
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "New Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.232297,
+      12.98271
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vaishnavi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.126449,
+      13.127486
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Annai Sathya Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.188108,
+      13.036122
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sri Ragavendra Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.186014,
+      13.037277
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chowdhary Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.180924,
+      13.037934
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Janaki Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.182073,
+      13.04017
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Majestic Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.178876,
+      13.039758
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sri Laxmi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.18065,
+      13.036349
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Suresh Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.182819,
+      13.037627
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thirumalai Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.182392,
+      13.034759
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Alwarthirunagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.187982,
+      13.044322
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gandhi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.187183,
+      13.041268
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Veerappa Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.18525,
+      13.042342
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sekkadu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.087698,
+      13.108393
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sakthi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.129139,
+      13.124477
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "St. Thomas Mount Cantonment",
+    "place_type": "suburb",
+    "coordinates": [
+      80.196728,
+      13.006022
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thendral Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.07057,
+      13.111747
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "SSM Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.116708,
+      12.892455
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Reserve Bank Staff Quarters",
+    "place_type": "quarter",
+    "coordinates": [
+      80.239163,
+      13.07855
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pudur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.159213,
+      13.129821
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kaladipet",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.298777,
+      13.151597
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nanganallur Co-op Society Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.190591,
+      12.98796
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "NTECL Township",
+    "place_type": "suburb",
+    "coordinates": [
+      80.287822,
+      13.250484
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Arul Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.111262,
+      12.907466
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Bharathiyar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.315551,
+      13.185809
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Old Pallavaram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.166539,
+      12.963304
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Moolakothalam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.276481,
+      13.106734
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Veppampattu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.002322,
+      13.127392
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ayathur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.001902,
+      13.134606
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "GOCHS Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.269171,
+      12.997872
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Melakottaiyur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.148124,
+      12.846409
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Government Estate",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.276799,
+      13.067361
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Stanley Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.272188,
+      13.109268
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Serene Avenue",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.171386,
+      12.860716
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Panaiyur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.245198,
+      12.887855
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Bharathipuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.222254,
+      13.077665
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gerugambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.136982,
+      13.015047
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiyagaraya Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.233579,
+      13.038595
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sivakami Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.317299,
+      13.197653
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kamatchi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.215865,
+      12.944583
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kamakoti Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.213268,
+      12.941036
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "TNHB Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.212059,
+      12.99142
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sai Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.234471,
+      12.95163
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kamakshiamman Nagar Layout",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.128285,
+      13.027862
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "K.K.Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.20298,
+      13.040797
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kargil Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.292241,
+      13.173019
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nazarethpuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.198992,
+      13.012641
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thirumangalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.199892,
+      13.08412
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vijayalakshmi Puram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.15496,
+      13.123822
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "KSR Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.15656,
+      13.099642
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mangalapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.168061,
+      13.10285
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kallikuppam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.170179,
+      13.13314
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiruvengada Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.143375,
+      13.116894
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiruninravur",
+    "place_type": "town",
+    "coordinates": [
+      80.033186,
+      13.118885
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kilambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.077359,
+      12.873771
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thandurai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.060978,
+      13.11122
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Paruthipattu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.113363,
+      13.089269
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "JB Estate",
+    "place_type": "suburb",
+    "coordinates": [
+      80.112397,
+      13.110802
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kaduvetti",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.109375,
+      13.076117
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Veera Raghavapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.111559,
+      13.069848
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Senneer Kuppam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.114583,
+      13.058958
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Malayambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.083671,
+      13.031336
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Palavoyal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.193804,
+      13.208382
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Manjampakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.224704,
+      13.159591
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kavalcheri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.06005,
+      13.077326
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chettipedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.023203,
+      13.025275
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Neelamangalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.041503,
+      12.855816
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Adhanur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.050689,
+      12.872462
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kovilambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.179988,
+      12.940682
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Echangadu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.183921,
+      12.948073
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiruvanchery",
+    "place_type": "suburb",
+    "coordinates": [
+      80.1403,
+      12.895705
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mappedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.137533,
+      12.888546
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Velappanchavadi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.136966,
+      13.060914
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Noombal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.137321,
+      13.053999
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kavankarai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.197014,
+      13.168667
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Padiyanallur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.175368,
+      13.202709
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Govardhanagiri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.111221,
+      13.098939
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karayanchavadi",
+    "place_type": "suburb",
+    "coordinates": [
+      80.110836,
+      13.04868
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kovilpadagai",
+    "place_type": "suburb",
+    "coordinates": [
+      80.104696,
+      13.141024
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Rajiv Gandhi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.085803,
+      13.121642
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Menambedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.163306,
+      13.121811
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Madhangakuppam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.181667,
+      13.131435
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Shanmugapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.180872,
+      13.141259
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mannurpet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.183421,
+      13.095145
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Shoba Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.142068,
+      13.122689
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Manikanda Puram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.13552,
+      13.128257
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Saravana Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.134454,
+      13.124356
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Annanur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.127452,
+      13.119349
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Cholambedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.122525,
+      13.122224
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vinayaga Puram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.151084,
+      13.127779
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Lenin Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.143007,
+      13.128222
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sembakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.159645,
+      12.927376
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Devi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.123697,
+      13.124657
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Radha Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.146811,
+      12.95078
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thiru Vi Ka Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.22951,
+      13.120899
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Venkatachalam Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.134328,
+      13.141963
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mittanamalli",
+    "place_type": "suburb",
+    "coordinates": [
+      80.070399,
+      13.153974
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Alandur",
+    "place_type": "town",
+    "coordinates": [
+      80.204443,
+      13.003131
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Koyambedu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.199809,
+      13.071519
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vadapalani",
+    "place_type": "suburb",
+    "coordinates": [
+      80.212677,
+      13.052645
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mogappair West",
+    "place_type": "suburb",
+    "coordinates": [
+      80.170216,
+      13.082347
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Teachers Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.150598,
+      13.109753
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ambattur OT",
+    "place_type": "suburb",
+    "coordinates": [
+      80.150427,
+      13.119706
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thirumalai Priya Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.162154,
+      13.128997
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Devanampattu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.16361,
+      13.124954
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Varadharajapuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.153386,
+      13.112464
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Banu Nagar West",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.155643,
+      13.133725
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Maruthi Ram Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.138141,
+      13.094866
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Lakshmipuram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.198947,
+      13.134833
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kumaran Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202394,
+      13.128209
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ponniammanmedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.228224,
+      13.134332
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vasantham Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.111904,
+      13.104859
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sathya Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.133357,
+      13.112794
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jyothi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.127428,
+      13.112492
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Radha Avenue",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.177301,
+      13.051084
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nesammal Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.181672,
+      13.061732
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Balakrishna Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.184745,
+      13.059415
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AVM Avenue",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.187623,
+      13.050354
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Natesan Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.192704,
+      13.057898
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mettukuppam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.173446,
+      13.058535
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Porur Gardens",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.154049,
+      13.046018
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sri Devi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.168503,
+      13.045339
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chettiyar Agaram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.143976,
+      13.048036
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Padi Pudhu Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.189295,
+      13.083109
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Golden George Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.182376,
+      13.074817
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sector 9",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.198245,
+      13.041999
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Banaveduthottam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.087682,
+      13.067928
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kolappancheri",
+    "place_type": "suburb",
+    "coordinates": [
+      80.079509,
+      13.071996
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ayalcheri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.085744,
+      13.093295
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karunakaracheri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.049005,
+      13.10842
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Annambedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.030895,
+      13.104971
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vellakkal",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.178437,
+      12.933252
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "IOB Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.141185,
+      12.920805
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Padmavathy Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.154478,
+      12.90933
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Yeshwanth Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.149245,
+      12.902669
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Barathi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.142709,
+      12.918564
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Paleripattu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.105437,
+      13.092723
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Agraharamel",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.03908,
+      13.100421
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Puliambedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.126702,
+      13.050215
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thundalam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.137411,
+      13.04661
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sivabhutam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.155372,
+      13.057816
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ellaiammanpettai",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.142047,
+      13.1824
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Attanthangal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.159412,
+      13.199719
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vijayanallur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.160602,
+      13.205965
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "TNHB LIG Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.106619,
+      13.112989
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "TNHB MIG Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.102215,
+      13.113829
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "TNHB HIG Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.104316,
+      13.110601
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kamaraj Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.095223,
+      13.107691
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Adayalampattu",
+    "place_type": "suburb",
+    "coordinates": [
+      80.157129,
+      13.069187
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Uzhaipalar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.056541,
+      13.12895
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Akash Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.131125,
+      13.002523
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chendurpuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.123,
+      13.035593
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pattur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.114062,
+      13.025241
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gorimedu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.107474,
+      13.041319
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kozhumanivakkam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.103232,
+      13.025551
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sri Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.102423,
+      13.048497
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Balaraman Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.100739,
+      13.045216
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kirupananda Variar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.104405,
+      13.038719
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Bakthavathsalam Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.092987,
+      13.036387
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kamakshiamman Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.115604,
+      13.037022
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vengambakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.133266,
+      12.873831
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vengadamangalam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.15327,
+      12.865306
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Prakash Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.049465,
+      13.130708
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nadukuthagai",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.038728,
+      13.129525
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AD Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.209086,
+      13.083969
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AE Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.206818,
+      13.083835
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AF Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.204199,
+      13.083954
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AG Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.216433,
+      13.081314
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AH Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.21376,
+      13.080798
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AI Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.21118,
+      13.081096
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AJ Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.208607,
+      13.08091
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AK Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.206617,
+      13.080957
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AL Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.204098,
+      13.081298
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "AM Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202325,
+      13.079765
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jawahar Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.2012,
+      13.081781
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kurinji Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.201402,
+      13.084004
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "A Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.219172,
+      13.083469
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "B Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.221597,
+      13.083071
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "C Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.224078,
+      13.083516
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "D Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.22547,
+      13.0849
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Shanthi Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.213467,
+      13.082097
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Z Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.210001,
+      13.08922
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "P Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.216772,
+      13.093078
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "O Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.223293,
+      13.09365
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "N Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.221484,
+      13.092949
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "M Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.219834,
+      13.093129
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "L Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.22493,
+      13.091079
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "K Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.22177,
+      13.090552
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "J Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.219732,
+      13.091175
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "I Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202451,
+      13.094339
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "H Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.201197,
+      13.087355
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "G Block",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.208357,
+      13.091562
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thininoor",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.019402,
+      13.097755
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Annai Indira Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.04088,
+      13.116252
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sorancheri B",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.070051,
+      13.100412
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Goparasanallur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.12575,
+      13.045754
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Melpakkam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.102796,
+      13.086992
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Velachery",
+    "place_type": "suburb",
+    "coordinates": [
+      80.220918,
+      12.977261
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sudarshan Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.159501,
+      12.908547
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Golden Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.179851,
+      13.089347
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vetri Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.226791,
+      13.123254
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thirupathi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.222327,
+      13.126393
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jawahar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.228215,
+      13.111235
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Anjugam Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.21924,
+      13.122864
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Amirthammal Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.23499,
+      13.110835
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gowdipuram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.065011,
+      13.202117
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "KKD Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.259421,
+      13.133013
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Erukkanchery",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.251564,
+      13.125693
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jamalia",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.251368,
+      13.102864
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chinnaiyan Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.249095,
+      13.112551
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Rajaji Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.209855,
+      13.11384
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kakkanji Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.252334,
+      13.117893
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Thathan Kuppam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.200395,
+      13.114954
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "SIDCO Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.202823,
+      13.108338
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "SIDCO Industrial Estate",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.169325,
+      13.109014
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Ambattur Industrial Estate",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.167166,
+      13.095068
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Manali New Town",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.272301,
+      13.18756
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kanniamman Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.098208,
+      13.193211
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "New Vellanur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.110121,
+      13.167265
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vetrivel Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.10238,
+      13.171395
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Arakkambakkam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.072341,
+      13.182854
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pandeswaram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.068377,
+      13.191706
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karalapakkam",
+    "place_type": "suburb",
+    "coordinates": [
+      80.045125,
+      13.179875
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "SIDCO Thirumullaivoyal",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.126715,
+      13.182578
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Arch Antoniyar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.118021,
+      13.178242
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kandanchavadi",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.246783,
+      12.962917
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Govindan Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.252105,
+      12.959956
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Okkiyampet",
+    "place_type": "suburb",
+    "coordinates": [
+      80.232463,
+      12.931426
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Akkarai",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.247873,
+      12.902901
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "TNHB",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.234202,
+      12.887993
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Jeppiar Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.230247,
+      12.881842
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Semmancheri",
+    "place_type": "suburb",
+    "coordinates": [
+      80.227167,
+      12.863188
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Kanathur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.242173,
+      12.852721
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Karaima Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.112951,
+      12.988987
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nallur",
+    "place_type": "suburb",
+    "coordinates": [
+      80.031473,
+      12.959066
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "New Nallur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.030987,
+      12.966167
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Old Tambaram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.103639,
+      12.923588
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "West Tambaram",
+    "place_type": "suburb",
+    "coordinates": [
+      80.108561,
+      12.928004
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vettri Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.096732,
+      12.926194
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Bharathi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.087353,
+      12.92406
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Parvathi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.081148,
+      12.921014
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Rayappa Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.073865,
+      12.922937
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Old Perungalathur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.088385,
+      12.917459
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Otteri",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.075389,
+      12.883139
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vengaivasal",
+    "place_type": "suburb",
+    "coordinates": [
+      80.17582,
+      12.899731
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Arasankazhani",
+    "place_type": "suburb",
+    "coordinates": [
+      80.195598,
+      12.878368
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Iswarya Garden",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.185051,
+      12.911485
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vadakkupattu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.190473,
+      12.933965
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gill Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.225023,
+      13.06483
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Lakshmi Colony",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.243117,
+      13.044843
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Broadway",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.283728,
+      13.088677
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Flower Bazaar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.280851,
+      13.090348
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Mannadi",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.289203,
+      13.096107
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Seethakadhi Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.29043,
+      13.100214
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Gangai Karai Puram",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.244196,
+      13.050701
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Tirumurthy Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.244325,
+      13.05416
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chinna Mathur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.250049,
+      13.176152
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Periya Thoppu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.256004,
+      13.168034
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Sri Padmagiri Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.253288,
+      13.161243
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chinna Kodungaiyur",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.251456,
+      13.141611
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Chinna Sekkadu",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.260723,
+      13.164992
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Britania Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.19762,
+      13.149152
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Pattaravakkam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.165768,
+      13.112471
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Vadanoombal",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.143633,
+      13.06734
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Wimco Nagar",
+    "place_type": "suburb",
+    "coordinates": [
+      80.307779,
+      13.179671
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Nettukuppam",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.328609,
+      13.229882
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Heavy Vehicles Factory Area, Avadi",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.07849,
+      13.138256
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Perumal Nagar",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.190951,
+      12.973834
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  },
+  {
+    "name": "Lakshmi Nagar 4th Stage",
+    "place_type": "neighbourhood",
+    "coordinates": [
+      80.188468,
+      12.972075
+    ],
+    "source": "OpenStreetMap (ODbL)"
+  }
+]

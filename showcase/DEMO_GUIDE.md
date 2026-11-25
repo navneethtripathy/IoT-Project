@@ -23,16 +23,15 @@
 ### [00:00 – 03:00] Phase 1: Centerpiece — 3D Chennai Urban Flood Digital Twin & Scenario Planning
 - **Tab to Display:** **Tab 1: Chennai Urban 3D Digital Twin** (or direct at `/urban-twin`)
 - **Visual Focus:** 
-  - Interactive 3D WebGL MapLibre view showing Greater Chennai Metropolitan Basin.
-  - 10 Prioritized focus locations: Velachery, Pallikaranai, Madipakkam, Perungudi, Tambaram, Pallavaram, Chembarambakkam, Porur, Saidapet, Adyar.
-  - Real Waterway flowlines: Adyar River, Cooum River, Buckingham Canal, Okkiyam Maduvu, and Pallikaranai Marsh wetland polygon.
-  - 3D Extruded Building footprints ($8\text{ m}$ to $42\text{ m}$) across Velachery, Saidapet, and Perungudi IT corridor.
-  - 10 Official IMD / CFM-DSS Automatic Rain Gauge stations and 5 regional reservoirs.
+  - Interactive offline-ready 3D WebGL MapLibre view showing Greater Chennai Metropolitan Basin and South Chennai quantitative domain (`111×175` cells at `150m` UTM Zone 44N).
+  - 10 Prioritized focus locations: Velachery, Pallikaranai Marsh, Madipakkam, Perungudi, Tambaram, Pallavaram, Chembarambakkam, Porur, Saidapet, Adyar Estuary.
+  - Official TN CFM-DSS WFS hydrography: 465 waterways, 771 waterbodies/marshes, 36 watersheds, 200 wards, and 230 historical flood spots.
+  - 18,198 real extruded OSM building footprints (`height_source` tracked per building), 9,942 major roads, 38,827 pilot streets, and 1,229 OSM bridges.
+  - 56 geolocated CFM-DSS stations and 5 WRD major reservoirs.
 - **Actions to Perform:**
-  1. Click **"Fly to Velachery"** quick-button to zoom in at a $45^\circ$ pitch angle showing 3D buildings and low-lying topography ($4.2\text{ m}$ elevation).
-  2. Click **"Fly to Pallikaranai"** to inspect the natural wetland drainage sink ($3.1\text{ m}$ elevation).
-  3. Select Scenario **"Heavy Monsoon Rainfall (65 mm/h)"** from the scenario selector and click **"Run Simulation"**.
-  4. Switch to **Tab 2: Urban Flood Scenario Laboratory** to show the live table calculating water volume, peak flood depth ($0.45\text{ m}$ in Velachery, $0.38\text{ m}$ in Pallikaranai), and warning status across all 10 locations.
+  1. Click **"Velachery"** quick fly-to button to zoom in at 3D pitch showing real extruded OSM buildings, bridges, and modeled flood depth prisms, and click anywhere on the map to inspect the Copernicus GLO-30 DSM elevation (`EGM2008`) & cell depth.
+  2. Click **"Pallikaranai"** or search **"Adyar"** in the top search bar to navigate across 747 real OSM places, stations, and bridges.
+  3. Select Scenario **"Cyclone Michaung Dec 2023 Replay (24h)"** and press **Play ▶** on the timeline scrubber to animate historical rainfall propagation, or use **Compare Impact Delta** (`Heavy Rain` vs `Reduced Drainage`) to quantify drainage clogging impact.
 - **Narrative:**
   > "Good morning, members of the evaluation committee. Today we present **CivicTwin-R**, a resilient cyber-physical digital twin architecture designed for urban flood monitoring and scenario planning.
   >
@@ -170,6 +169,6 @@
   > 2. A mathematically rigorous **Experimental IoT Tank Digital Twin** with RK4 numerical ODE forecasting and OLS parameter calibration.
   > 3. Scientifically validated **missing-data resilience algorithms** with zero future-data leakage in real time.
   > 4. Enterprise-grade **dual storage** coupling SQLite WAL with **InfluxDB 2.x time-series indexing**.
-  > 5. Full software completeness verified by **149 automated passing tests**.
+  > 5. Full software completeness verified by **157 automated passing tests** across geospatial validation, Landlab 2D hydrology, Torricelli physics, InfluxDB integration, and offline browser QA.
   >
   > Thank you. We are ready to answer your technical questions."

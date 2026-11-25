@@ -1,259 +1,173 @@
 """
-CivicTwin-R — Chennai Urban Geospatial Digital Twin Automated Test Suite
+CivicTwin-R — Real Geospatial & 2D Hydrological Digital Twin Test Suite
 
 Validates:
-  1. Geographical validity of the 10 Chennai focus locations (WGS84 bounds).
-  2. Verified CFM-DSS / IMD Automatic Rain Gauge station locations and metadata.
-  3. Official WRD reservoir capacities, storage percentages, and coordinates.
-  4. Geospatial GeoJSON integrity for waterways, catchments, and 3D buildings.
-  5. Mass-balance hydrological screening engine under various storm profiles.
-  6. Monotonic sensitivity: increasing rainfall or reducing drainage increases inundation.
-  7. Chembarambakkam reservoir sluice gate discharge propagation to Saidapet and Adyar.
-  8. REST API endpoints and HTML template delivery.
+  1. Official Copernicus GLO-30 UTM44N DEM bundle, GeoTIFF bounds, ocean/land/channel masks.
+  2. Real TN CFM-DSS WFS layers (GCC boundary, watersheds, waterways, waterbodies, 56 verified stations).
+  3. Real OpenStreetMap PBF extracts (18k+ buildings with honest height provenance, roads, bridges, parks, places).
+  4. Physical separation: chennai_arg_rainfall.csv (non-spatial) vs verified_stations.json (geolocated).
+  5. Landlab 2D OverlandFlow terrain engine (8 presets, scenario comparison, Chembarambakkam Adyar wave).
+  6. FastAPI REST API endpoints, offline vendor bundles (/static/vendor/*), and live service status API.
 """
 
 from __future__ import annotations
+
+import json
+import numpy as np
 import pytest
 from fastapi.testclient import TestClient
 
 from backend.app.main import app
-from digital_twin.chennai_geo_data import (
-    CHENNAI_LOCATIONS,
-    CHENNAI_RESERVOIRS,
-    RAINFALL_STATIONS,
-    WATERWAYS_GEOJSON,
-    CATCHMENTS_GEOJSON,
-    BUILDINGS_GEOJSON,
-)
-from digital_twin.urban_hydrology import (
-    urban_engine,
+from digital_twin.terrain_hydrology import (
+    PROCESSED_GEO_DIR,
+    FOCUS_LOCATIONS,
     PREDEFINED_SCENARIOS,
-    UrbanScenarioParams,
+    HydroScenarioConfig,
+    terrain_engine,
 )
 
-# Chennai Metropolitan Region Bounding Box
-CHENNAI_LAT_MIN = 12.80
+CHENNAI_LAT_MIN = 12.65
 CHENNAI_LAT_MAX = 13.45
 CHENNAI_LON_MIN = 79.80
-CHENNAI_LON_MAX = 80.35
+CHENNAI_LON_MAX = 80.40
 
 
-class TestChennaiGeospatialData:
-    def test_ten_prioritized_locations_exist(self):
-        assert len(CHENNAI_LOCATIONS) == 10
-        ids = {loc["id"] for loc in CHENNAI_LOCATIONS}
-        required_ids = {
-            "velachery",
-            "pallikaranai",
-            "adyar",
-            "madipakkam",
-            "perungudi",
-            "tambaram",
-            "pallavaram",
-            "chembarambakkam",
-            "porur",
-            "saidapet",
-        }
-        assert required_ids.issubset(ids), f"Missing locations: {required_ids - ids}"
+class TestRealGeospatialLayers:
+    def test_dem_utm44n_bundle_and_metadata(self):
+        npz_path = PROCESSED_GEO_DIR / "south_chennai_dem_utm44n_150m.npz"
+        meta_path = PROCESSED_GEO_DIR / "dem_metadata.json"
+        hs_path = PROCESSED_GEO_DIR / "chennai_terrain_hillshade.png"
+        assert npz_path.exists() and meta_path.exists() and hs_path.exists()
 
-    def test_location_coordinates_within_chennai_bounds(self):
-        for loc in CHENNAI_LOCATIONS:
+        meta = json.loads(meta_path.read_text())
+        assert meta["crs"] == "EPSG:32644"
+        assert meta["grid_shape"] == [111, 175]
+        assert meta["dx_m"] == 150.0
+        assert meta["valid_land_cells"] > 15000
+
+        z = np.load(npz_path)
+        assert z["elevation_m"].shape == (111, 175)
+        assert z["channel_mask"].sum() > 900
+
+    def test_ten_focus_locations_grounded_in_domain(self):
+        assert len(FOCUS_LOCATIONS) == 10
+        ids = {l["id"] for l in FOCUS_LOCATIONS}
+        assert {"velachery", "pallikaranai", "adyar", "madipakkam", "perungudi", "saidapet", "porur", "pallavaram", "tambaram", "chembarambakkam"}.issubset(ids)
+        for loc in FOCUS_LOCATIONS:
             lon, lat = loc["coordinates"]
-            assert CHENNAI_LON_MIN <= lon <= CHENNAI_LON_MAX, f"{loc['name']} lon {lon} out of bounds"
-            assert CHENNAI_LAT_MIN <= lat <= CHENNAI_LAT_MAX, f"{loc['name']} lat {lat} out of bounds"
-            assert loc["elevation_m"] > 0, f"{loc['name']} elevation must be positive"
-            assert loc["area_km2"] > 0, f"{loc['name']} area must be positive"
-            assert 0.0 < loc["runoff_coefficient"] <= 1.0, f"{loc['name']} runoff coeff invalid"
+            assert CHENNAI_LON_MIN <= lon <= CHENNAI_LON_MAX
+            assert CHENNAI_LAT_MIN <= lat <= CHENNAI_LAT_MAX
+            pt = terrain_engine.query_point(lon, lat)
+            assert pt["in_computational_domain"] is True
+            assert pt["copernicus_dsm_elevation_m"] is not None
 
-    def test_rainfall_stations_coordinates_and_provenance(self):
-        assert len(RAINFALL_STATIONS) >= 10
-        for st in RAINFALL_STATIONS:
+    def test_verified_wfs_stations_vs_nonspatial_arg_corpus(self):
+        st_path = PROCESSED_GEO_DIR / "verified_stations.json"
+        stations = json.loads(st_path.read_text())
+        assert len(stations) >= 50
+        for st in stations:
             lon, lat = st["coordinates"]
             assert CHENNAI_LON_MIN <= lon <= CHENNAI_LON_MAX
             assert CHENNAI_LAT_MIN <= lat <= CHENNAI_LAT_MAX
-            assert st["provenance"] in ["CFM-DSS_ARG", "IMD_Chennai"]
-            assert st["source"] == "observed"
-            assert st["rainfall_mm"] >= 0.0
+            assert st["observation_mode"] == "historical_verified_coordinates"
 
-    def test_reservoirs_data_integrity(self):
-        assert len(CHENNAI_RESERVOIRS) == 5
-        names = {r["reservoir_name"] for r in CHENNAI_RESERVOIRS}
-        assert "Chembarambakkam" in names
-        assert "Poondi (Sathyamurthy Sagar)" in names
-        assert "Red Hills (Puzhal)" in names
-        for r in CHENNAI_RESERVOIRS:
-            assert r["storage_capacity_gross_mcm"] > r["storage_capacity_live_mcm"] > 0.0
-            assert 0.0 <= r["storage_fill_pct"] <= 100.0
+    def test_real_wfs_and_osm_geojson_integrity(self):
+        waterways = json.loads((PROCESSED_GEO_DIR / "waterways_official.geojson").read_text())
+        waterbodies = json.loads((PROCESSED_GEO_DIR / "waterbodies_official.geojson").read_text())
+        watersheds = json.loads((PROCESSED_GEO_DIR / "watersheds_south.geojson").read_text())
+        buildings = json.loads((PROCESSED_GEO_DIR / "osm_buildings_south.geojson").read_text())
+        roads = json.loads((PROCESSED_GEO_DIR / "osm_roads_major.geojson").read_text())
+        bridges = json.loads((PROCESSED_GEO_DIR / "osm_bridges.geojson").read_text())
 
-    def test_geojson_waterways_and_catchments(self):
-        assert WATERWAYS_GEOJSON["type"] == "FeatureCollection"
-        assert len(WATERWAYS_GEOJSON["features"]) >= 6
+        assert len(waterways["features"]) >= 400
+        assert len(waterbodies["features"]) >= 700
+        assert len(watersheds["features"]) >= 30
+        assert len(roads["features"]) >= 5000
+        assert len(bridges["features"]) >= 500
+        assert len(buildings["features"]) >= 10000
 
-        # Verify key waterways
-        feat_names = [f["properties"]["name"] for f in WATERWAYS_GEOJSON["features"]]
-        assert any("Adyar River" in n for n in feat_names)
-        assert any("Cooum River" in n for n in feat_names)
-        assert any("Pallikaranai Marsh" in n for n in feat_names)
-        assert any("Chembarambakkam" in n for n in feat_names)
-
-        # Catchments
-        assert CATCHMENTS_GEOJSON["type"] == "FeatureCollection"
-        assert len(CATCHMENTS_GEOJSON["features"]) >= 4
-
-        # 3D Buildings
-        assert BUILDINGS_GEOJSON["type"] == "FeatureCollection"
-        assert len(BUILDINGS_GEOJSON["features"]) >= 10
-        for b in BUILDINGS_GEOJSON["features"]:
-            assert b["properties"]["height_m"] >= 8.0
+        allowed_sources = {"osm_height_tag", "osm_levels_derived", "type_fallback_estimate"}
+        for b in buildings["features"][:100]:
+            props = b["properties"]
+            assert props["height_m"] >= 3.0
+            assert props["height_source"] in allowed_sources
 
 
-class TestUrbanHydrologyModel:
-    def test_normal_baseline_zero_inundation(self):
-        normal_params = PREDEFINED_SCENARIOS["normal"]
-        res = urban_engine.run_scenario(normal_params)
-        assert res["summary"]["total_accumulated_volume_mcm"] == 0.0
-        assert res["summary"]["max_depth_m"] == 0.0
-        for loc in res["location_impacts"]:
-            assert loc["estimated_depth_m"] == 0.0
-            assert loc["risk_level"] == "Low"
+class TestTerrainHydrologyIntegration:
+    def test_normal_baseline_is_dry(self):
+        res = terrain_engine.run_scenario(PREDEFINED_SCENARIOS["normal"])
+        assert res["summary"]["stored_water_volume_mcm"] == 0.0
+        assert res["summary"]["urban_inundated_area_km2"] == 0.0
+        assert res["summary"]["max_urban_depth_m"] == 0.0
 
-    def test_heavy_rainfall_generates_inundation(self):
-        heavy_params = PREDEFINED_SCENARIOS["heavy_rain"]
-        res = urban_engine.run_scenario(heavy_params)
-        assert res["summary"]["total_accumulated_volume_mcm"] > 10.0
-        assert res["summary"]["max_depth_m"] > 0.30
-        assert len(res["flood_overlay_geojson"]["features"]) > 0
+    def test_drainage_mitigation_and_obstruction_ordering(self):
+        r_imp = terrain_engine.run_scenario(PREDEFINED_SCENARIOS["improved_drainage"])
+        r_nom = terrain_engine.run_scenario(PREDEFINED_SCENARIOS["heavy_rainfall"])
+        r_red = terrain_engine.run_scenario(PREDEFINED_SCENARIOS["reduced_drainage"])
+        assert r_imp["summary"]["stored_water_volume_mcm"] < r_nom["summary"]["stored_water_volume_mcm"]
+        assert r_nom["summary"]["stored_water_volume_mcm"] < r_red["summary"]["stored_water_volume_mcm"]
 
-    def test_drainage_obstruction_increases_depth(self):
-        base_params = UrbanScenarioParams(
-            scenario_id="drain_test_100",
-            scenario_name="Normal Drainage",
-            rainfall_intensity_mm_hr=50.0,
-            duration_hours=4.0,
-            runoff_coefficient=0.85,
-            drainage_capacity_pct=100.0,
-            infiltration_rate_mm_hr=4.0,
-            chembarambakkam_discharge_cusecs=1000.0,
-            description="100% Drainage",
-        )
-        obstructed_params = UrbanScenarioParams(
-            scenario_id="drain_test_25",
-            scenario_name="Obstructed Drainage",
-            rainfall_intensity_mm_hr=50.0,
-            duration_hours=4.0,
-            runoff_coefficient=0.85,
-            drainage_capacity_pct=25.0,
-            infiltration_rate_mm_hr=4.0,
-            chembarambakkam_discharge_cusecs=1000.0,
-            description="25% Drainage",
-        )
-        res_normal = urban_engine.run_scenario(base_params)
-        res_choked = urban_engine.run_scenario(obstructed_params)
-
-        assert res_choked["summary"]["total_accumulated_volume_mcm"] > res_normal["summary"]["total_accumulated_volume_mcm"]
-        assert res_choked["summary"]["max_depth_m"] > res_normal["summary"]["max_depth_m"]
-
-    def test_chembarambakkam_discharge_propagates_to_adyar_corridor(self):
-        low_discharge = UrbanScenarioParams(
-            scenario_id="low_q",
-            scenario_name="Low Discharge",
-            rainfall_intensity_mm_hr=20.0,
-            duration_hours=4.0,
-            runoff_coefficient=0.75,
-            drainage_capacity_pct=90.0,
-            infiltration_rate_mm_hr=5.0,
-            chembarambakkam_discharge_cusecs=500.0,
-            description="500 cfs",
-        )
-        high_discharge = UrbanScenarioParams(
-            scenario_id="high_q",
-            scenario_name="Surge Discharge",
-            rainfall_intensity_mm_hr=20.0,
-            duration_hours=4.0,
-            runoff_coefficient=0.75,
-            drainage_capacity_pct=90.0,
-            infiltration_rate_mm_hr=5.0,
-            chembarambakkam_discharge_cusecs=25000.0,
-            description="25,000 cfs",
-        )
-        res_low = urban_engine.run_scenario(low_discharge)
-        res_high = urban_engine.run_scenario(high_discharge)
-
-        # Saidapet is on the central Adyar River corridor
-        saidapet_low = next(l for l in res_low["location_impacts"] if l["id"] == "saidapet")
-        saidapet_high = next(l for l in res_high["location_impacts"] if l["id"] == "saidapet")
-
-        assert saidapet_high["estimated_depth_m"] > saidapet_low["estimated_depth_m"]
+    def test_chembarambakkam_spillway_wave_propagates_down_adyar(self):
+        lo = HydroScenarioConfig("test_lo", "Lo", "boundary_discharge", 25.0, 12.0, 4.0, 85.0, chembarambakkam_discharge_cusecs=0.0)
+        hi = PREDEFINED_SCENARIOS["reservoir_discharge"]
+        r0 = terrain_engine.run_scenario(lo)
+        r1 = terrain_engine.run_scenario(hi)
+        diff = r1["_max_depth_grid"] - r0["_max_depth_grid"]
+        # Channel wave clearly raises depth downstream through central Adyar corridor (cols 50..129 Saidapet)
+        assert float(diff[:, 50].max()) > 1.0
+        assert float(diff[:, 129].max()) > 0.4
+        assert r1["summary"]["mass_balance"]["relative_error"] < 0.01
 
 
-class TestUrbanRestApiEndpoints:
+class TestUrbanRestAndOfflineAssets:
     @pytest.fixture
     def client(self):
         with TestClient(app) as c:
             yield c
 
-    def test_get_urban_locations_endpoint(self, client):
-        r = client.get("/api/urban/locations")
-        assert r.status_code == 200
-        data = r.json()
-        assert data["count"] == 10
-        assert len(data["locations"]) == 10
+    def test_urban_locations_and_stations(self, client):
+        r_loc = client.get("/api/urban/locations")
+        assert r_loc.status_code == 200 and r_loc.json()["count"] == 10
+        r_v = client.get("/api/urban/locations/velachery")
+        assert r_v.status_code == 200 and r_v.json()["name"] == "Velachery"
+        r_st = client.get("/api/urban/stations")
+        assert r_st.status_code == 200 and r_st.json()["count"] >= 50
 
-    def test_get_single_urban_location(self, client):
-        r = client.get("/api/urban/locations/velachery")
-        assert r.status_code == 200
-        loc = r.json()
-        assert loc["name"] == "Velachery"
-        assert loc["elevation_m"] == 6.2
+    def test_nonspatial_arg_analytics_and_reservoirs(self, client):
+        r_arg = client.get("/api/urban/historical/arg-analytics")
+        assert r_arg.status_code == 200
+        d_arg = r_arg.json()
+        assert d_arg["has_coordinates"] is False
+        assert d_arg["total_records"] == 328
 
-    def test_get_urban_stations_endpoint(self, client):
-        r = client.get("/api/urban/stations")
-        assert r.status_code == 200
-        data = r.json()
-        assert data["count"] >= 10
+        r_res = client.get("/api/urban/reservoirs")
+        assert r_res.status_code == 200
+        assert r_res.json()["count"] == 5
 
-    def test_get_urban_reservoirs_endpoint(self, client):
-        r = client.get("/api/urban/reservoirs")
-        assert r.status_code == 200
-        data = r.json()
-        assert data["count"] == 5
+    def test_geo_layers_and_search_and_point_query(self, client):
+        for layer in ["dem_metadata", "hillshade", "waterways", "waterbodies", "watersheds", "roads_major", "bridges", "buildings", "places"]:
+            r = client.get(f"/api/urban/geo/{layer}")
+            assert r.status_code == 200, f"Failed geo layer {layer}"
+        r_s = client.get("/api/urban/search?q=Velachery")
+        assert r_s.status_code == 200 and r_s.json()["count"] >= 1
+        r_pt = client.get("/api/urban/point?lon=80.218&lat=12.9815")
+        assert r_pt.status_code == 200 and r_pt.json()["in_computational_domain"] is True
 
-    def test_get_urban_geo_layers(self, client):
-        for endpoint in ["waterways", "catchments", "buildings"]:
-            r = client.get(f"/api/urban/geo/{endpoint}")
-            assert r.status_code == 200
-            data = r.json()
-            assert data["type"] == "FeatureCollection"
-            assert len(data["features"]) > 0
+    def test_scenario_api_and_compare_and_offline_html(self, client):
+        r_sc = client.post("/api/urban/scenario", json={"scenario_id": "heavy_rainfall"})
+        assert r_sc.status_code == 200
+        assert r_sc.json()["summary"]["stored_water_volume_mcm"] > 10.0
 
-    def test_post_urban_scenario_endpoint(self, client):
-        payload = {
-            "scenario_id": "heavy_rain",
-            "rainfall_intensity_mm_hr": 55.0,
-            "duration_hours": 3.0,
-            "drainage_capacity_pct": 70.0,
-            "chembarambakkam_discharge_cusecs": 5000.0,
-        }
-        r = client.post("/api/urban/scenario", json=payload)
-        assert r.status_code == 200
-        data = r.json()
-        assert "summary" in data
-        assert "location_impacts" in data
-        assert data["summary"]["total_accumulated_volume_mcm"] > 0
+        r_cmp = client.post("/api/urban/scenario/compare", json={"baseline_id": "heavy_rainfall", "alternate_id": "reduced_drainage"})
+        assert r_cmp.status_code == 200
+        assert r_cmp.json()["delta_inundated_area_km2"] > 0.0
 
-    def test_get_urban_twin_html_pages(self, client):
-        # 3D Urban Twin dedicated page
-        r_urban = client.get("/urban-twin")
-        assert r_urban.status_code == 200
-        html_urban = r_urban.text
-        assert "MapLibre" in html_urban or "maplibre-gl" in html_urban
-        assert "Chennai" in html_urban
-        assert "Velachery" in html_urban
-        assert "Pallikaranai" in html_urban
+        r_ui = client.get("/urban-twin")
+        assert r_ui.status_code == 200
+        assert "/static/vendor/maplibre-gl.js" in r_ui.text
+        assert "cdn." not in r_ui.text and "unpkg.com" not in r_ui.text
 
-        # Main Showcase page includes Urban Twin
-        r_show = client.get("/showcase")
-        assert r_show.status_code == 200
-        html_show = r_show.text
-        assert "Chennai Urban Geospatial Digital Twin" in html_show
-        assert "Experimental IoT Tank Digital Twin" in html_show
+        r_sh = client.get("/showcase")
+        assert r_sh.status_code == 200
+        assert "/static/vendor/three.min.js" in r_sh.text
+        assert "cdn.tailwindcss.com" not in r_sh.text

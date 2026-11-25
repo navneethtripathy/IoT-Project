@@ -1,0 +1,43 @@
+{
+  "grid_shape": [
+    111,
+    175
+  ],
+  "dx_m": 150.0,
+  "dy_m": 150.0,
+  "cell_area_m2": 22500.0,
+  "crs": "EPSG:32644",
+  "vertical_datum": "EGM2008 (Copernicus GLO-30 DSM)",
+  "bounds_utm": [
+    396300.0,
+    1426800.0,
+    422550.0,
+    1443450.0
+  ],
+  "bounds_wgs84_quad": [
+    [
+      80.043551,
+      13.05533
+    ],
+    [
+      80.285645,
+      13.056112
+    ],
+    [
+      80.286075,
+      12.905562
+    ],
+    [
+      80.044126,
+      12.90479
+    ]
+  ],
+  "valid_land_cells": 18136,
+  "ocean_boundary_cells": 1289,
+  "permanent_water_cells": 382,
+  "wetland_cells": 435,
+  "elevation_min_land_m": 0.16,
+  "elevation_median_land_m": 16.75,
+  "elevation_max_land_m": 133.93,
+  "dsm_caveat": "Derived from Copernicus GLO-30 DSM (30m native resampled bilinearly to 150m UTM 44N); includes urban roof and tree canopy bias."
+}

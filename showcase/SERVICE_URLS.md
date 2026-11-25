@@ -12,7 +12,7 @@
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Engineering Showcase Web Center** | HTTP / `8000` | [http://127.0.0.1:8000/showcase](http://127.0.0.1:8000/showcase) | Primary academic demonstration UI: Dual-node gauges, 3D WebGL twin, RK4 ODE prediction, reconstruction benchmark, scenario lab, SQLite database explorer, and MQTT packet streamer. | Anonymous (Read/Write) | Uvicorn / FastAPI (`backend.app.main:app`) |
 | **Dedicated 3D Chennai Urban Twin** | HTTP / `8000` | [http://127.0.0.1:8000/urban-twin](http://127.0.0.1:8000/urban-twin) | Dedicated standalone 3D WebGL geospatial digital twin of Chennai flood catchments, waterways, and extruded buildings. | Anonymous | MapLibre WebGL / FastAPI |
-| **InfluxDB 2.x Time-Series Engine & UI** | HTTP / `8086` | [http://127.0.0.1:8086](http://127.0.0.1:8086) | High-performance time-series database and visualization UI. Organization: `civictwin`, Bucket: `telemetry`. Telemetry dual-persisted concurrently with SQLite. | Token / User (`civictwin` / `civictwin-dev-token`) | InfluxDB 2.x (`influxd`) |
+| **InfluxDB 2.x Time-Series Engine & UI** | HTTP / `8086` | [http://127.0.0.1:8086](http://127.0.0.1:8086) | High-performance time-series database and visualization UI. Organization: `civictwin`, Bucket: `telemetry`. Telemetry dual-persisted concurrently with SQLite. | Local token / user (see `.env`) | InfluxDB 2.x (`influxd`) |
 | **Interactive OpenAPI Documentation** | HTTP / `8000` | [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) | Swagger UI for interactive execution and validation of all REST API endpoints. | Anonymous | FastAPI (`/docs`) |
 | **ReDoc API Specifications** | HTTP / `8000` | [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) | Alternative structured technical reference documentation for the REST API. | Anonymous | FastAPI (`/redoc`) |
 | **Node-RED Operational Dashboard** | HTTP / `1880` | [http://127.0.0.1:1880/ui/](http://127.0.0.1:1880/ui/) | Secondary real-time operations dashboard featuring gauges, water level bar charts, alert badges, and historical trend curves. | Anonymous | Node.js (`node-red/red.js`) |
@@ -25,7 +25,15 @@
 
 ### System Health & Status
 - **`GET /health`**: Returns system operational status, database storage mode, MQTT connection state, message ingestion counters, and tracked zone counts.
+- **`GET /api/services/status`**: Live probes for FastAPI, Mosquitto TCP (1883), SQLite, InfluxDB 2.x (8086), and Node-RED (`1880/ui`).
 - **`GET /api/scenarios/status`**: Returns active cyber-physical scenario status and remaining duration.
+
+### Chennai Urban 3D Geospatial & 2D Hydrology APIs
+- **`GET /api/urban/geo/{layer}`**: Offline GeoJSON/PNG assets (`dem_metadata`, `hillshade`, `gcc_boundary`, `watersheds`, `wards`, `waterways`, `waterbodies`, `flood_spots`, `roads_major`, `streets_pilot`, `bridges`, `parks`, `buildings`, `places`, `manifest`).
+- **`GET /api/urban/search?q=...`**: Substring search across focus basins, 747 OSM places, 56 WFS stations, bridges & named buildings.
+- **`GET /api/urban/point?lon=...&lat=...`**: Point query returning Copernicus DSM elevation (EGM2008), UTM 44N coords, surface mask & modeled water depth.
+- **`POST /api/urban/scenario` & `/compare` & `/save` & `/{id}/export`**: Runs/compares/persists/exports Landlab 2D OverlandFlow simulations.
+- **`GET /api/urban/historical/arg-analytics` & `/michaung` & `/reservoirs`**: Preserved non-spatial ARG statistics, 144h Michaung rainfall, and 5 WRD reservoirs.
 
 ### Telemetry & Zones
 - **`GET /api/zones`**: Returns state for all active zones (`zone_01` Adyar, `zone_02` Cooum, `zone_03` Kosasthalaiyar), including water level, distance, battery, RSSI, and alert state.

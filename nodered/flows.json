@@ -272,7 +272,7 @@
         "type": "function",
         "z": "civictwin_tab",
         "name": "Parse Zone Data",
-        "func": "var zones = msg.payload.zones || [];\nvar outputs = [];\n\nfor (var i = 0; i < 3 && i < zones.length; i++) {\n    var z = zones[i];\n    var level_pct = z.current_level_pct || z.water_level_pct || 0;\n    var level_cm = z.current_level_cm || z.water_level_cm || 0;\n    var rain_pct = z.rain_indicator_pct;\n    var rain_raw = z.rain_sensor_raw;\n    var status = z.sensor_status || 'unknown';\n    var source = (z.data_source || z.source || 'DIGITAL_TWIN').toUpperCase();\n    var isStale = z.is_stale === true;\n    var ts = z.last_update ? new Date(z.last_update).toLocaleTimeString() : 'N/A';\n    \n    var statusBadge = '[ONLINE]';\n    if (status === 'offline') statusBadge = '[OFFLINE]';\n    else if (isStale || status === 'stale') statusBadge = '[STALE]';\n    else if (status === 'invalid') statusBadge = '[INVALID]';\n    \n    var rainText = rain_pct === null || rain_pct === undefined\n        ? 'Simulated rain indicator: unavailable'\n        : 'Simulated rain indicator: ' + Number(rain_pct).toFixed(1) + '% (ADC ' + rain_raw + ') — not mm';\n    outputs.push({ payload: level_pct, topic: z.zone_id });\n    outputs.push({ payload: statusBadge + ' [' + source + '] ' + level_cm.toFixed(1) + ' cm (' + level_pct.toFixed(1) + '%) @ ' + ts });\n    outputs.push({ payload: rainText, topic: z.zone_id });\n}\n\nreturn outputs;",
+        "func": "var zones = msg.payload.zones || [];\nvar outputs = [];\n\nfor (var i = 0; i < 3 && i < zones.length; i++) {\n    var z = zones[i];\n    var level_pct = z.current_level_pct || z.water_level_pct || 0;\n    var level_cm = z.current_level_cm || z.water_level_cm || 0;\n    var rain_pct = z.rain_indicator_pct;\n    var rain_raw = z.rain_sensor_raw;\n    var status = z.sensor_status || 'unknown';\n    var source = (z.data_source || z.source || 'DIGITAL_TWIN').toUpperCase();\n    var isStale = z.is_stale === true;\n    var ts = z.last_update ? new Date(z.last_update).toLocaleTimeString() : 'N/A';\n    \n    var statusBadge = '[ONLINE]';\n    if (status === 'offline') statusBadge = '[OFFLINE]';\n    else if (isStale || status === 'stale') statusBadge = '[STALE]';\n    else if (status === 'invalid') statusBadge = '[INVALID]';\n    \n    var rainText = rain_pct === null || rain_pct === undefined\n        ? 'Simulated rain indicator: unavailable'\n        : 'Simulated rain indicator: ' + Number(rain_pct).toFixed(1) + '% (ADC ' + rain_raw + ') \u2014 not mm';\n    outputs.push({ payload: level_pct, topic: z.zone_id });\n    outputs.push({ payload: statusBadge + ' [' + source + '] ' + level_cm.toFixed(1) + ' cm (' + level_pct.toFixed(1) + '%) @ ' + ts });\n    outputs.push({ payload: rainText, topic: z.zone_id });\n}\n\nreturn outputs;",
         "outputs": 9,
         "noerr": 0,
         "initialize": "",
@@ -1027,5 +1027,156 @@
         "info": "Fault injection and recovery testing",
         "x": 170,
         "y": 840
+    },
+    {
+        "id": "mosquitto_local_broker",
+        "type": "mqtt-broker",
+        "name": "Local Mosquitto (1883)",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "nodered_civictwin_sub",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true
+    },
+    {
+        "id": "mqtt_in_telemetry",
+        "type": "mqtt in",
+        "z": "civictwin_tab",
+        "name": "MQTT Subscribe Telemetry",
+        "topic": "civictwin/v1/nodes/+/telemetry",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mosquitto_local_broker",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 1140,
+        "wires": [
+            [
+                "mqtt_json_parse",
+                "mqtt_debug"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_json_parse",
+        "type": "function",
+        "z": "civictwin_tab",
+        "name": "Validate & Parse MQTT Telemetry",
+        "func": "var d = typeof msg.payload === \"string\" ? JSON.parse(msg.payload) : msg.payload;\nif (!d || !d.device_id || d.sensor_status !== \"valid\") { return null; }\nreturn [\n  { payload: Number(d.water_level_pct || 0), topic: d.device_id, device_id: d.device_id },\n  d\n];",
+        "outputs": 2,
+        "x": 400,
+        "y": 1140,
+        "wires": [
+            [
+                "mqtt_route_node",
+                "mqtt_live_chart"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "mqtt_route_node",
+        "type": "switch",
+        "z": "civictwin_tab",
+        "name": "Route Node 01 vs Node 02",
+        "property": "device_id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "node_01",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "node_02",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "outputs": 2,
+        "x": 660,
+        "y": 1120,
+        "wires": [
+            [
+                "mqtt_node1_status"
+            ],
+            [
+                "mqtt_node2_status"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_node1_status",
+        "type": "ui_text",
+        "z": "civictwin_tab",
+        "group": "monitoring_group",
+        "order": 10,
+        "width": "6",
+        "height": 1,
+        "name": "Direct MQTT Node 01",
+        "label": "MQTT Direct node_01",
+        "format": "{{msg.payload | number:1}}%",
+        "layout": "row-spread",
+        "x": 910,
+        "y": 1100
+    },
+    {
+        "id": "mqtt_node2_status",
+        "type": "ui_text",
+        "z": "civictwin_tab",
+        "group": "monitoring_group",
+        "order": 11,
+        "width": "6",
+        "height": 1,
+        "name": "Direct MQTT Node 02",
+        "label": "MQTT Direct node_02",
+        "format": "{{msg.payload | number:1}}%",
+        "layout": "row-spread",
+        "x": 910,
+        "y": 1140
+    },
+    {
+        "id": "mqtt_live_chart",
+        "type": "ui_chart",
+        "z": "civictwin_tab",
+        "name": "Live MQTT Telemetry Trend",
+        "group": "monitoring_group",
+        "order": 12,
+        "width": "12",
+        "height": 4,
+        "label": "Live MQTT Water Level History (%)",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Awaiting MQTT telemetry...",
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "15",
+        "removeOlderUnit": "60",
+        "x": 680,
+        "y": 1190
+    },
+    {
+        "id": "mqtt_debug",
+        "type": "debug",
+        "z": "civictwin_tab",
+        "name": "MQTT Raw Telemetry Debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 400,
+        "y": 1200
     }
 ]

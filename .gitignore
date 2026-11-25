@@ -56,3 +56,9 @@ firmware/esp32/build/
 # Reports (binary)
 reports/*.pdf
 reports/*.docx
+
+# Large raw geospatial source extracts (acquired reproducibly via scripts/acquire_chennai_geodata.py)
+*.osm.pbf
+data/geo/raw_dem/*.tif
+data/geo/raw_osm/*.json
+.vendor_tmp/

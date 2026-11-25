@@ -1,0 +1,149 @@
+{
+  "generated_at_utc": "2026-11-25T12:39:49.049131+00:00",
+  "crs_visualization": "EPSG:4326",
+  "crs_computation": "EPSG:32644",
+  "sources": [
+    {
+      "name": "Copernicus GLO-30 DEM (30m COG)",
+      "provider": "European Space Agency / Copernicus / AWS Open Data",
+      "license": "Free & Open Copernicus License",
+      "vertical_datum": "EGM2008"
+    },
+    {
+      "name": "Tamil Nadu CFM-DSS Official WFS Geoportal",
+      "provider": "TN Disaster Risk Reduction Agency / Greater Chennai Flood Management",
+      "license": "Public Government Geoportal (tncfmdss)"
+    },
+    {
+      "name": "OpenStreetMap Southern India Extract (southern-zone-latest.osm.pbf)",
+      "provider": "Geofabrik / OpenStreetMap Contributors",
+      "license": "ODbL 1.0"
+    }
+  ],
+  "dem_metadata": {
+    "grid_shape": [
+      111,
+      175
+    ],
+    "dx_m": 150.0,
+    "dy_m": 150.0,
+    "cell_area_m2": 22500.0,
+    "crs": "EPSG:32644",
+    "vertical_datum": "EGM2008 (Copernicus GLO-30 DSM)",
+    "bounds_utm": [
+      396300.0,
+      1426800.0,
+      422550.0,
+      1443450.0
+    ],
+    "bounds_wgs84_quad": [
+      [
+        80.043551,
+        13.05533
+      ],
+      [
+        80.285645,
+        13.056112
+      ],
+      [
+        80.286075,
+        12.905562
+      ],
+      [
+        80.044126,
+        12.90479
+      ]
+    ],
+    "valid_land_cells": 18136,
+    "ocean_boundary_cells": 1289,
+    "permanent_water_cells": 382,
+    "wetland_cells": 435,
+    "elevation_min_land_m": 0.16,
+    "elevation_median_land_m": 16.75,
+    "elevation_max_land_m": 133.93,
+    "dsm_caveat": "Derived from Copernicus GLO-30 DSM (30m native resampled bilinearly to 150m UTM 44N); includes urban roof and tree canopy bias."
+  },
+  "wfs_feature_counts": {
+    "gcc_boundary.geojson": 1,
+    "watersheds_south.geojson": 36,
+    "wards_chennai.geojson": 200,
+    "waterways_official.geojson": 465,
+    "waterbodies_official.geojson": 771,
+    "verified_stations.json": 56,
+    "historical_flood_spots.geojson": 230
+  },
+  "osm_feature_counts": {
+    "osm_roads_major.geojson": 9942,
+    "osm_streets_pilot.geojson": 38827,
+    "osm_bridges.geojson": 1229,
+    "osm_parks_landuse.geojson": 1123,
+    "osm_buildings_south.geojson": 18198,
+    "osm_places_index.json": 747
+  },
+  "processed_files": {
+    "chennai_terrain_hillshade.png": {
+      "bytes": 21114,
+      "sha256": "4b7888150a952d7b2ed1c477714d8d8e16c38ad4ad524ce518d201ccebc0f8b3"
+    },
+    "dem_metadata.json": {
+      "bytes": 838,
+      "sha256": "fb66a8f66d33295471274f6c7287800f3720664900a355a82cb5b13d8cc56997"
+    },
+    "gcc_boundary.geojson": {
+      "bytes": 8836,
+      "sha256": "d9b19614944a63775cf52399905b0444bd59f9a73c295c7a8f09a88a5a322f5e"
+    },
+    "historical_flood_spots.geojson": {
+      "bytes": 61140,
+      "sha256": "6e3135cab1c683b4c393fac534241ef4c58e5112192c871a7c7899620ae7873d"
+    },
+    "osm_bridges.geojson": {
+      "bytes": 375384,
+      "sha256": "f0e52fd940aec7221074cb5feab5ea73b983d92a380421f80bd5b1156ddff709"
+    },
+    "osm_buildings_south.geojson": {
+      "bytes": 7228300,
+      "sha256": "6f65ce52e24c03cd9b7e1a5e9ba0a7e274f98d4acaf78b545238e39557214ff9"
+    },
+    "osm_parks_landuse.geojson": {
+      "bytes": 379157,
+      "sha256": "eca8a8999b60be224ab23a9b02df6bd45be5f187cc319a64507c07115e394fe8"
+    },
+    "osm_places_index.json": {
+      "bytes": 124908,
+      "sha256": "a994bd1a887c6fe26dc40ebb033b78b658c9d7586e9cbc47ed8005a01a514da2"
+    },
+    "osm_roads_major.geojson": {
+      "bytes": 2808405,
+      "sha256": "cc9146c311e3a3b444831dc6e645db8c569f5fbbd9fa664c6937e38644d4e5bf"
+    },
+    "osm_streets_pilot.geojson": {
+      "bytes": 9794484,
+      "sha256": "7d1f8d162c020fc617ee7c46ac258f20aa3667b27359eca7aa72d0dcda98ba2d"
+    },
+    "south_chennai_dem_utm44n_150m.npz": {
+      "bytes": 65534,
+      "sha256": "381daf69b309ff56344904f4d5318540e94094e48d73862c03604959b444e027"
+    },
+    "verified_stations.json": {
+      "bytes": 19487,
+      "sha256": "85011f8a1165d6a45dbc0ab7274cf51bde3341962a43449a9de195b719f80936"
+    },
+    "wards_chennai.geojson": {
+      "bytes": 186730,
+      "sha256": "453051c03890c6704f806c0342abb17d971bec51c9eda2e2f0a1f32c243c3d5b"
+    },
+    "waterbodies_official.geojson": {
+      "bytes": 437593,
+      "sha256": "1b22248541f3c613e18ec6d571b244785ecc43d62e7128516feaaaa85cf3fd58"
+    },
+    "watersheds_south.geojson": {
+      "bytes": 103482,
+      "sha256": "aa5d51b10e60269fe09670ee30745358035ba2e1979584b90fee42d16e03eafa"
+    },
+    "waterways_official.geojson": {
+      "bytes": 296911,
+      "sha256": "5bffccf980d9fe73db60233b878f8e30df52376dc50de1d706acfdceed6a0894"
+    }
+  }
+}

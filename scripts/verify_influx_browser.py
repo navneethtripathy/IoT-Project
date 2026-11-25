@@ -6,17 +6,25 @@ selects the 'telemetry' bucket, queries incoming water_level_cm and water_level_
 and captures visual evidence in showcase/screenshots/11_influxdb_ui.png.
 """
 
+import os
 import sys
 import time
 from pathlib import Path
+from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright
 
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 CHROME_BIN = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 def main():
     screenshot_dir = Path("showcase/screenshots")
     screenshot_dir.mkdir(parents=True, exist_ok=True)
     out_file = screenshot_dir / "11_influxdb_ui.png"
+    influx_user = os.getenv("INFLUXDB_USERNAME", "civictwin")
+    influx_pass = os.getenv("INFLUXDB_PASSWORD", "")
+    if not influx_pass:
+        print("Error: INFLUXDB_PASSWORD not set in .env or environment.", file=sys.stderr)
+        sys.exit(1)
 
     with sync_playwright() as p:
         browser = p.chromium.launch(
@@ -33,9 +41,9 @@ def main():
 
         # Check if signin page
         if "signin" in page.url or page.locator("input[name='username']").is_visible():
-            print("Signing in with credentials...")
-            page.fill("input[name='username']", "civictwin")
-            page.fill("input[name='password']", "civictwin-password-2024")
+            print("Signing in with configured local credentials...")
+            page.fill("input[name='username']", influx_user)
+            page.fill("input[name='password']", influx_pass)
             page.click("button[type='submit']")
             page.wait_for_load_state("networkidle", timeout=10000)
             time.sleep(2)

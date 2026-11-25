@@ -1,6 +1,6 @@
 # CivicTwin-R: A Resilient Cyber-Physical Digital Twin for Urban Flood Monitoring and Scenario Planning
 
-[![Automated Tests](https://img.shields.io/badge/tests-149%20passed-brightgreen.svg)](tests/)
+[![Automated Tests](https://img.shields.io/badge/tests-157%20passed-brightgreen.svg)](tests/)
 [![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.14-blue.svg)](pyproject.toml)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com/)
 [![MQTT](https://img.shields.io/badge/MQTT-Mosquitto%20v2.0-red.svg)](mqtt/)
@@ -70,17 +70,18 @@ pip install -e ".[dev]"
 ```
                        [ CHENNAI URBAN GEOGRAPHICAL LAYER ]
      10 Focus Locations (Velachery, Pallikaranai, Madipakkam, Adyar, Saidapet...)
-      • Real WGS84 Georeferenced Coordinates & Elevations (3.1m - 28.5m)
-      • Waterways: Adyar River, Cooum River, Buckingham Canal, Okkiyam Maduvu
-      • Major Reservoirs: Chembarambakkam (3,645 Mcft), Poondi, Red Hills, Cholavaram
-      • 10 Official IMD / CFM-DSS Automatic Rain Gauge (ARG) Stations
-      • 3D Extruded Building Polygons (8m to 42m height)
+      • Copernicus GLO-30 30m DSM resampled to 111x175 UTM44N (EPSG:32644, 150m)
+      • Official TN CFM-DSS WFS Waterways (465), Waterbodies (771), Watersheds (36)
+      • 5 WRD Reservoirs: Chembarambakkam (103.2 MCM), Poondi, Red Hills, Cholavaram
+      • 56 Official Geolocated CFM-DSS Stations (vs non-spatial 328-row ARG CSV)
+      • 18,198 Real Extruded OSM Buildings, 9,942 Arteries, 38,827 Streets, 1,229 Bridges
                           │
                           ▼
-             [ URBAN HYDROLOGICAL SCREENING MODEL ]
-      • Mass-Balance ODE: dV/dt = Q_rain + Q_upstream - Q_drain - Q_infil
-      • Elevation Depression Thresholds & Slope Attenuation
-      • 7 Operational Scenarios (Normal, Heavy Rain, Drainage Obstruction, Michaung Replay...)
+             [ URBAN 2D HYDROLOGICAL ENGINE (LANDLAB) ]
+      • Landlab 2D OverlandFlow (de Almeida et al. 2012 shallow-water routing)
+      • Hydro-conditioned Adyar / Chembarambakkam Surplus / Buckingham Canal bed
+      • Single-pass infiltration, stormwater drainage sink & Bay of Bengal outfall
+      • 8 Operational Scenarios (Normal, Heavy Rain, Extreme, Drainage +/-, Michaung, Dropout, Spillway)
                           │
                           ▼
     [ EXPERIMENTAL IOT TANK DIGITAL TWIN (Laboratory Validation Environment) ]
@@ -126,49 +127,33 @@ pip install -e ".[dev]"
 
 ---
 
-## 3. Chennai 3D Urban Digital Twin & Hydrological Screening Model
+## 3. Chennai 3D Urban Digital Twin & Landlab 2D Hydrological Engine
 
-### 10 Georeferenced Focus Locations
+### Geospatial Grounding (`EPSG:4326` Visualization + `EPSG:32644` Computation)
 
-CivicTwin-R models 10 high-risk urban locations in Greater Chennai with authentic WGS84 coordinates, digital elevation ground heights, and drainage catchment properties:
+CivicTwin-R integrates official Copernicus GLO-30 topography, TN CFM-DSS WFS layers, and OpenStreetMap extracts (`southern-zone-latest.osm.pbf`) processed deterministically via `scripts/process_chennai_geodata.py` into offline-ready local assets (`data/geo/processed/`):
 
-| Location | Lat, Lon | Elevation | Risk Profile | Primary Receiving Waterway |
-| :--- | :---: | :---: | :---: | :--- |
-| **Velachery** | 12.9790°N, 80.2180°E | 4.2 m | Critical Bowl Hotspot | Pallikaranai Marsh / Okkiyam Maduvu |
-| **Pallikaranai** | 12.9349°N, 80.2137°E | 3.1 m | Natural Wetland Sink | Okkiyam Maduvu / Buckingham Canal |
-| **Madipakkam** | 12.9623°N, 80.1986°E | 5.8 m | Urban Catchment | Pallikaranai Marsh |
-| **Perungudi** | 12.9654°N, 80.2461°E | 4.9 m | IT Corridor Drainage | Buckingham Canal |
-| **Tambaram** | 12.9249°N, 80.1000°E | 28.5 m | Upstream Fluvial Head | Adyar River Headwaters |
-| **Pallavaram** | 12.9675°N, 80.1491°E | 16.2 m | Foothill Runoff | Adyar River Basin |
-| **Chembarambakkam** | 13.0084°N, 80.0594°E | 25.0 m | 3,645 Mcft Reservoir | Adyar River Outflow Trunk |
-| **Porur** | 13.0382°N, 80.1565°E | 14.5 m | Lake Buffer Basin | Adyar River Basin |
-| **Saidapet** | 13.0184°N, 80.2231°E | 7.5 m | Chokepoint Maraimalai Bridge | Adyar River Channel |
-| **Adyar** | 13.0012°N, 80.2565°E | 4.0 m | Tidal Estuary Outfall | Bay of Bengal River Mouth |
+| Layer / Domain | Source & Resolution | Count / Dimensions | Purpose |
+| :--- | :---: | :---: | :--- |
+| **Terrain Surface & Mask** | Copernicus GLO-30 (`EGM2008`) | `111x175` cells (`dx=150m`, `18,136` land cells) | Hydro-conditioned 2D shallow-water routing grid (`z=0.16..133.9m`) |
+| **Hydrography & Basins** | TN CFM-DSS WFS Geoportal | 465 waterways, 771 waterbodies, 36 watersheds, 200 wards | Official Adyar/Cooum/Buckingham channels & Pallikaranai Marsh |
+| **3D Extruded Buildings** | OpenStreetMap PBF (`pyosmium`) | 18,198 footprints (honest `height_source` tag) | Urban infrastructure overlay (6.9 MB GeoJSON) |
+| **Road & Bridge Network** | OpenStreetMap PBF (`pyosmium`) | 9,942 major roads, 38,827 pilot streets, 1,229 bridges | Corridor navigation & bridge elevation awareness |
+| **Verified Stations** | CFM-DSS WFS (`srg` + `Raingauge_Stations`) | 56 geolocated stations | Spatial station pins (strictly separated from non-spatial ARG CSV) |
 
-### Authentic Waterways & 3D Building Geometry
-- **Waterway Traces:** Adyar River (32 km flowline), Cooum River, Buckingham Canal, Okkiyam Maduvu overflow channel, Pallikaranai Marsh (800 ha wetland polygon), Chembarambakkam Reservoir, Porur Lake, and Velachery Lake.
-- **3D Urban Building Extrusion:** Georeferenced multi-polygon structures with realistic architectural heights ($8\text{ m}$ to $42\text{ m}$) rendered via MapLibre GL JS WebGL `fill-extrusion`.
-- **Precipitation & Storage Layers:** 10 official IMD / GCC rain gauges and 5 regional reservoirs displaying live storage, fill percentages, and gate discharge vectors.
+### Landlab 2D OverlandFlow Formulation & Mass Balance
+Surface water routing uses `Landlab OverlandFlow` (de Almeida et al. 2012) over the UTM 44N grid with per-CFL-step boundary tracking:
+$$\frac{\partial h}{\partial t} + \nabla \cdot \mathbf{q} = i_{\text{rain}}(t) + q_{\text{spillway}}(t) - f_{\text{infil}} - d_{\text{stormwater}}, \qquad \text{relative mass-balance error} < 0.2\%$$
 
-### Hydrological Screening Model Formulation
-Water volume within each urban catchment unit $i$ is governed by the conservation equation:
-$$\frac{dV_i}{dt} = Q_{\text{rain}, i}(t) + \sum_{j \in \text{up}(i)} Q_{\text{inflow}, j}(t) - Q_{\text{drain}, i}(t) - Q_{\text{infil}, i}(t)$$
-
-Where:
-- $Q_{\text{rain}, i} = C_i \cdot I(t) \cdot A_i$ (Rational runoff equation where $C_i \in [0.45, 0.88]$ is the impervious surface runoff coefficient).
-- $Q_{\text{drain}, i} = C_{\text{drain}} \cdot \sqrt{S_i} \cdot \min(1.0, \text{drainage\_efficiency})$ (Drainage capacity attenuated by terrain slope $S_i$).
-- $Q_{\text{infil}, i} = f_0 \cdot \exp(-\gamma t) \cdot A_i$ (Horton infiltration model).
-- Local surface inundation depth:
-  $$h_{\text{flood}, i} = \max\left(0, \frac{V_i}{A_i} - h_{\text{depression}, i}\right)$$
-
-### 7 Operational Urban Scenarios
-1. `normal`: Nominal dry-weather baseline with nominal drainage ($0.00\text{ m}$ inundation).
-2. `heavy_rain`: Monsoon downpour ($65\text{ mm/h}$) causing immediate ponding in Velachery ($0.45\text{ m}$) and Pallikaranai ($0.38\text{ m}$).
-3. `extreme_monsoon`: Severe cloudburst ($140\text{ mm/h}$) triggering widespread red alert ($1.22\text{ m}$ in Velachery, $1.45\text{ m}$ in Pallikaranai).
-4. `drainage_obstruction`: Trash rack debris blockage reducing drainage efficiency by $75\%$ ($0.88\text{ m}$ in Velachery).
-5. `reservoir_discharge`: Emergency discharge of $8,500\text{ cusecs}$ from Chembarambakkam propagating downstream to Saidapet ($1.15\text{ m}$) and Adyar ($0.95\text{ m}$).
-6. `michaung_replay`: Historical replay of Cyclone Michaung storm peak ($185\text{ mm/h}$) resulting in catastrophic inundation ($1.62\text{ m}$ in Velachery).
-7. `sensor_failure`: Edge telemetry failure simulation triggering automated physics-based digital twin fallback.
+### 8 Operational Urban Scenarios
+1. `normal`: Dry-weather baseline (`0 mm/hr`, zero surface inundation).
+2. `heavy_rainfall`: Monsoon storm (`45 mm/hr`, `4h`, nominal 100% stormwater removal).
+3. `extreme_rainfall`: Hypothetical extreme cloudburst stress-test (`85 mm/hr`, `6h`).
+4. `reduced_drainage`: Identical `45 mm/hr` storm with stormwater capacity degraded to `25%`.
+5. `improved_drainage`: Counterfactual mitigation doubling effective stormwater capacity (`200%`).
+6. `michaung_replay`: Peak `24h` hourly observed precipitation replay from Dec 2023 Cyclone Michaung CSV (`chennai_michaung_hourly.csv`).
+7. `monitoring_dropout`: Evaluates ±35% precipitation estimation uncertainty under station gaps.
+8. `reservoir_discharge`: `25,000 cusecs` (`707.9 m³/s`) spillway release over `12h` from Chembarambakkam along the hydro-conditioned Adyar channel to Saidapet & Estuary.
 
 ---
 
@@ -213,35 +198,21 @@ We strictly distinguish between two operational regimes to prevent future-data l
 
 ## 6. Verification & Automated Test Suite
 
-The repository includes a comprehensive automated test suite of **149 tests** covering InfluxDB 2.x time-series integration, urban geospatial layers, hydrological screening ODEs, unit physics, calibration regression, edge warning hysteresis, REST endpoints, and live socket integration:
+The repository includes an automated test suite of **157 tests** covering Copernicus DEM/WFS/OSM geometry, controlled analytical hydrology & Landlab 2D conservation, InfluxDB 2.x time-series integration, experimental tank Torricelli physics, missing-data causal vs retrospective benchmarks, edge hysteresis, REST endpoints, and live Mosquitto/FastAPI/Node-RED socket integration:
 
 ```bash
 # Execute entire test suite
 PYTHONPATH=. pytest tests/ -v
 ```
 
-```
-============================== test session starts ==============================
-collected 149 items
-
-tests/test_all.py ...................................................... [ 49%]
-tests/test_chennai_twin.py ...................                           [ 62%]
-tests/test_influxdb.py .......                                           [ 66%]
-tests/test_live_showcase_integration.py .......                          [ 71%]
-tests/test_tank_twin.py ............................                     [ 90%]
-tests/test_urban_twin.py ................                                [100%]
-
-======================= 149 passed, 1 warning in 16.87s ========================
-```
-
 ---
 
-## 7. Data Provenance & Academic Boundary Disclosures
+## 7. Data Provenance & Scientific Limitations Disclosure
 
-1. **Automatic Rain Gauges (ARG):** Observations from $117$ GCC stations record atmospheric precipitation ($\text{mm}$), not river channel depth. Rainfall drives runoff into the urban screening model.
-2. **Major Water Reservoirs:** WRD Tamil Nadu daily storage records provide capacity and outflow parameters for Chembarambakkam, Poondi, Red Hills, Cholavaram, and Thervoy Kandigai.
-3. **Cyclone Michaung Series:** $144$ hourly precipitation records ($12\text{ days}$) from December 2023 provide the storm forcing function.
-4. **Physical Sensors:** Physical ultrasonic sensors and ESP32 nodes are deployed on the laboratory acrylic tank bench; Chennai river channels are monitored via the calibrated geographical screening digital twin.
+1. **Copernicus GLO-30 DSM Caveat:** Surface terrain (`150m UTM 44N`, `EGM2008`) derives from Copernicus 30m Digital Surface Model (includes rooftop and canopy signal rather than surveyed bare-earth LiDAR DTM). Channels along Adyar, Chembarambakkam surplus, Buckingham Canal, Cooum, and Okkiyam Maduvu were hydro-conditioned solely to prevent bridge-deck blockage.
+2. **Spatial vs Non-Spatial Rainfall Separation:** 56 official stations from TN CFM-DSS WFS (`verified_stations.json`) are plotted on the 3D map. The 328-row `data/processed/chennai_arg_rainfall.csv` corpus lacks lat/lon columns and is strictly presented in non-spatial subbasin analytics (`/api/urban/historical/arg-analytics`) rather than invented coordinates.
+3. **2D Screening Scope (No Surveyed Gauge Calibration):** No physical flood depth gauges or post-event surveyed flood rasters exist for quantitative river validation; simulated depths represent physics-based scenario screening estimates rather than observed street depths.
+4. **Dual Workstream Separation:** Live MQTT (`node_01`, `node_02`) streams originate exclusively from the simulated experimental ultrasonic tank bench and remain isolated from Chennai urban hydrological calculations.
 
 ---
 

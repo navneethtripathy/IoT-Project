@@ -1,0 +1,786 @@
+[
+  {
+    "station_name": "Chennai Nungambakkam",
+    "station_id": "SRG_Chennai Nungambakkam",
+    "station_kind": "SRG_ARG",
+    "agency": "IMD",
+    "subbasin": "Cooum",
+    "district": "Chennai",
+    "coordinates": [
+      80.246389,
+      13.068333
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "CD Hospital Tondiarpet",
+    "station_id": "CHNZ06SRG05",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Cooum",
+    "district": "Chennai",
+    "coordinates": [
+      80.2917,
+      13.1283
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Chennai Collectorate Building",
+    "station_id": "CHNZ04SRG06",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Cooum",
+    "district": "Chennai",
+    "coordinates": [
+      80.292213,
+      13.096485
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Perambur Corporation Park",
+    "station_id": "CHNZ05SRG10",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Cooum",
+    "district": "Chennai",
+    "coordinates": [
+      80.2427,
+      13.1093
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Ambattur",
+    "station_id": "CHNZ07SRG02",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Cooum",
+    "district": "Chennai",
+    "coordinates": [
+      80.149,
+      13.1095
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Ayanavaram Taluk Office",
+    "station_id": "CHNZ08SRG04",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Cooum",
+    "district": "Chennai",
+    "coordinates": [
+      80.2319,
+      13.0883
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "DGP Office",
+    "station_id": "CHNZ09SRG08",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Adyar",
+    "district": "Chennai",
+    "coordinates": [
+      80.279256,
+      13.041392
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Tambaram Taluk Office",
+    "station_id": "CGLTAMSRG06",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kovalam",
+    "district": "Chengalpattu",
+    "coordinates": [
+      80.1268,
+      12.9353
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Government HS MGR Nagar",
+    "station_id": "CHNZ10SRG09",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Adyar",
+    "district": "Chennai",
+    "coordinates": [
+      80.203,
+      13.034
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Anna university",
+    "station_id": "CHNZ13SRG03",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Adyar",
+    "district": "Chennai",
+    "coordinates": [
+      80.2342,
+      13.0092
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Sholinghanallur",
+    "station_id": "CHNZ15SRG11",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kovalam",
+    "district": "Chennai",
+    "coordinates": [
+      80.228,
+      12.88
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Alandur",
+    "station_id": "SRG_Alandur",
+    "station_kind": "SRG_ARG",
+    "agency": "IMD",
+    "subbasin": "Adyar",
+    "district": "Chennai",
+    "coordinates": [
+      80.2009,
+      13.0018
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Avadi",
+    "station_id": "TLRAVASRG01",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Cooum",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.075,
+      13.123
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Redhills_Revenue",
+    "station_id": "TLRPONSRG10",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kosasthalayar",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.186111,
+      13.187778
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Cholavaram_Revenue",
+    "station_id": "TLRPONSRG02",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kosasthalayar",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.154722,
+      13.217778
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Ponneri",
+    "station_id": "TLRPONSRG06",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Araniyar",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.195556,
+      13.331389
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "JamineKoratur",
+    "station_id": "TLRPOOSRG04",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Cooum",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.01,
+      13.09
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Poonamallee",
+    "station_id": "TLRPOOSRG07",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Adyar",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.0945,
+      13.0472
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Thamaraipakkam",
+    "station_id": "TLRTLRSRG11",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kosasthalayar",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.026944,
+      13.229167
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Poondi_Revenue",
+    "station_id": "TLRTIRSRG08",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kosasthalayar",
+    "district": "Tiruvallur",
+    "coordinates": [
+      79.875,
+      13.208892
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Tiruvallur",
+    "station_id": "TLRTLRSRG14",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kosasthalayar",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.0,
+      13.25
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Uthukottai",
+    "station_id": "TLRUTHSRG15",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Araniyar",
+    "district": "Tiruvallur",
+    "coordinates": [
+      79.911944,
+      13.332778
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Chembarambakkam_Revenue",
+    "station_id": "KPMKUNSRG01",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Adyar",
+    "district": "Kancheepuram",
+    "coordinates": [
+      80.084828,
+      13.008467
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Sriperumbudur",
+    "station_id": "KPMSRISRG03",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Adyar",
+    "district": "Kancheepuram",
+    "coordinates": [
+      79.9434,
+      12.9671
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Chengalpattu",
+    "station_id": "CGLCHESRG01",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Lower Palar",
+    "district": "Chengalpattu",
+    "coordinates": [
+      79.978139,
+      12.700867
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Thirupporur Taluk Office",
+    "station_id": "CGLTPPSRG08",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kovalam",
+    "district": "Chengalpattu",
+    "coordinates": [
+      80.1858,
+      12.7197
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Kelambakkam",
+    "station_id": "CGLTPPSRG03",
+    "station_kind": "SRG_ARG",
+    "agency": "Revenue",
+    "subbasin": "Kovalam",
+    "district": "Chengalpattu",
+    "coordinates": [
+      80.2281,
+      12.7826
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:srg"
+  },
+  {
+    "station_name": "Puzhal",
+    "station_id": "4",
+    "station_kind": "RainGauge",
+    "agency": "IMD",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.1833,
+      13.15
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Korattur Anicut",
+    "station_id": "6",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Kancheepuram",
+    "coordinates": [
+      80.011111,
+      13.088889
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Tamaraipakkam",
+    "station_id": "9",
+    "station_kind": "RainGauge",
+    "agency": "IITM",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.037,
+      13.162
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Padappai",
+    "station_id": "11",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "\tKancheepuram",
+    "coordinates": [
+      80.025225,
+      12.898061
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Thiruvottiyur",
+    "station_id": "14",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Thiruvallur",
+    "coordinates": [
+      80.295964,
+      13.159242
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Red Hills",
+    "station_id": "15",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Thiruvallur",
+    "coordinates": [
+      80.186111,
+      13.187778
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Tharamani",
+    "station_id": "20",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Chennai",
+    "coordinates": [
+      80.245,
+      12.985983
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Meenambakkam",
+    "station_id": "21",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "\tKancheepuram",
+    "coordinates": [
+      80.181392,
+      12.990278
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Cholavaram",
+    "station_id": "23",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Thiruvallur",
+    "coordinates": [
+      80.154722,
+      13.217778
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Sriperumpudur",
+    "station_id": "25",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Kancheepuram",
+    "coordinates": [
+      79.943678,
+      12.967089
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Tambaram",
+    "station_id": "26",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Kancheepuram",
+    "coordinates": [
+      80.126944,
+      12.935278
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Sunguvachathram",
+    "station_id": "27",
+    "station_kind": "RainGauge",
+    "agency": "IITM",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      79.917,
+      12.906
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Sri Venkateswara Engg College",
+    "station_id": "29",
+    "station_kind": "RainGauge",
+    "agency": "IITM",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      79.968,
+      12.984
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Chembarambakkam",
+    "station_id": "33",
+    "station_kind": "RainGauge",
+    "agency": "IMD",
+    "subbasin": "Chennai",
+    "district": "kanchipuram",
+    "coordinates": [
+      80.0833,
+      13.0
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Vandalur",
+    "station_id": "35",
+    "station_kind": "RainGauge",
+    "agency": "IITM",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.069,
+      12.877
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Thiruvallur",
+    "station_id": "36",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Thiruvallur",
+    "coordinates": [
+      79.906944,
+      13.14
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Vallur Anicut",
+    "station_id": "38",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "\tThiruvallur",
+    "coordinates": [
+      80.254444,
+      13.263053
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "LMOIS Kolapakkam",
+    "station_id": "41",
+    "station_kind": "RainGauge",
+    "agency": "IMD",
+    "subbasin": "Chennai",
+    "district": "kanchipuram",
+    "coordinates": [
+      80.1333,
+      13.0
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "HVF Avadi",
+    "station_id": "42",
+    "station_kind": "RainGauge",
+    "agency": "IMD",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.1,
+      13.1167
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Jerusalem Engg College",
+    "station_id": "44",
+    "station_kind": "RainGauge",
+    "agency": "IITM",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.21,
+      12.941
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Taramani",
+    "station_id": "47",
+    "station_kind": "RainGauge",
+    "agency": "IMD",
+    "subbasin": "Chennai",
+    "district": "Chennai",
+    "coordinates": [
+      80.2333,
+      12.9833
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Pallikaranai forest office",
+    "station_id": "48",
+    "station_kind": "RainGauge",
+    "agency": "IITM",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.235,
+      12.948
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Nungambakkam",
+    "station_id": "49",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Chennai",
+    "coordinates": [
+      80.246389,
+      13.068333
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Poonmalee",
+    "station_id": "50",
+    "station_kind": "RainGauge",
+    "agency": "IMD",
+    "subbasin": "Chennai",
+    "district": "Tiruvallur",
+    "coordinates": [
+      80.0833,
+      13.05
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Poondi",
+    "station_id": "52",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Thiruvallur",
+    "coordinates": [
+      79.875,
+      13.208892
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Egmore",
+    "station_id": "55",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Chennai",
+    "coordinates": [
+      80.258611,
+      13.078333
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "KVK Kattupakkam",
+    "station_id": "58",
+    "station_kind": "RainGauge",
+    "agency": "IMD",
+    "subbasin": "Chennai",
+    "district": "kanchipuram",
+    "coordinates": [
+      80.0333,
+      12.8167
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Mylapore",
+    "station_id": "60",
+    "station_kind": "RainGauge",
+    "agency": "PWD",
+    "subbasin": "Chennai",
+    "district": "Chennai",
+    "coordinates": [
+      80.279256,
+      13.041392
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  },
+  {
+    "station_name": "Sathyabama University",
+    "station_id": "63",
+    "station_kind": "RainGauge",
+    "agency": "IMD",
+    "subbasin": "Chennai",
+    "district": "kanchipuram",
+    "coordinates": [
+      80.2,
+      12.8667
+    ],
+    "observation_mode": "historical_verified_coordinates",
+    "source_dataset": "CFM-DSS:Raingauge_Stations"
+  }
+]

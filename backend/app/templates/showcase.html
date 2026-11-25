@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CivicTwin-R — Engineering Showcase Control Center</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="/static/vendor/tailwindcss.js"></script>
+  <script src="/static/vendor/chart.umd.min.js"></script>
+  <script src="/static/vendor/three.min.js"></script>
+  <script src="/static/vendor/OrbitControls.js"></script>
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0b1120; color: #f1f5f9; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
+    body { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: #0b1120; color: #f1f5f9; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
     .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.6); }
     .tank-fill { transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
     .pulse-dot { animation: pulse 2s infinite; }
@@ -37,30 +36,30 @@
       </div>
     </div>
 
-    <!-- GLOBAL SERVICE STATUS PILLS -->
+    <!-- GLOBAL LIVE SERVICE STATUS PILLS (Probed from /api/services/status) -->
     <div class="flex items-center flex-wrap gap-2 text-xs mono">
       <div id="status-api" class="px-2.5 py-1 rounded-md bg-slate-800/90 border border-slate-700 flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
-        <span class="text-slate-300">FastAPI: <span class="text-emerald-400 font-semibold">200 OK</span></span>
+        <span id="api-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+        <span class="text-slate-300">FastAPI: <span id="api-text" class="text-slate-300 font-semibold">checking...</span></span>
       </div>
       <div id="status-mqtt" class="px-2.5 py-1 rounded-md bg-slate-800/90 border border-slate-700 flex items-center gap-1.5">
-        <span id="mqtt-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        <span class="text-slate-300">MQTT (1883): <span id="mqtt-text" class="text-emerald-400 font-semibold">CONNECTED</span></span>
+        <span id="mqtt-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+        <span class="text-slate-300">MQTT (1883): <span id="mqtt-text" class="text-slate-300 font-semibold">checking...</span></span>
       </div>
       <div id="status-storage" class="px-2.5 py-1 rounded-md bg-slate-800/90 border border-slate-700 flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-        <span class="text-slate-300">DB: <span id="storage-text" class="text-cyan-300 font-semibold">SQLite (WAL)</span></span>
+        <span id="storage-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+        <span class="text-slate-300">SQLite: <span id="storage-text" class="text-slate-300 font-semibold">checking...</span></span>
       </div>
       <div id="status-influx" class="px-2.5 py-1 rounded-md bg-slate-800/90 border border-slate-700 flex items-center gap-1.5">
         <a href="http://127.0.0.1:8086" target="_blank" class="flex items-center gap-1.5 hover:text-white transition" title="Open InfluxDB 2.x Time-Series UI">
-          <span id="influx-dot" class="w-2 h-2 rounded-full bg-indigo-400"></span>
-          <span class="text-slate-300">InfluxDB: <span id="influx-text" class="text-indigo-300 font-semibold underline">:8086</span></span>
+          <span id="influx-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+          <span class="text-slate-300">InfluxDB: <span id="influx-text" class="text-slate-300 font-semibold underline">:8086</span></span>
         </a>
       </div>
       <div id="status-nodered" class="px-2.5 py-1 rounded-md bg-slate-800/90 border border-slate-700 flex items-center gap-1.5">
-        <a href="http://127.0.0.1:1880/ui" target="_blank" class="flex items-center gap-1.5 hover:text-white transition">
-          <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-          <span class="text-slate-300">Node-RED: <span class="text-purple-300 font-semibold underline">:1880/ui</span></span>
+        <a href="http://127.0.0.1:1880/ui" target="_blank" class="flex items-center gap-1.5 hover:text-white transition" title="Open Node-RED UI Dashboard">
+          <span id="nodered-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+          <span class="text-slate-300">Node-RED: <span id="nodered-text" class="text-slate-300 font-semibold underline">:1880/ui</span></span>
         </a>
       </div>
     </div>
@@ -136,23 +135,23 @@
           <iframe id="urban-twin-frame" src="/urban-twin" class="w-full h-full border-0"></iframe>
         </div>
 
-        <!-- SUMMARY KEY INDICATORS BAR -->
+        <!-- SUMMARY KEY INDICATORS BAR (Live from Landlab 2D Simulation) -->
         <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs mono">
           <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
-            <span class="text-slate-400 block text-[11px]">Modeled Basin Volume:</span>
-            <span id="overview-vol" class="text-cyan-300 font-bold text-base">70.3 MCM</span>
+            <span class="text-slate-400 block text-[11px]">Modeled Stored Volume:</span>
+            <span id="overview-vol" class="text-cyan-300 font-bold text-base">-- MCM</span>
           </div>
           <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
-            <span class="text-slate-400 block text-[11px]">Total Inundated Area:</span>
-            <span id="overview-area" class="text-blue-300 font-bold text-base">74.8 km²</span>
+            <span class="text-slate-400 block text-[11px]">Urban Inundated Area:</span>
+            <span id="overview-area" class="text-blue-300 font-bold text-base">-- km²</span>
           </div>
           <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
-            <span class="text-slate-400 block text-[11px]">Max Waterlogging Depth:</span>
-            <span id="overview-depth" class="text-amber-400 font-bold text-base">1.19 m</span>
+            <span class="text-slate-400 block text-[11px]">Max Urban Depth:</span>
+            <span id="overview-depth" class="text-amber-400 font-bold text-base">-- m</span>
           </div>
           <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800">
-            <span class="text-slate-400 block text-[11px]">Active Risk Localities:</span>
-            <span id="overview-risk" class="text-red-400 font-bold text-base">8 of 10 High/Critical</span>
+            <span class="text-slate-400 block text-[11px]">High-Susceptibility Basins:</span>
+            <span id="overview-risk" class="text-red-400 font-bold text-base">-- of 10 High/Critical</span>
           </div>
         </div>
       </div>
@@ -164,21 +163,22 @@
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-              <span>&#9889;</span> Chennai Urban Flood Scenario Laboratory
+              <span>&#9889;</span> Chennai Urban Flood Scenario Laboratory (Landlab 2D OverlandFlow)
             </h2>
             <p class="text-sm text-slate-400 mt-0.5">
-              Terrain-aware mass-balance flood screening across Chennai's 10 strategic focus locations under simulated meteorological and drainage regimes.
+              Physically routed 2D shallow-water simulation across the Copernicus GLO-30 UTM44N 150m South Chennai DEM.
             </p>
           </div>
           <div class="flex items-center gap-2">
             <select id="main-scenario-preset" onchange="runMainUrbanScenario(this.value)" class="bg-slate-900 border border-slate-700 text-cyan-300 text-xs rounded-lg p-2 focus:outline-none">
-              <option value="normal">Scenario 1 — Normal Baseline (Dry Weather)</option>
-              <option value="heavy_rain" selected>Scenario 2 — Heavy Monsoon Rain (45 mm/hr)</option>
-              <option value="extreme_monsoon">Scenario 3 — Extreme Cyclonic Downpour (85 mm/hr)</option>
-              <option value="drainage_obstruction">Scenario 4 — Drainage Obstruction (25% Capacity)</option>
-              <option value="reservoir_discharge">Scenario 5 — Chembarambakkam Sluice Surge (25,000 cfs)</option>
-              <option value="michaung_replay">Scenario 6 — Cyclone Michaung Dec 2023 Replay</option>
-              <option value="sensor_failure">Scenario 7 — Monitoring Data Dropout Simulation</option>
+              <option value="normal">1. Normal Baseline (Dry Weather)</option>
+              <option value="heavy_rainfall" selected>2. Heavy Monsoon Rain (45 mm/hr, 4h)</option>
+              <option value="extreme_rainfall">3. Extreme Cloudburst (85 mm/hr, 6h)</option>
+              <option value="reduced_drainage">4. Reduced Drainage (25% Efficiency)</option>
+              <option value="improved_drainage">5. Improved Drainage Mitigation (200%)</option>
+              <option value="michaung_replay">6. Cyclone Michaung Dec 2023 Replay (24h)</option>
+              <option value="monitoring_dropout">7. Monitoring Network Dropout (±35%)</option>
+              <option value="reservoir_discharge">8. Chembarambakkam Spillway Surge (25,000 cfs)</option>
             </select>
           </div>
         </div>
@@ -188,13 +188,13 @@
           <table class="w-full text-xs text-left">
             <thead class="bg-slate-800/80 text-slate-300 uppercase tracking-wider font-semibold border-b border-slate-700">
               <tr>
-                <th class="py-2.5 px-3">Location</th>
-                <th class="py-2.5 px-3">Sub-Basin</th>
-                <th class="py-2.5 px-3">Elevation</th>
-                <th class="py-2.5 px-3">Est. Flood Depth</th>
+                <th class="py-2.5 px-3">Locality</th>
+                <th class="py-2.5 px-3">Coordinates (WGS84)</th>
+                <th class="py-2.5 px-3">Min DSM Elev</th>
+                <th class="py-2.5 px-3">Max / Mean Depth</th>
                 <th class="py-2.5 px-3">Severity Classification</th>
                 <th class="py-2.5 px-3">Risk Level</th>
-                <th class="py-2.5 px-3">Pop. Affected</th>
+                <th class="py-2.5 px-3">Flooded Area</th>
                 <th class="py-2.5 px-3">Primary Hazard Mechanism</th>
               </tr>
             </thead>
@@ -205,8 +205,8 @@
         </div>
 
         <div class="p-3 bg-slate-900/90 rounded-lg border border-slate-800 text-xs text-slate-400 flex items-center justify-between">
-          <span>*Scientific Integrity Note: Mass-balance terrain depression screening approximation; not a calibrated 2D hydrodynamic Navier-Stokes solver.</span>
-          <span class="text-cyan-400 font-semibold">Provenance: SIMULATED_SCREENING_MODEL</span>
+          <span>*Scientific Disclosure: Landlab 2D OverlandFlow on 150m Copernicus GLO-30 DSM (not surveyed LiDAR DTM or subsurface SWMM pipes); screening estimate only.</span>
+          <span class="text-cyan-400 font-semibold">Provenance: LANDLAB_2D_OVERLANDFLOW</span>
         </div>
       </div>
     </section>
@@ -703,33 +703,30 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3 text-xs mono">
-            <h4 class="font-bold text-sm text-cyan-400 font-sans">Automatic Rain Gauges (ARG)</h4>
-            <div class="text-2xl font-bold text-white">117 Stations</div>
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2 text-xs mono">
+            <h4 class="font-bold text-sm text-cyan-400 font-sans">Spatial Stations vs Non-Spatial ARG CSV</h4>
+            <div class="text-xl font-bold text-white">56 Map Pins · 13 ARG Basins</div>
             <p class="text-slate-400 leading-relaxed font-sans">
-              Measures continuous precipitation (<strong class="text-slate-200">mm</strong>). Used to drive catchment runoff in digital twin mass balance; never disguised as direct river stage height.
+              Only the 56 CFM-DSS WFS stations carrying official WGS84 coordinates are plotted on the 3D map. The 328-row preserved <code class="text-cyan-300">chennai_arg_rainfall.csv</code> lacks coordinates and is summarized cleanly in non-spatial basin analytics below.
             </p>
             <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
-              Source: TNUIFSL / GCC / CRA / IIT Madras (328 records in raw corpus).
+              Source: TN CFM-DSS WFS + preserved ARG CSV
             </div>
           </div>
 
-          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3 text-xs mono">
-            <h4 class="font-bold text-sm text-blue-400 font-sans">Major Reservoir Storage</h4>
-            <div class="text-2xl font-bold text-white">5 Reservoirs</div>
-            <p class="text-slate-400 leading-relaxed font-sans">
-              Monitors stage-storage metrics in Million Cubic Meters (<strong class="text-slate-200">MCM</strong>) for Chembarambakkam, Poondi, Red Hills, Cholavaram, and Thervoy Kandigai.
-            </p>
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2 text-xs mono">
+            <h4 class="font-bold text-sm text-blue-400 font-sans">Major WRD Reservoirs</h4>
+            <div id="chennai-reservoirs-summary" class="space-y-1 text-[11px] text-slate-300 font-sans">Loading WRD bulletins...</div>
             <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
-              Source: WRD Daily Stage-Storage Bulletins.
+              Source: preserved chennai_reservoirs.csv
             </div>
           </div>
 
-          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3 text-xs mono">
-            <h4 class="font-bold text-sm text-purple-400 font-sans">Cyclone Michaung Replay</h4>
-            <div class="text-2xl font-bold text-white">144 Hourly Steps</div>
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2 text-xs mono">
+            <h4 class="font-bold text-sm text-purple-400 font-sans">Cyclone Michaung Replay (Dec 2023)</h4>
+            <div id="michaung-summary-stat" class="text-xl font-bold text-white">144 Hourly Obs</div>
             <p class="text-slate-400 leading-relaxed font-sans">
-              Complete historical hourly storm series (Dec 2023) replayed deterministically through the IoT ingestion pipeline.
+              Observed hourly rainfall time-series driving historical storm replay in both the spatial Landlab 2D model and telemetry replayer.
             </p>
             <div class="pt-2 border-t border-slate-800 flex gap-2">
               <button onclick="controlReplay('start')" class="px-2.5 py-1 bg-purple-900/60 hover:bg-purple-800 text-purple-300 rounded border border-purple-700">Start Replay</button>
@@ -740,6 +737,21 @@
 
         <div class="h-72 w-full relative mt-4">
           <canvas id="chennaiChart"></canvas>
+        </div>
+
+        <div class="overflow-x-auto rounded-lg border border-slate-800 bg-slate-900/70">
+          <table class="w-full text-xs text-left mono">
+            <thead class="bg-slate-800/80 text-slate-300 uppercase">
+              <tr>
+                <th class="py-2 px-3">ARG Subbasin (CSV Non-Spatial)</th>
+                <th class="py-2 px-3">Unique Stations</th>
+                <th class="py-2 px-3">Records</th>
+                <th class="py-2 px-3">Mean Rain (mm)</th>
+                <th class="py-2 px-3">Max Observed Rain (mm)</th>
+              </tr>
+            </thead>
+            <tbody id="arg-subbasin-tbody" class="divide-y divide-slate-800 text-slate-300"></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -1159,7 +1171,7 @@
     }
 
     async function fetchUrbanScenarioTable() {
-      const preset = document.getElementById('main-scenario-preset') ? document.getElementById('main-scenario-preset').value : 'heavy_rain';
+      const preset = document.getElementById('main-scenario-preset') ? document.getElementById('main-scenario-preset').value : 'heavy_rainfall';
       await runMainUrbanScenario(preset);
     }
 
@@ -1173,24 +1185,25 @@
         const badgeColor = loc.risk_level === 'Critical' ? 'bg-red-950 text-red-300 border-red-800' :
                            loc.risk_level === 'High' ? 'bg-amber-950 text-amber-300 border-amber-800' :
                            loc.risk_level === 'Moderate' ? 'bg-blue-950 text-blue-300 border-blue-800' :
+                           loc.risk_level === 'Regulator' ? 'bg-sky-950 text-sky-300 border-sky-800' :
                            'bg-emerald-950 text-emerald-300 border-emerald-800';
         tr.innerHTML = `
           <td class="py-2.5 px-3 font-bold text-white">${loc.name}</td>
           <td class="py-2.5 px-3 text-slate-400 font-sans">${loc.coordinates[1].toFixed(4)}°N, ${loc.coordinates[0].toFixed(4)}°E</td>
-          <td class="py-2.5 px-3 text-slate-300">${loc.elevation_m} m</td>
-          <td class="py-2.5 px-3 text-cyan-300 font-bold">${loc.estimated_depth_m} m (${loc.estimated_depth_cm} cm)</td>
+          <td class="py-2.5 px-3 text-slate-300">${loc.dsm_elevation_m} m</td>
+          <td class="py-2.5 px-3 text-cyan-300 font-bold">${loc.modeled_max_depth_m} m / ${loc.modeled_mean_depth_m} m</td>
           <td class="py-2.5 px-3 font-sans text-slate-300">${loc.classification}</td>
           <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">${loc.risk_level}</span></td>
-          <td class="py-2.5 px-3 text-slate-300">${loc.affected_population_estimate.toLocaleString()}</td>
-          <td class="py-2.5 px-3 font-sans text-[11px] text-slate-400">${loc.drainage_status}</td>
+          <td class="py-2.5 px-3 text-slate-300">${loc.inundated_area_km2} km²</td>
+          <td class="py-2.5 px-3 font-sans text-[11px] text-slate-400">${loc.primary_hazard}</td>
         `;
         tbody.appendChild(tr);
       });
       if (document.getElementById('overview-vol')) {
-        document.getElementById('overview-vol').innerText = `${data.summary.total_accumulated_volume_mcm} MCM`;
-        document.getElementById('overview-area').innerText = `${data.summary.total_inundated_area_km2} km²`;
-        document.getElementById('overview-depth').innerText = `${data.summary.max_depth_m} m`;
-        document.getElementById('overview-risk').innerText = `${data.summary.high_risk_locations_count} of 10 High/Critical`;
+        document.getElementById('overview-vol').innerText = `${data.summary.stored_water_volume_mcm} MCM`;
+        document.getElementById('overview-area').innerText = `${data.summary.urban_inundated_area_km2} km²`;
+        document.getElementById('overview-depth').innerText = `${data.summary.max_urban_depth_m} m`;
+        document.getElementById('overview-risk').innerText = `${data.summary.high_susceptibility_locations_count} of 10 High/Critical`;
       }
     }
 
@@ -1628,6 +1641,25 @@
     // -------------------------------------------------------------
     async function fetchLiveTelemetry() {
       try {
+        // Live Service Status Probes (FastAPI, MQTT, SQLite, InfluxDB, Node-RED)
+        const sRes = await fetch('/api/services/status');
+        if (sRes.ok) {
+          const sv = (await sRes.json()).services || {};
+          const setPill = (dotId, txtId, ok, okLabel, warnLabel) => {
+            const d = document.getElementById(dotId);
+            const t = document.getElementById(txtId);
+            if (!d || !t) return;
+            d.className = `w-2 h-2 rounded-full ${ok ? 'bg-emerald-400' : 'bg-rose-400'}`;
+            t.innerText = ok ? okLabel : warnLabel;
+            t.className = `${ok ? 'text-emerald-400' : 'text-rose-400'} font-semibold`;
+          };
+          setPill('api-dot', 'api-text', sv.fastapi && sv.fastapi.status === 'online', '200 OK', 'OFFLINE');
+          setPill('mqtt-dot', 'mqtt-text', sv.mqtt_broker && sv.mqtt_broker.status === 'connected', 'CONNECTED (1883)', sv.mqtt_broker ? sv.mqtt_broker.status.toUpperCase() : 'OFFLINE');
+          setPill('storage-dot', 'storage-text', sv.sqlite && sv.sqlite.status === 'online', `${sv.sqlite ? sv.sqlite.records_stored : 0} rows`, 'OFFLINE');
+          setPill('influx-dot', 'influx-text', sv.influxdb && sv.influxdb.connected, `:8086 (${sv.influxdb.records_count} rows)`, ':8086 OFFLINE');
+          setPill('nodered-dot', 'nodered-text', sv.nodered && sv.nodered.status === 'online', ':1880/ui LIVE', ':1880 OFFLINE');
+        }
+
         // Health
         const hRes = await fetch('/health');
         if (hRes.ok) {
@@ -1636,17 +1668,6 @@
           if (h.ingestion && h.ingestion.stats) {
             document.getElementById('metric-valid').innerText = h.ingestion.stats.messages_valid || 0;
             document.getElementById('metric-duplicates').innerText = h.ingestion.stats.messages_duplicate || 0;
-          }
-          const mqttDot = document.getElementById('mqtt-dot');
-          const mqttTxt = document.getElementById('mqtt-text');
-          if (h.mqtt_connected) {
-            mqttDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-            mqttTxt.innerText = 'CONNECTED (1883)';
-            mqttTxt.className = 'text-emerald-400 font-semibold';
-          } else {
-            mqttDot.className = 'w-2 h-2 rounded-full bg-amber-400';
-            mqttTxt.innerText = 'STANDALONE';
-            mqttTxt.className = 'text-amber-400 font-semibold';
           }
         }
 
@@ -1873,46 +1894,91 @@
       });
     }
 
-    // Chennai historical chart
+    // Chennai genuine historical data loader & chart (Cyclone Michaung + WRD Reservoirs + Non-Spatial ARG Analytics)
     let chennaiChartInstance = null;
-    function initChennaiChart() {
+    async function initChennaiChart() {
       if (chennaiChartInstance) return;
-      const ctx = document.getElementById('chennaiChart').getContext('2d');
-      chennaiChartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['Hour 0', 'Hour 24', 'Hour 48', 'Hour 72', 'Hour 96', 'Hour 120', 'Hour 144'],
-          datasets: [
-            {
-              label: 'Hourly Rainfall Rate (mm/h)',
-              data: [5, 12, 28, 85, 142, 45, 8],
-              borderColor: '#8b5cf6',
-              backgroundColor: 'rgba(139, 92, 246, 0.15)',
-              fill: true,
-              tension: 0.3
+      try {
+        const [mRes, rRes, aRes] = await Promise.all([
+          fetch('/api/urban/historical/michaung'),
+          fetch('/api/urban/reservoirs'),
+          fetch('/api/urban/historical/arg-analytics')
+        ]);
+        if (mRes.ok) {
+          const m = await mRes.json();
+          document.getElementById('michaung-summary-stat').innerText = `${m.cumulative_mm} mm Cum · ${m.peak_hourly_mm_hr} mm/h Peak`;
+          const recs = m.records || [];
+          const ctx = document.getElementById('chennaiChart').getContext('2d');
+          chennaiChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: recs.map(r => r.timestamp_local.replace('2023-', '').replace('T', ' ')),
+              datasets: [
+                {
+                  label: 'Observed Hourly Rainfall (mm/hr)',
+                  data: recs.map(r => r.hourly_precipitation_mm),
+                  borderColor: '#8b5cf6',
+                  backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                  fill: true,
+                  pointRadius: 0,
+                  tension: 0.2
+                },
+                {
+                  label: 'Cumulative Rainfall (mm)',
+                  data: recs.map(r => r.cumulative_rainfall_mm),
+                  borderColor: '#06b6d4',
+                  borderWidth: 2,
+                  pointRadius: 0,
+                  yAxisID: 'y1',
+                  tension: 0.2
+                }
+              ]
             },
-            {
-              label: 'Catchment Model Water Height (cm)',
-              data: [6.2, 8.5, 14.1, 28.6, 41.2, 32.0, 18.4],
-              borderColor: '#06b6d4',
-              borderWidth: 2,
-              tension: 0.3
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: { grid: { color: 'rgba(51, 65, 85, 0.4)' }, ticks: { color: '#94a3b8', maxTicksLimit: 12 } },
+                y: { grid: { color: 'rgba(51, 65, 85, 0.4)' }, ticks: { color: '#94a3b8' }, title: { display: true, text: 'Hourly Rain (mm/hr)', color: '#94a3b8' } },
+                y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#06b6d4' }, title: { display: true, text: 'Cumulative (mm)', color: '#06b6d4' } }
+              },
+              plugins: {
+                title: { display: true, text: 'Actual Observed Cyclone Michaung Hourly Precipitation (Dec 1–6, 2023)', color: '#f1f5f9' },
+                legend: { labels: { color: '#cbd5e1' } }
+              }
             }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: { grid: { color: 'rgba(51, 65, 85, 0.4)' }, ticks: { color: '#94a3b8' } },
-            y: { grid: { color: 'rgba(51, 65, 85, 0.4)' }, ticks: { color: '#94a3b8' } }
-          },
-          plugins: {
-            title: { display: true, text: 'Cyclone Michaung Hourly Storm Rainfall vs Modeled Runoff', color: '#f1f5f9' },
-            legend: { labels: { color: '#cbd5e1' } }
+          });
+        }
+        if (rRes.ok) {
+          const rd = await rRes.json();
+          const box = document.getElementById('chennai-reservoirs-summary');
+          if (box) {
+            box.innerHTML = (rd.reservoirs || []).map(r => `
+              <div class="flex justify-between border-b border-slate-800/70 pb-0.5">
+                <span class="text-white font-medium">${r.reservoir_name}</span>
+                <span class="mono text-sky-300">${r.storage_capacity_live_mcm}/${r.storage_capacity_gross_mcm} MCM (${r.storage_fill_pct}%)</span>
+              </div>
+            `).join('');
           }
         }
-      });
+        if (aRes.ok) {
+          const ad = await aRes.json();
+          const tb = document.getElementById('arg-subbasin-tbody');
+          if (tb) {
+            tb.innerHTML = (ad.subbasins || []).map(s => `
+              <tr>
+                <td class="py-1.5 px-3 font-sans text-white">${s.subbasin}</td>
+                <td class="py-1.5 px-3">${s.station_count}</td>
+                <td class="py-1.5 px-3">${s.record_count}</td>
+                <td class="py-1.5 px-3 text-cyan-300">${s.mean_rainfall_mm}</td>
+                <td class="py-1.5 px-3 text-amber-300 font-bold">${s.max_rainfall_mm}</td>
+              </tr>
+            `).join('');
+          }
+        }
+      } catch (e) {
+        console.warn('Chennai historical load error:', e);
+      }
     }
 
     // Clock
