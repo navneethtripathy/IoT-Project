@@ -549,6 +549,13 @@ class TestStorage:
         assert isinstance(store, SQLiteStorage)
         store.close()
 
+    def test_influx_flux_escaping(self):
+        from backend.storage_influx import _escape_flux
+        escaped = _escape_flux('zone"01\\test\ninjected')
+        assert '"' not in escaped.replace('\\"', '')
+        assert '\n' not in escaped
+        assert escaped == 'zone\\"01\\\\testinjected'
+
 
 # Ingestion Pipeline Tests
 

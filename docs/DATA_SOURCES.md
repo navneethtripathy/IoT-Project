@@ -26,7 +26,7 @@ Every extruded footprint carries `height_source`:
 | :--- | :---: | :--- |
 | `data/processed/chennai_arg_rainfall.csv` | `328` rows (`13` subbasins) | **CFM-DSS ARG**: Contains no lat/lon columns; surfaced strictly in non-spatial basin analytics (`/api/urban/historical/arg-analytics`) so no station positions are ever fabricated. |
 | `data/processed/chennai_reservoirs.csv` | `5` WRD reservoirs | **WRD Lake Operation System**: Chembarambakkam (`103.215 MCM`), RedHills, Poondi, Cholavaram, Thervoy Kandigai capacities and live fill percentages. |
-| `data/processed/chennai_michaung_hourly.csv` & `data/raw/chennai_michaung_hourly_raw.json` | `144` hourly steps | **ERA5 / IMD Calibrated**: Dec 1–6, 2023 Cyclone Michaung precipitation series (`472.0 mm` cumulative, `46.8 mm/hr` peak) driving historical replay. |
+| `data/processed/chennai_michaung_hourly.csv` & `data/raw/chennai_michaung_hourly_raw.json` | `144` hourly steps | **ERA5 / IMD Calibrated**: Dec 1–6, 2023 Cyclone Michaung precipitation series (`369.8 mm` 6-day cumulative, `259.4 mm` peak 24h replay window Dec 4–5, `26.1 mm/hr` peak hourly rate) driving historical replay. |
 | `data/raw/cfm_dashboard_raw.json` | Raw corpus snapshot | Preserved upstream CFM-DSS JSON payload. |
 
 ---

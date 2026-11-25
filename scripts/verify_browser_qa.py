@@ -89,31 +89,45 @@ def run_qa() -> int:
         time.sleep(1.5)
         page.screenshot(path=str(SHOT_DIR / "04_pallikaranai_selected.png"))
 
+        def wait_scenario_ready(expected_substr: str):
+            page.wait_for_function(
+                """(sub) => {
+                    const btn = document.getElementById('btn-run-sim');
+                    const ban = document.getElementById('active-scenario-banner');
+                    return btn && !btn.innerText.includes('Computing') && ban && ban.innerText.includes(sub);
+                }""",
+                arg=expected_substr,
+                timeout=25000,
+            )
+            time.sleep(0.8)
+
         # Verified Stations & Reduced Drainage comparison
         page.select_option("#preset-select", "reduced_drainage")
-        time.sleep(2.2)
+        wait_scenario_ready("Reduced Drainage")
         page.click("button:has-text('Compare Impact Delta')")
-        time.sleep(1.5)
+        page.wait_for_function("!document.getElementById('compare-output').classList.contains('hidden')", timeout=15000)
         cmp_text = page.inner_text("#compare-output")
         print(f"      Scenario Compare -> {cmp_text.splitlines()[0] if cmp_text else 'hidden'}")
         page.screenshot(path=str(SHOT_DIR / "08_drainage_obstruction.png"))
 
-        # Heavy Rain & Chembarambakkam spillway view
+        # Heavy Rain & Adyar Estuary / Verified CFM-DSS Stations view
         page.select_option("#preset-select", "heavy_rainfall")
-        time.sleep(1.5)
+        wait_scenario_ready("Heavy Monsoon")
         page.screenshot(path=str(SHOT_DIR / "07_heavy_rainfall_scenario.png"))
+        page.click("button:has-text('Adyar Estuary')")
+        time.sleep(1.5)
         page.screenshot(path=str(SHOT_DIR / "05_rainfall_stations.png"))
 
         page.select_option("#preset-select", "reservoir_discharge")
-        time.sleep(2.2)
+        wait_scenario_ready("Chembarambakkam Spillway")
         page.click("button:has-text('Chembarambakkam')")
-        time.sleep(1.6)
+        time.sleep(1.5)
         page.screenshot(path=str(SHOT_DIR / "06_reservoirs.png"))
 
         # Cyclone Michaung Replay & Timeline Playback
         page.click("button:has-text('Reset View')")
         page.select_option("#preset-select", "michaung_replay")
-        time.sleep(2.5)
+        wait_scenario_ready("Cyclone Michaung")
         page.screenshot(path=str(SHOT_DIR / "09_michaung_replay.png"))
 
         # 2. Load Showcase Hub (offline) & verify live service pills + tabs

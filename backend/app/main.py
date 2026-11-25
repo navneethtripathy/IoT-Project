@@ -877,7 +877,7 @@ def get_services_status():
             "sqlite": {
                 "status": "online" if storage else "offline",
                 "records_stored": storage.count() if storage else 0,
-                "db_size_kb": db_stats.get("file_size_kb", 0),
+                "db_size_kb": db_stats.get("size_kb", db_stats.get("file_size_kb", 0)),
             },
             "influxdb": {
                 "status": "connected" if influx_ok else ("disabled" if not config.INFLUXDB_ENABLED else "offline"),

@@ -20,6 +20,11 @@ from backend.storage import StorageBackend
 logger = logging.getLogger("civictwin.storage.influx")
 
 
+def _escape_flux(value: str) -> str:
+    """Escape backslashes and quotes before interpolating values into Flux string literals."""
+    return str(value).replace("\\", "\\\\").replace('"', '\\"').replace("\n", "").replace("\r", "")
+
+
 class InfluxDBStorage(StorageBackend):
     """InfluxDB 2.x implementation of StorageBackend."""
 
@@ -104,14 +109,17 @@ class InfluxDBStorage(StorageBackend):
             return False
 
     def query_latest(self, zone_id: str, limit: int = 1) -> list[dict]:
+        safe_bucket = _escape_flux(self._bucket)
+        safe_zone = _escape_flux(zone_id)
+        safe_limit = max(1, int(limit))
         query = f'''
-        from(bucket: "{self._bucket}")
+        from(bucket: "{safe_bucket}")
             |> range(start: -30d)
             |> filter(fn: (r) => r["_measurement"] == "telemetry")
-            |> filter(fn: (r) => r["zone_id"] == "{zone_id}")
+            |> filter(fn: (r) => r["zone_id"] == "{safe_zone}")
             |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
             |> sort(columns: ["_time"], desc: true)
-            |> limit(n: {limit})
+            |> limit(n: {safe_limit})
         '''
         return self._run_query(query)
 
@@ -122,28 +130,33 @@ class InfluxDBStorage(StorageBackend):
         end: datetime,
         limit: int = 1000,
     ) -> list[dict]:
+        safe_bucket = _escape_flux(self._bucket)
+        safe_zone = _escape_flux(zone_id)
+        safe_limit = max(1, int(limit))
         start_iso = start.isoformat()
         end_iso = end.isoformat()
         query = f'''
-        from(bucket: "{self._bucket}")
+        from(bucket: "{safe_bucket}")
             |> range(start: {start_iso}, stop: {end_iso})
             |> filter(fn: (r) => r["_measurement"] == "telemetry")
-            |> filter(fn: (r) => r["zone_id"] == "{zone_id}")
+            |> filter(fn: (r) => r["zone_id"] == "{safe_zone}")
             |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
             |> sort(columns: ["_time"], desc: false)
-            |> limit(n: {limit})
+            |> limit(n: {safe_limit})
         '''
         return self._run_query(query)
 
     def query_all_latest(self, limit_per_zone: int = 1) -> dict[str, list[dict]]:
+        safe_bucket = _escape_flux(self._bucket)
+        safe_limit = max(1, int(limit_per_zone))
         query = f'''
-        from(bucket: "{self._bucket}")
+        from(bucket: "{safe_bucket}")
             |> range(start: -30d)
             |> filter(fn: (r) => r["_measurement"] == "telemetry")
             |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
             |> group(columns: ["zone_id"])
             |> sort(columns: ["_time"], desc: true)
-            |> limit(n: {limit_per_zone})
+            |> limit(n: {safe_limit})
         '''
         records = self._run_query(query)
         grouped: dict[str, list[dict]] = {}
@@ -153,9 +166,10 @@ class InfluxDBStorage(StorageBackend):
         return grouped
 
     def count(self, zone_id: Optional[str] = None) -> int:
-        filter_zone = f'|> filter(fn: (r) => r["zone_id"] == "{zone_id}")' if zone_id else ""
+        safe_bucket = _escape_flux(self._bucket)
+        filter_zone = f'|> filter(fn: (r) => r["zone_id"] == "{_escape_flux(zone_id)}")' if zone_id else ""
         query = f'''
-        from(bucket: "{self._bucket}")
+        from(bucket: "{safe_bucket}")
             |> range(start: -30d)
             |> filter(fn: (r) => r["_measurement"] == "telemetry")
             {filter_zone}
