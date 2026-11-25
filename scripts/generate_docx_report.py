@@ -148,7 +148,6 @@ def generate_docx():
         lines = f.readlines()
 
     in_code_block = False
-    in_mermaid = False
     code_lines: list[str] = []
     in_table = False
     table_rows: list[list[str]] = []
@@ -161,7 +160,6 @@ def generate_docx():
         if stripped.startswith("```"):
             if in_code_block:
                 in_code_block = False
-                in_mermaid = False
                 code_text = "\n".join(code_lines)
                 p = doc.add_paragraph(code_text)
                 p.paragraph_format.left_indent = Inches(0.3)
@@ -174,8 +172,6 @@ def generate_docx():
                 code_lines = []
             else:
                 in_code_block = True
-                lang = stripped[3:].strip().lower()
-                in_mermaid = (lang == "mermaid")
                 code_lines = []
             continue
 

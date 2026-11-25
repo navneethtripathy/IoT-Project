@@ -34,8 +34,8 @@ services:
     image: eclipse-mosquitto:2.0
     container_name: civictwin-mosquitto
     ports:
-      - "1883:1883"   # MQTT TCP — reachable from Mac and LAN
-      - "9001:9001"   # MQTT WebSocket — for browser-based clients
+      - "127.0.0.1:1883:1883"   # MQTT TCP — loopback only
+      - "127.0.0.1:9001:9001"   # MQTT WebSocket — loopback only
     volumes:
       - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - mosquitto_data:/mosquitto/data
@@ -54,7 +54,7 @@ services:
     image: influxdb:2.7
     container_name: civictwin-influxdb
     ports:
-      - "8086:8086"   # InfluxDB UI + API — reachable from Mac
+      - "127.0.0.1:8086:8086"   # InfluxDB UI + API — loopback only
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME:-civictwin}
@@ -80,7 +80,7 @@ services:
     image: nodered/node-red:4.0
     container_name: civictwin-nodered
     ports:
-      - "1880:1880"   # Node-RED editor + dashboard
+      - "127.0.0.1:1880:1880"   # Node-RED editor + dashboard — loopback only
     volumes:
       - nodered_data:/data
       - ./nodered/flows.json:/data/flows.json:ro
@@ -109,7 +109,7 @@ services:
       dockerfile: Dockerfile
     container_name: civictwin-backend
     ports:
-      - "8000:8000"   # FastAPI — reachable from Mac at localhost:8000
+      - "127.0.0.1:8000:8000"   # FastAPI — loopback only
     environment:
       # ── MQTT: use the Docker service name, not localhost ──────────
       - MQTT_BROKER_HOST=mosquitto

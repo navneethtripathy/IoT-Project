@@ -67,7 +67,7 @@ def main():
 
         topic = f"civictwin/v1/zones/{args.zone}/telemetry"
         payload = json.dumps(msg)
-        result = client.publish(topic, payload, qos=1)
+        client.publish(topic, payload, qos=1)
 
         print(f"[{seq}/{args.count}] {topic} → level={water_level:.1f}cm ({water_pct:.1f}%)")
         time.sleep(args.interval)

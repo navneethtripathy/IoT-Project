@@ -243,7 +243,12 @@ def run_qa() -> int:
             sips_bin = shutil.which("sips")
             if sips_bin:
                 import subprocess
-                subprocess.run([sips_bin, "-s", "format", "png", str(tmp_pdf), "--out", str(SHOT_DIR / "15_engineering_pdf_report.png")], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                from PIL import Image as PILImage
+                pdf_png = SHOT_DIR / "15_engineering_pdf_report.png"
+                subprocess.run([sips_bin, "-s", "format", "png", str(tmp_pdf), "--out", str(pdf_png)], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                if pdf_png.exists():
+                    with PILImage.open(pdf_png) as im:
+                        im.convert("RGBA").save(pdf_png, format="PNG", icc_profile=None)
             page_pdf = context.new_page()
             page_pdf.goto("http://127.0.0.1:8000/showcase#reports", wait_until="networkidle", timeout=30000)
             time.sleep(0.8)

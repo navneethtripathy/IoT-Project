@@ -319,7 +319,7 @@ class MultiNodeMqttSimulator:
                 last_step = now
 
                 with self._lock:
-                    for node_id, node in self.nodes.items():
+                    for _node_id, node in self.nodes.items():
                         reading = node.step(dt)
                         if reading and self.connected and self.client:
                             payload = json.dumps(reading)
@@ -356,7 +356,7 @@ class MultiNodeMqttSimulator:
             if now - last_status >= 30.0:
                 last_status = now
                 with self._lock:
-                    for node_id, node in self.nodes.items():
+                    for _node_id, node in self.nodes.items():
                         if self.connected and self.client and not node.is_disconnected:
                             status_data = node.get_status_payload()
                             st_payload = json.dumps(status_data)

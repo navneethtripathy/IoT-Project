@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import csv
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -130,11 +130,15 @@ class InfluxDBStorage(StorageBackend):
         end: datetime,
         limit: int = 1000,
     ) -> list[dict]:
+        if not isinstance(start, datetime) or not isinstance(end, datetime):
+            raise TypeError("start and end must be datetime instances")
         safe_bucket = _escape_flux(self._bucket)
         safe_zone = _escape_flux(zone_id)
         safe_limit = max(1, int(limit))
-        start_iso = start.isoformat()
-        end_iso = end.isoformat()
+        start_utc = start if start.tzinfo is not None else start.replace(tzinfo=timezone.utc)
+        end_utc = end if end.tzinfo is not None else end.replace(tzinfo=timezone.utc)
+        start_iso = start_utc.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        end_iso = end_utc.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         query = f'''
         from(bucket: "{safe_bucket}")
             |> range(start: {start_iso}, stop: {end_iso})

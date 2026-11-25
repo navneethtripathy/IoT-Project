@@ -81,7 +81,6 @@ class HistoricalReplayController:
             self._current_index += 1
 
         # Synthesize physical water level from cumulative rainfall and nominal drainage
-        precip = float(row.get("hourly_precipitation_mm", 0.0))
         cum_rain = float(row.get("cumulative_rainfall_mm", 0.0))
         timestamp_str = row.get("timestamp_local", "")
 

@@ -34,7 +34,7 @@ from digital_twin.reconstruction import (
 )
 from backend.models import (
     TelemetryMessage, IngestedTelemetry, SensorStatus,
-    DataSource, AlertLevel, ZoneConfig, ZoneState,
+    DataSource, AlertLevel,
 )
 from backend.storage import MemoryStorage, SQLiteStorage, create_storage
 from backend.ingestion import IngestionService
@@ -180,7 +180,7 @@ class TestDigitalTwinEngine:
         r1 = e1.step_all()
         r2 = e2.step_all()
 
-        for a, b in zip(r1, r2):
+        for a, b in zip(r1, r2, strict=False):
             assert a.true_level_cm == b.true_level_cm
             assert a.observed_level_cm == b.observed_level_cm
 
@@ -400,7 +400,8 @@ class TestModels:
         assert isinstance(msg.timestamp, datetime)
 
     def test_telemetry_invalid_device_id(self):
-        with pytest.raises(Exception):
+        from pydantic import ValidationError
+        with pytest.raises(ValidationError):
             TelemetryMessage(
                 device_id="",
                 zone_id="zone_01",

@@ -38,8 +38,16 @@ SQLITE_DB_PATH: str = os.getenv("SQLITE_DB_PATH", str(_PROJECT_ROOT / "data" / "
 # API
 API_HOST: str = os.getenv("API_HOST", "127.0.0.1")
 API_PORT: int = int(os.getenv("API_PORT", "8000"))
-API_DEBUG: bool = os.getenv("API_DEBUG", "true").lower() == "true"
+API_DEBUG: bool = os.getenv("API_DEBUG", "false").lower() == "true"
 LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
+CORS_ORIGINS: list[str] = [
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ORIGINS",
+        "http://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:1880,http://localhost:1880",
+    ).split(",")
+    if origin.strip()
+]
 
 # Digital Twin
 TWIN_TIME_STEP_SEC: float = float(os.getenv("TWIN_TIME_STEP_SEC", "5"))

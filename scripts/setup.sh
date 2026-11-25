@@ -30,13 +30,19 @@ if [ ! -f .env ]; then
 from pathlib import Path
 p = Path('.env')
 txt = p.read_text()
-txt = txt.replace('INFLUXDB_TOKEN=', f'INFLUXDB_TOKEN=${RAND_TOKEN}')
+txt = txt.replace('INFLUXDB_TOKEN=<generate-local-token-via-setup-sh>', f'INFLUXDB_TOKEN=${RAND_TOKEN}')
+txt = txt.replace('INFLUXDB_PASSWORD=<generate-local-password-via-setup-sh>', f'INFLUXDB_PASSWORD=${RAND_PASS}')
+txt = txt.replace('INFLUXDB_ENABLED=false', 'INFLUXDB_ENABLED=true')
+if 'INFLUXDB_TOKEN=' in txt and '${RAND_TOKEN}' not in txt:
+    txt = txt.replace('INFLUXDB_TOKEN=', f'INFLUXDB_TOKEN=${RAND_TOKEN}')
 if 'INFLUXDB_USERNAME=' not in txt:
     txt += f'\nINFLUXDB_USERNAME=civictwin\nINFLUXDB_PASSWORD=${RAND_PASS}\n'
 p.write_text(txt)
 "
-    echo "[OK] Generated local .env with randomized InfluxDB credentials."
+    chmod 600 .env
+    echo "[OK] Generated local .env with randomized InfluxDB credentials (mode 600)."
 else
+    chmod 600 .env 2>/dev/null || true
     echo "[OK] Existing .env preserved."
 fi
 

@@ -10,7 +10,7 @@ import json
 from datetime import datetime, timezone
 from fastapi.testclient import TestClient
 
-from backend.app.main import app, storage
+from backend.app.main import app
 from backend.models import IngestedTelemetry, DataSource, SensorStatus
 from backend.storage import SQLiteStorage
 from backend.storage_influx import InfluxDBStorage

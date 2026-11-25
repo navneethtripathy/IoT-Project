@@ -144,7 +144,8 @@
         </div>
       </div>
 
-      <button type="button" onclick="toggleDemoTour()" class="hidden md:inline-flex ct-btn ct-btn-sm px-2 text-[#36C2C9]" title="Guided Demo Walkthrough">Demo</button>
+      <button type="button" onclick="toggleDemoTour()"
+        class="hidden md:inline-flex ct-btn ct-btn-sm px-2 text-[#36C2C9]" title="Guided Demo Walkthrough">Demo</button>
       <button type="button" onclick="toggleDrawer('left')" class="ct-btn ct-btn-sm px-2 sm:px-2.5"
         aria-label="Toggle Scenario Controls" title="Toggle Scenario Studio">Controls</button>
       <button type="button" onclick="toggleDrawer('right')" class="ct-btn ct-btn-sm px-2 sm:px-2.5"
@@ -280,11 +281,15 @@
               <div class="flex justify-between items-center text-xs mb-1">
                 <label for="sl-initd" class="text-[#A0ADBD]">Initial Ponded Depth</label>
                 <div class="flex items-center gap-1 mono text-[11px]">
-                  <input id="num-initd" type="number" min="0" max="2" step="0.05" value="0" oninput="syncFromNumber('initd')" class="w-14 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]" aria-label="Initial water depth in meters" />
+                  <input id="num-initd" type="number" min="0" max="2" step="0.05" value="0"
+                    oninput="syncFromNumber('initd')"
+                    class="w-14 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]"
+                    aria-label="Initial water depth in meters" />
                   <span class="text-[#36C2C9]">m</span>
                 </div>
               </div>
-              <input id="sl-initd" type="range" min="0" max="2" step="0.05" value="0" oninput="syncFromSlider('initd')" class="ct-slider" />
+              <input id="sl-initd" type="range" min="0" max="2" step="0.05" value="0" oninput="syncFromSlider('initd')"
+                class="ct-slider" />
             </div>
           </div>
 
@@ -322,7 +327,8 @@
           <button type="button" onclick="runScenarioCompare()" class="ct-btn ct-btn-sm text-[11px]">
             Compare Impact Delta
           </button>
-          <button type="button" onclick="toggleComparisonWorkspace()" id="btn-swipe-cmp" class="ct-btn ct-btn-sm text-[11px] text-[#36C2C9]">
+          <button type="button" onclick="toggleComparisonWorkspace()" id="btn-swipe-cmp"
+            class="ct-btn ct-btn-sm text-[11px] text-[#36C2C9]">
             Swipe Split Map
           </button>
         </div>
@@ -343,16 +349,23 @@
           <option value="">Load saved scenario...</option>
         </select>
         <div class="grid grid-cols-3 gap-1">
-          <button type="button" onclick="duplicateSelectedSaved()" class="ct-btn ct-btn-sm text-[10.5px] py-1">Duplicate</button>
-          <button type="button" onclick="toggleRenamePrompt()" class="ct-btn ct-btn-sm text-[10.5px] py-1">Rename</button>
-          <button type="button" onclick="requestDeleteSaved()" class="ct-btn ct-btn-sm text-[10.5px] py-1 text-[#F16D75]">Delete</button>
+          <button type="button" onclick="duplicateSelectedSaved()"
+            class="ct-btn ct-btn-sm text-[10.5px] py-1">Duplicate</button>
+          <button type="button" onclick="toggleRenamePrompt()"
+            class="ct-btn ct-btn-sm text-[10.5px] py-1">Rename</button>
+          <button type="button" onclick="requestDeleteSaved()"
+            class="ct-btn ct-btn-sm text-[10.5px] py-1 text-[#F16D75]">Delete</button>
         </div>
-        <div id="saved-crud-confirm" class="hidden bg-[#080B10] border border-[#344050] rounded p-2 space-y-1.5 text-[11px]"></div>
+        <div id="saved-crud-confirm"
+          class="hidden bg-[#080B10] border border-[#344050] rounded p-2 space-y-1.5 text-[11px]"></div>
         <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-[#253140]">
-          <button type="button" onclick="downloadPdfReport()" class="ct-btn ct-btn-primary ct-btn-sm text-[11px] col-span-2">Download PDF Report</button>
-          <button type="button" onclick="exportActive('geojson')" class="ct-btn ct-btn-sm text-[#62B5F5]">GeoJSON</button>
+          <button type="button" onclick="downloadPdfReport()"
+            class="ct-btn ct-btn-primary ct-btn-sm text-[11px] col-span-2">Download PDF Report</button>
+          <button type="button" onclick="exportActive('geojson')"
+            class="ct-btn ct-btn-sm text-[#62B5F5]">GeoJSON</button>
           <button type="button" onclick="exportCsvReport()" class="ct-btn ct-btn-sm text-[#36C2C9]">Export CSV</button>
-          <button type="button" onclick="exportActive('summary')" class="ct-btn ct-btn-sm text-[#A0ADBD] col-span-2">Export Summary JSON</button>
+          <button type="button" onclick="exportActive('summary')"
+            class="ct-btn ct-btn-sm text-[#A0ADBD] col-span-2">Export Summary JSON</button>
         </div>
       </div>
     </aside>
@@ -363,17 +376,24 @@
 
       <!-- SIDE-BY-SIDE / SWIPE COMPARISON OVERLAY -->
       <div id="compare-split-pane" class="hidden absolute inset-0 z-20 pointer-events-none">
-        <div id="map-alt-wrap" class="absolute inset-0 pointer-events-auto" style="clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);">
+        <div id="map-alt-wrap" class="absolute inset-0 pointer-events-auto"
+          style="clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);">
           <div id="map-alt" class="w-full h-full"></div>
         </div>
-        <div id="compare-divider-line" class="absolute top-0 bottom-0 w-0.5 bg-[#62B5F5] shadow-[0_0_12px_rgba(98,181,245,0.6)] pointer-events-none" style="left: 50%;"></div>
-        <div class="pointer-events-auto absolute top-14 left-1/2 -translate-x-1/2 ut-float-panel px-3 py-1.5 flex items-center gap-3 text-[11px] mono shadow-2xl">
+        <div id="compare-divider-line"
+          class="absolute top-0 bottom-0 w-0.5 bg-[#62B5F5] shadow-[0_0_12px_rgba(98,181,245,0.6)] pointer-events-none"
+          style="left: 50%;"></div>
+        <div
+          class="pointer-events-auto absolute top-14 left-1/2 -translate-x-1/2 ut-float-panel px-3 py-1.5 flex items-center gap-3 text-[11px] mono shadow-2xl">
           <span class="text-[#A0ADBD]">L: <strong id="cmp-left-lbl" class="text-[#F4F6F8]">Baseline</strong></span>
           <label for="compare-swipe-range" class="sr-only">Swipe comparison divider</label>
-          <input id="compare-swipe-range" type="range" min="10" max="90" value="50" oninput="updateCompareSwipe(this.value)" class="ct-slider w-24" />
+          <input id="compare-swipe-range" type="range" min="10" max="90" value="50"
+            oninput="updateCompareSwipe(this.value)" class="ct-slider w-24" />
           <span class="text-[#36C2C9]">R: <strong id="cmp-right-lbl" class="text-[#F4F6F8]">Alternate</strong></span>
-          <button type="button" onclick="toggleDeltaRasterMode()" id="btn-delta-raster" class="ct-btn ct-btn-sm py-0.5 text-[10px]">Delta Overlay</button>
-          <button type="button" onclick="toggleComparisonWorkspace(false)" class="ct-btn ct-btn-sm py-0.5 text-[10px] text-[#F16D75]">Exit Compare</button>
+          <button type="button" onclick="toggleDeltaRasterMode()" id="btn-delta-raster"
+            class="ct-btn ct-btn-sm py-0.5 text-[10px]">Delta Overlay</button>
+          <button type="button" onclick="toggleComparisonWorkspace(false)"
+            class="ct-btn ct-btn-sm py-0.5 text-[10px] text-[#F16D75]">Exit Compare</button>
         </div>
       </div>
 
@@ -405,25 +425,31 @@
           <button type="button" onclick="flyToLocation('chembarambakkam')"
             class="px-2 py-0.5 rounded text-[11px] text-[#62B5F5] hover:bg-[#17212D] transition shrink-0">Chembarambakkam</button>
           <span class="border-l border-[#253140] pl-1.5 flex items-center gap-1 shrink-0">
-            <select id="viewpoints-select" onchange="jumpSavedViewpoint(this.value)" aria-label="Saved viewpoints" class="bg-transparent text-[11px] text-[#A0ADBD] outline-none">
+            <select id="viewpoints-select" onchange="jumpSavedViewpoint(this.value)" aria-label="Saved viewpoints"
+              class="bg-transparent text-[11px] text-[#A0ADBD] outline-none">
               <option value="">Viewpoints...</option>
             </select>
-            <button type="button" onclick="saveCurrentViewpoint()" class="px-1.5 py-0.5 rounded text-[10.5px] text-[#36C2C9] hover:bg-[#17212D]" title="Save current camera viewpoint">+View</button>
+            <button type="button" onclick="saveCurrentViewpoint()"
+              class="px-1.5 py-0.5 rounded text-[10.5px] text-[#36C2C9] hover:bg-[#17212D]"
+              title="Save current camera viewpoint">+View</button>
           </span>
         </div>
       </div>
 
       <!-- LIGHTWEIGHT GUIDED DEMONSTRATION TOUR DOCK -->
-      <div id="demo-guide-dock" class="hidden absolute top-14 left-3 z-20 w-72 ut-float-panel p-3 text-xs space-y-2 shadow-2xl">
+      <div id="demo-guide-dock"
+        class="hidden absolute top-14 left-3 z-20 w-72 ut-float-panel p-3 text-xs space-y-2 shadow-2xl">
         <div class="flex items-center justify-between border-b border-[#253140] pb-1.5">
           <span class="ct-label text-[#36C2C9]">Guided Showcase (<span id="demo-step-num">1</span>/13)</span>
-          <button type="button" onclick="toggleDemoTour(false)" class="text-[#738196] hover:text-[#F4F6F8] text-[11px]">Close</button>
+          <button type="button" onclick="toggleDemoTour(false)"
+            class="text-[#738196] hover:text-[#F4F6F8] text-[11px]">Close</button>
         </div>
         <div id="demo-step-title" class="font-medium text-[#F4F6F8]">Loading step...</div>
         <p id="demo-step-desc" class="text-[11px] text-[#A0ADBD] leading-relaxed"></p>
         <div class="flex items-center justify-between pt-1">
           <button type="button" onclick="stepDemoTour(-1)" class="ct-btn ct-btn-sm py-0.5 text-[11px]">Prev</button>
-          <button type="button" onclick="executeDemoStepAction()" class="ct-btn ct-btn-primary ct-btn-sm py-0.5 text-[11px]">Run Step</button>
+          <button type="button" onclick="executeDemoStepAction()"
+            class="ct-btn ct-btn-primary ct-btn-sm py-0.5 text-[11px]">Run Step</button>
           <button type="button" onclick="stepDemoTour(1)" class="ct-btn ct-btn-sm py-0.5 text-[11px]">Next</button>
         </div>
       </div>
@@ -432,15 +458,18 @@
       <div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
         <button id="btn-layers" type="button" onclick="toggleLayerMenu()" aria-expanded="false"
           aria-controls="layer-popover" class="ct-btn ct-btn-sm text-[#62B5F5]">Layers</button>
-        <button id="btn-terrain" type="button" onclick="cycleTerrainExaggeration()" class="ct-btn ct-btn-sm text-[#36C2C9]" title="Cycle Copernicus 3D elevation scale">3D DEM 3x</button>
+        <button id="btn-terrain" type="button" onclick="cycleTerrainExaggeration()"
+          class="ct-btn ct-btn-sm text-[#36C2C9]" title="Cycle Copernicus 3D elevation scale">3D DEM 3x</button>
         <button id="btn-tilt" type="button" onclick="toggle3DPitch()" class="ct-btn ct-btn-sm">3D Pitch</button>
-        <button type="button" onclick="resetNorth()" class="ct-btn ct-btn-sm" title="Align camera due North">North</button>
+        <button type="button" onclick="resetNorth()" class="ct-btn ct-btn-sm"
+          title="Align camera due North">North</button>
         <button type="button" onclick="resetOverview()" class="ct-btn ct-btn-sm">Reset</button>
         <button type="button" onclick="toggleFullscreen()" class="ct-btn ct-btn-sm">Full</button>
       </div>
 
       <!-- LAYER MANAGER POPOVER -->
-      <div id="layer-popover" class="hidden absolute top-3 right-24 z-20 w-68 ut-float-panel p-3 text-xs space-y-1.5 shadow-2xl">
+      <div id="layer-popover"
+        class="hidden absolute top-3 right-24 z-20 w-68 ut-float-panel p-3 text-xs space-y-1.5 shadow-2xl">
         <div class="flex justify-between items-center border-b border-[#253140] pb-1.5">
           <span class="ct-label">Geospatial &amp; Flood Layers</span>
           <button type="button" onclick="toggleLayerMenu()" aria-label="Close layer menu"
@@ -449,34 +478,79 @@
         <div class="space-y-1 pb-1.5 border-b border-[#253140]">
           <div class="flex justify-between items-center text-[11px]">
             <span class="text-[#A0ADBD]">Flood Raster Mode</span>
-            <select id="flood-depth-mode" onchange="updateFloodRasterMode(this.value)" class="bg-[#080B10] border border-[#253140] rounded px-1.5 py-0.5 text-[10.5px] text-[#62B5F5]">
+            <select id="flood-depth-mode" onchange="updateFloodRasterMode(this.value)"
+              class="bg-[#080B10] border border-[#253140] rounded px-1.5 py-0.5 text-[10.5px] text-[#62B5F5]">
               <option value="final" selected>Final Step Depth</option>
               <option value="max">Peak Max Depth</option>
             </select>
           </div>
           <div class="flex justify-between items-center text-[11px] gap-2">
             <label for="flood-opacity-sl" class="text-[#A0ADBD] shrink-0">Overlay Opacity</label>
-            <input id="flood-opacity-sl" type="range" min="0.15" max="0.95" step="0.05" value="0.50" oninput="setFloodOpacity(this.value)" class="ct-slider w-24" />
+            <input id="flood-opacity-sl" type="range" min="0.15" max="0.95" step="0.05" value="0.50"
+              oninput="setFloodOpacity(this.value)" class="ct-slider w-24" />
           </div>
         </div>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Flood Depth Raster</span><input type="checkbox" checked onchange="toggleMapLayer(['flood-raster'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>3D Flood Depth Prisms</span><input type="checkbox" checked onchange="toggleMapLayer(['flood-cells-3d'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Scenario Delta Raster (Alt-Base)</span><input id="chk-delta-layer" type="checkbox" onchange="toggleDeltaRasterMode(this.checked)" class="accent-[#36C2C9]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Exposed Infrastructure Highlight</span><input id="chk-exposure-layer" type="checkbox" onchange="toggleMapLayer(['exposure-buildings-fill','exposure-roads-line'], this.checked)" class="accent-[#F16D75]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Discharge Flow Vectors</span><input type="checkbox" checked onchange="toggleMapLayer(['flow-vectors'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>3D OSM Buildings (18,198)</span><input type="checkbox" checked onchange="toggleMapLayer(['osm-buildings-3d'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Roads &amp; Local Streets</span><input type="checkbox" checked onchange="toggleMapLayer(['roads-major','streets-pilot'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Road Bridges (1,229)</span><input type="checkbox" checked onchange="toggleMapLayer(['osm-bridges'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Waterways &amp; Lakes</span><input type="checkbox" checked onchange="toggleMapLayer(['waterways','waterbodies','waterbodies-outline'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Parks &amp; Wetlands</span><input type="checkbox" checked onchange="toggleMapLayer(['osm-parks'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Watersheds (36)</span><input type="checkbox" checked onchange="toggleMapLayer(['watersheds-line'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>GCC Wards (200)</span><input type="checkbox" onchange="toggleMapLayer(['wards-line'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>CFM-DSS Stations (56)</span><input type="checkbox" checked onchange="toggleMapLayer(['stations-pts'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>WRD Reservoirs (5)</span><input type="checkbox" checked onchange="toggleMapLayer(['reservoir-pts'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Historical Flood Spots (230)</span><input type="checkbox" onchange="toggleMapLayer(['hist-flood-spots'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Copernicus Hillshade</span><input type="checkbox" checked onchange="toggleMapLayer(['dem-hillshade'], this.checked)" class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Flood
+            Depth Raster</span><input type="checkbox" checked onchange="toggleMapLayer(['flood-raster'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>3D
+            Flood Depth Prisms</span><input type="checkbox" checked
+            onchange="toggleMapLayer(['flood-cells-3d'], this.checked)" class="accent-[#62B5F5]" /></label>
+        <label
+          class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Scenario
+            Delta Raster (Alt-Base)</span><input id="chk-delta-layer" type="checkbox"
+            onchange="toggleDeltaRasterMode(this.checked)" class="accent-[#36C2C9]" /></label>
+        <label
+          class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Exposed
+            Infrastructure Highlight</span><input id="chk-exposure-layer" type="checkbox"
+            onchange="toggleMapLayer(['exposure-buildings-fill','exposure-roads-line'], this.checked)"
+            class="accent-[#F16D75]" /></label>
+        <label
+          class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Discharge
+            Flow Vectors</span><input type="checkbox" checked onchange="toggleMapLayer(['flow-vectors'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>3D OSM
+            Buildings (18,198)</span><input type="checkbox" checked
+            onchange="toggleMapLayer(['osm-buildings-3d'], this.checked)" class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Roads
+            &amp; Local Streets</span><input type="checkbox" checked
+            onchange="toggleMapLayer(['roads-major','streets-pilot'], this.checked)" class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Road
+            Bridges (1,229)</span><input type="checkbox" checked
+            onchange="toggleMapLayer(['osm-bridges'], this.checked)" class="accent-[#62B5F5]" /></label>
+        <label
+          class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Waterways
+            &amp; Lakes</span><input type="checkbox" checked
+            onchange="toggleMapLayer(['waterways','waterbodies','waterbodies-outline'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Parks
+            &amp; Wetlands</span><input type="checkbox" checked onchange="toggleMapLayer(['osm-parks'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
+        <label
+          class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Watersheds
+            (36)</span><input type="checkbox" checked onchange="toggleMapLayer(['watersheds-line'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>GCC
+            Wards (200)</span><input type="checkbox" onchange="toggleMapLayer(['wards-line'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
+        <label
+          class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>CFM-DSS
+            Stations (56)</span><input type="checkbox" checked onchange="toggleMapLayer(['stations-pts'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>WRD
+            Reservoirs (5)</span><input type="checkbox" checked
+            onchange="toggleMapLayer(['reservoir-pts'], this.checked)" class="accent-[#62B5F5]" /></label>
+        <label
+          class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Historical
+            Flood Spots (230)</span><input type="checkbox" onchange="toggleMapLayer(['hist-flood-spots'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
+        <label
+          class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Copernicus
+            Hillshade</span><input type="checkbox" checked onchange="toggleMapLayer(['dem-hillshade'], this.checked)"
+            class="accent-[#62B5F5]" /></label>
         <div class="pt-1.5 border-t border-[#253140] text-[10px] text-[#738196] leading-snug">
-          Offline Copernicus 3D Terrarium DEM (150 m grid; bilinear visual resampling, 0x/1x/3x exaggeration). Permanent lakes masked separately.
+          Offline Copernicus 3D Terrarium DEM (150 m grid; bilinear visual resampling, 0x/1x/3x exaggeration). Permanent
+          lakes masked separately.
         </div>
       </div>
 
@@ -529,9 +603,12 @@
     <!-- RIGHT CONTEXTUAL ANALYTICS & ASSET INSPECTOR -->
     <aside id="right-drawer" class="ut-drawer w-[320px] border-l flex flex-col overflow-hidden shrink-0">
       <div class="grid grid-cols-3 border-b border-[#253140] bg-[#080B10] shrink-0 text-[11px] font-medium">
-        <button type="button" onclick="switchRightPanel('outputs')" id="rtab-btn-outputs" class="py-2 text-[#62B5F5] border-b-2 border-[#62B5F5] transition">Outputs</button>
-        <button type="button" onclick="switchRightPanel('exposure')" id="rtab-btn-exposure" class="py-2 text-[#A0ADBD] border-b-2 border-transparent hover:text-[#F4F6F8] transition">Exposure</button>
-        <button type="button" onclick="switchRightPanel('boundaries')" id="rtab-btn-boundaries" class="py-2 text-[#A0ADBD] border-b-2 border-transparent hover:text-[#F4F6F8] transition">Boundaries</button>
+        <button type="button" onclick="switchRightPanel('outputs')" id="rtab-btn-outputs"
+          class="py-2 text-[#62B5F5] border-b-2 border-[#62B5F5] transition">Outputs</button>
+        <button type="button" onclick="switchRightPanel('exposure')" id="rtab-btn-exposure"
+          class="py-2 text-[#A0ADBD] border-b-2 border-transparent hover:text-[#F4F6F8] transition">Exposure</button>
+        <button type="button" onclick="switchRightPanel('boundaries')" id="rtab-btn-boundaries"
+          class="py-2 text-[#A0ADBD] border-b-2 border-transparent hover:text-[#F4F6F8] transition">Boundaries</button>
       </div>
 
       <!-- PANEL 1: OUTPUTS & SPATIAL INSPECTOR -->
@@ -541,11 +618,13 @@
             <h2 class="ct-label">Simulation Outputs</h2>
             <span id="sim-time-ms" class="mono text-[11px] text-[#738196]">-- ms</span>
           </div>
-          <div id="active-scenario-banner" class="text-xs font-medium text-[#F4F6F8] bg-[#111821] border border-[#253140] rounded-md px-2.5 py-1.5">
+          <div id="active-scenario-banner"
+            class="text-xs font-medium text-[#F4F6F8] bg-[#111821] border border-[#253140] rounded-md px-2.5 py-1.5">
             Loading...
           </div>
 
-          <div class="grid grid-cols-2 border border-[#253140] rounded-md bg-[#080B10] divide-x divide-y divide-[#253140] mono">
+          <div
+            class="grid grid-cols-2 border border-[#253140] rounded-md bg-[#080B10] divide-x divide-y divide-[#253140] mono">
             <div class="p-2.5">
               <div class="text-[10.5px] font-sans text-[#738196]">Stored Volume</div>
               <div id="kpi-vol" class="text-sm font-semibold text-[#62B5F5] mt-0.5">-- MCM</div>
@@ -588,14 +667,18 @@
             <h2 class="ct-label">Focus Basins (1.2 km)</h2>
             <span class="text-[10px] mono text-[#738196]">Peak modeled</span>
           </div>
-          <div id="locations-list" class="border border-[#253140] rounded-md divide-y divide-[#253140] bg-[#080B10]"></div>
+          <div id="locations-list" class="border border-[#253140] rounded-md divide-y divide-[#253140] bg-[#080B10]">
+          </div>
         </section>
 
         <!-- SCIENTIFIC SCOPE & UNCERTAINTY DISCLOSURE -->
         <details class="border-t border-[#253140] pt-3 text-[11px] text-[#738196]">
-          <summary class="cursor-pointer font-medium text-[#A0ADBD] hover:text-[#F4F6F8] transition">Scientific Scope &amp; Uncertainty</summary>
+          <summary class="cursor-pointer font-medium text-[#A0ADBD] hover:text-[#F4F6F8] transition">Scientific Scope
+            &amp; Uncertainty</summary>
           <p class="mt-2 leading-relaxed">
-            Hydrological routing runs Landlab OverlandFlow over Copernicus GLO-30 DSM (150 m UTM44N, EGM2008). Depths reflect scenario screening estimates (+/- 0.3–1.2 m DSM rooftop/canopy uncertainty) without physical SWMM drain pipes or field depth gauges. 3D relief applies configurable vertical exaggeration (`3x` default).
+            Hydrological routing runs Landlab OverlandFlow over Copernicus GLO-30 DSM (150 m UTM44N, EGM2008). Depths
+            reflect scenario screening estimates (+/- 0.3–1.2 m DSM rooftop/canopy uncertainty) without physical SWMM
+            drain pipes or field depth gauges. 3D relief applies configurable vertical exaggeration (`3x` default).
           </p>
         </details>
       </div>
@@ -604,42 +687,63 @@
       <div id="rtab-exposure" class="hidden flex-1 overflow-y-auto p-3.5 space-y-3.5">
         <div class="flex items-center justify-between">
           <span class="ct-label text-[#F16D75]">Potential Exposure (UTM44N)</span>
-          <select id="ut-exp-thresh" onchange="refreshActiveExposure()" aria-label="Exposure depth threshold" class="bg-[#080B10] border border-[#253140] rounded px-1.5 py-0.5 text-[11px] mono text-[#62B5F5]">
+          <select id="ut-exp-thresh" onchange="refreshActiveExposure()" aria-label="Exposure depth threshold"
+            class="bg-[#080B10] border border-[#253140] rounded px-1.5 py-0.5 text-[11px] mono text-[#62B5F5]">
             <option value="0.05">&ge; 0.05m</option>
             <option value="0.15" selected>&ge; 0.15m</option>
             <option value="0.30">&ge; 0.30m</option>
             <option value="0.60">&ge; 0.60m</option>
           </select>
         </div>
-        <div class="grid grid-cols-2 border border-[#253140] rounded-md bg-[#080B10] divide-x divide-y divide-[#253140] mono text-xs">
-          <div class="p-2.5"><div class="text-[10px] font-sans text-[#738196]">Exposed Buildings</div><div id="ut-exp-bld" class="text-sm font-semibold text-[#F16D75] mt-0.5">--</div></div>
-          <div class="p-2.5"><div class="text-[10px] font-sans text-[#738196]">Footprint Area</div><div id="ut-exp-area" class="text-sm font-semibold text-[#E9B65C] mt-0.5">-- ha</div></div>
-          <div class="p-2.5"><div class="text-[10px] font-sans text-[#738196]">Exposed Roads</div><div id="ut-exp-road" class="text-sm font-semibold text-[#62B5F5] mt-0.5">-- km</div></div>
-          <div class="p-2.5"><div class="text-[10px] font-sans text-[#738196]">OSM Civic Tags</div><div id="ut-exp-civic" class="text-sm font-semibold text-[#36C2C9] mt-0.5">--</div></div>
+        <div
+          class="grid grid-cols-2 border border-[#253140] rounded-md bg-[#080B10] divide-x divide-y divide-[#253140] mono text-xs">
+          <div class="p-2.5">
+            <div class="text-[10px] font-sans text-[#738196]">Exposed Buildings</div>
+            <div id="ut-exp-bld" class="text-sm font-semibold text-[#F16D75] mt-0.5">--</div>
+          </div>
+          <div class="p-2.5">
+            <div class="text-[10px] font-sans text-[#738196]">Footprint Area</div>
+            <div id="ut-exp-area" class="text-sm font-semibold text-[#E9B65C] mt-0.5">-- ha</div>
+          </div>
+          <div class="p-2.5">
+            <div class="text-[10px] font-sans text-[#738196]">Exposed Roads</div>
+            <div id="ut-exp-road" class="text-sm font-semibold text-[#62B5F5] mt-0.5">-- km</div>
+          </div>
+          <div class="p-2.5">
+            <div class="text-[10px] font-sans text-[#738196]">OSM Civic Tags</div>
+            <div id="ut-exp-civic" class="text-sm font-semibold text-[#36C2C9] mt-0.5">--</div>
+          </div>
         </div>
         <div class="space-y-1.5">
           <div class="ct-label">Highlight on 3D Map</div>
           <div class="grid grid-cols-2 gap-1.5 text-[11px]">
-            <button type="button" onclick="applyExposureHighlight('all')" class="ct-btn ct-btn-sm py-1 text-[#F16D75]">All Exposed</button>
-            <button type="button" onclick="applyExposureHighlight('building')" class="ct-btn ct-btn-sm py-1">Buildings Only</button>
-            <button type="button" onclick="applyExposureHighlight('road')" class="ct-btn ct-btn-sm py-1 text-[#62B5F5]">Roads Only</button>
-            <button type="button" onclick="applyExposureHighlight('clear')" class="ct-btn ct-btn-sm py-1 text-[#738196]">Clear Highlight</button>
+            <button type="button" onclick="applyExposureHighlight('all')"
+              class="ct-btn ct-btn-sm py-1 text-[#F16D75]">All Exposed</button>
+            <button type="button" onclick="applyExposureHighlight('building')" class="ct-btn ct-btn-sm py-1">Buildings
+              Only</button>
+            <button type="button" onclick="applyExposureHighlight('road')"
+              class="ct-btn ct-btn-sm py-1 text-[#62B5F5]">Roads Only</button>
+            <button type="button" onclick="applyExposureHighlight('clear')"
+              class="ct-btn ct-btn-sm py-1 text-[#738196]">Clear Highlight</button>
           </div>
         </div>
         <div id="ut-exp-breakdown" class="space-y-2 text-[11px] mono text-[#A0ADBD]">Loading exposure breakdown...</div>
         <p class="text-[10px] text-[#738196] leading-relaxed border-t border-[#253140] pt-2">
-          Modelled potential exposure on a 150 m grid; does not indicate structural damage, road closure, or monetary loss.
+          Modelled potential exposure on a 150 m grid; does not indicate structural damage, road closure, or monetary
+          loss.
         </p>
       </div>
 
       <!-- PANEL 3: NEIGHBOURHOODS (OFFICIAL WATERSHEDS & GCC WARDS) -->
       <div id="rtab-boundaries" class="hidden flex-1 overflow-y-auto p-3.5 space-y-3">
         <div class="flex items-center justify-between gap-2">
-          <select id="ut-nb-type" onchange="refreshActiveNeighbourhoods()" aria-label="Boundary layer type" class="ct-select text-[11px] py-1 flex-1">
+          <select id="ut-nb-type" onchange="refreshActiveNeighbourhoods()" aria-label="Boundary layer type"
+            class="ct-select text-[11px] py-1 flex-1">
             <option value="watersheds" selected>Watersheds (36)</option>
             <option value="wards">GCC Wards (200)</option>
           </select>
-          <select id="ut-nb-sort" onchange="renderActiveNeighbourhoodRows()" aria-label="Sort neighbourhoods" class="ct-select text-[11px] py-1 flex-1">
+          <select id="ut-nb-sort" onchange="renderActiveNeighbourhoodRows()" aria-label="Sort neighbourhoods"
+            class="ct-select text-[11px] py-1 flex-1">
             <option value="area" selected>Sort: Flood km²</option>
             <option value="pct">Sort: % Flooded</option>
             <option value="buildings">Sort: Buildings</option>
@@ -647,7 +751,8 @@
           </select>
         </div>
         <div id="ut-nb-summary" class="text-[11px] text-[#738196]">Loading official boundary summaries...</div>
-        <div id="ut-nb-list" class="border border-[#253140] rounded-md divide-y divide-[#253140] bg-[#080B10] text-xs"></div>
+        <div id="ut-nb-list" class="border border-[#253140] rounded-md divide-y divide-[#253140] bg-[#080B10] text-xs">
+        </div>
       </div>
     </aside>
   </div>
@@ -1527,7 +1632,7 @@
             map.setTerrain(null);
           }
         }
-      } catch (_) {}
+      } catch (_) { }
     }
 
     function updateFloodRasterMode(mode) {

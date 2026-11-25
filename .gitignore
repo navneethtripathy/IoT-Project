@@ -11,26 +11,33 @@ venv/
 .venv/
 env/
 
-# Environment
+# Environment & Credentials
 .env
+.env.*
+!.env.example
 *.env.local
+*.key
+*.pem
+*_credentials.json
+nodered_cred*.json
 
-# IDE
+# Testing & Coverage
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS, IDE & Temp Exports
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Node
-node_modules/
-package-lock.json
-nodered_runtime/
-.run/
+tmp_*
+*.tmp
+.playwright-mcp/
 
 # Generated data (keep structure, ignore large outputs)
 data/generated/*.csv
@@ -40,11 +47,24 @@ results/plots/*.svg
 results/tables/*.csv
 results/logs/*.log
 
-# Database
+# Node & Runtime Directories
+node_modules/
+package-lock.json
+nodered_runtime/
+.run/
+influxdb_data/
+mosquitto_data/
+
+# Logs
+*.log
+
+# Databases & WAL Artifacts
 *.db
 *.sqlite
 *.sqlite3
-data/*.db
+*.db-wal
+*.db-shm
+data/*.db*
 
 # Docker
 *.pid

@@ -19,34 +19,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import pytest
 from fastapi.testclient import TestClient
 
-from backend import config
-from backend.models import (
-    DataSource,
-    FreshnessState,
-    IngestedTelemetry,
-    NodeAlertPayload,
-    NodeStatusPayload,
-    SensorStatus,
-    TelemetryMessage,
-)
+from backend.models import FreshnessState
 from backend.storage import MemoryStorage
 from backend.ingestion import IngestionService
 from digital_twin.tank_twin import (
     PhysicalTankModel,
     TankGeometry,
-    TankCalibrationResult,
-    create_default_tanks,
     calibrate_drain_down,
-    evaluate_tank_prediction,
     reconstruct_physics_based,
 )
 import random
 from digital_twin.reconstruction import (
-    apply_mask,
-    create_missing_mask,
     linear_interpolation,
     linear_trend_causal,
-    locf,
     run_gap_length_experiment,
 )
 from digital_twin.edge_warning import (
@@ -672,8 +657,6 @@ class TestCausalReconstructionSettingAandB:
         """
         Verify that standard linear interpolation in Setting B relies on future endpoint.
         """
-        from digital_twin.reconstruction import linear_interpolation
-
         series_v1 = [20.0, None, None, 26.0]
         series_v2 = [20.0, None, None, 50.0]
 

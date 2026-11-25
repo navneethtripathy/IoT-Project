@@ -37,7 +37,6 @@ from digital_twin.reconstruction import (
     apply_mask,
     locf,
     linear_interpolation,
-    evaluate_reconstruction,
 )
 from backend import config
 
@@ -219,7 +218,7 @@ def experiment_latency() -> dict:
     messages_sent = 0
     messages_received = 0
 
-    for step_i in range(100):
+    for _step_i in range(100):
         messages = sim.generate_one_step()
         for msg in messages:
             messages_sent += 1
@@ -308,7 +307,6 @@ def experiment_warnings() -> dict:
             zid = d["zone_id"]
             info = zone_warnings[zid]
             true_pct = d["true_level_pct"]
-            obs_pct = d.get("observed_level_pct")
             alert = d["alert_level"]
 
             # Ground truth threshold crossings
@@ -574,8 +572,8 @@ def main():
     # Run all experiments
     recon_results = experiment_reconstruction()
     scenario_results = experiment_scenarios()
-    latency_results = experiment_latency()
-    warning_results = experiment_warnings()
+    experiment_latency()
+    experiment_warnings()
 
     # Generate plots
     generate_plots(recon_results, scenario_results)

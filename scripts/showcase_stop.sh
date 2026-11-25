@@ -6,7 +6,7 @@
 # ==============================================================================
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "$DIR"
+cd "$DIR" || exit 1
 
 echo "Shutting down CivicTwin-R project-owned services..."
 
