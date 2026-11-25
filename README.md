@@ -20,13 +20,15 @@ Urban flash flooding requires integrating sparse environmental monitoring, noisy
 
 ## 2. Visual Overview (Actual Application Screenshots)
 
-| Chennai 3D Urban Flood Digital Twin (`/urban-twin`) | 3D Extruded Buildings & Point Inspector |
+| Obsidian Ocean Overview Hub (`/showcase`) | Chennai 3D Urban Flood Digital Twin (`/urban-twin`) |
 | :---: | :---: |
-| ![Chennai 3D Digital Twin](showcase/screenshots/01_chennai_overview.png) | ![Velachery 3D Buildings and Flood Prisms](showcase/screenshots/02_3d_urban_twin.png) |
-| **Cyclone Michaung Replay & Impact Delta** | **Experimental IoT Tank Twin (`/showcase` Tab 6)** |
-| ![Cyclone Michaung Replay](showcase/screenshots/09_michaung_replay.png) | ![Three.js Experimental Tank Twin](showcase/screenshots/10_experimental_tank_twin.png) |
-| **Node-RED Operational Dashboard (`:1880/ui/`)** | **InfluxDB 2.x Data Explorer (`:8086`)** |
-| ![Node-RED Operational Dashboard](showcase/screenshots/11_nodered_dashboard.png) | ![InfluxDB Data Explorer](showcase/screenshots/11_influxdb_ui.png) |
+| ![Obsidian Ocean Overview Hub](showcase/screenshots/01_showcase_overview.png) | ![Chennai 3D Urban Flood Digital Twin](showcase/screenshots/02_urban_twin_fullscreen.png) |
+| **Velachery 3D Buildings & Point Inspector** | **Cyclone Michaung Replay & Impact Delta** |
+| ![Velachery 3D Buildings and Point Inspector](showcase/screenshots/03_3d_geographical_detail.png) | ![Cyclone Michaung Replay](showcase/screenshots/07_cyclone_michaung_replay.png) |
+| **Experimental IoT Tank Twin (`/showcase` IoT Lab)** | **Node-RED Operational Dashboard (`:1880/ui/`)** |
+| ![Three.js Experimental Tank Twin](showcase/screenshots/09_experimental_iot_lab.png) | ![Node-RED Operational Dashboard](showcase/screenshots/14_nodered_dashboard.png) |
+| **InfluxDB 2.x Data Explorer (`:8086`)** | **Historical Basin Analytics (`/showcase`)** |
+| ![InfluxDB Data Explorer](showcase/screenshots/11_influxdb_ui.png) | ![Chennai Basin Historical Analysis](showcase/screenshots/08_rainfall_reservoir_analytics.png) |
 
 ---
 

@@ -1,0 +1,434 @@
+/* ==========================================================================
+   CivicTwin-R — Obsidian Ocean Design System
+   Shared color, typography, spacing, surface, and motion tokens.
+   100% offline-first: uses native Apple/system sans & monospace stacks.
+   ========================================================================== */
+
+:root {
+  /* Obsidian Ocean Surfaces */
+  --bg-primary: #080B10;
+  --bg-secondary: #0C1118;
+  --bg-elevated: #111821;
+  --bg-interactive: #17212D;
+
+  /* Borders */
+  --border-subtle: #253140;
+  --border-strong: #344050;
+
+  /* Typography Ink */
+  --text-primary: #F4F6F8;
+  --text-secondary: #A0ADBD;
+  --text-muted: #738196;
+
+  /* Accents & Semantics */
+  --accent-glacier: #62B5F5;
+  --accent-teal: #36C2C9;
+  --sem-green: #43C59E;
+  --sem-amber: #E9B65C;
+  --sem-coral: #F16D75;
+
+  /* Typography Families */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Motion System */
+  --ease-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-hover: 180ms;
+  --dur-panel: 260ms;
+  --dur-enter: 380ms;
+}
+
+html {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.mono,
+.tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular-sans {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Typography Hierarchy Tokens */
+.ct-display {
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ct-page-title {
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ct-section-title {
+  font-size: 1rem;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ct-body {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.ct-support {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.ct-label {
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.ct-metric {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ct-caption {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+/* Surface Primitives */
+.ct-surface {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+
+.ct-surface-elevated {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+
+.ct-divider {
+  border-color: var(--border-subtle);
+}
+
+/* Navigation Bar */
+.ct-nav {
+  background-color: rgba(8, 11, 16, 0.88);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(8px);
+  transition: background-color var(--dur-panel) var(--ease-quint), border-color var(--dur-panel) var(--ease-quint);
+}
+
+.ct-nav.is-scrolled {
+  background-color: rgba(12, 17, 24, 0.96);
+  border-bottom-color: var(--border-strong);
+}
+
+.ct-nav-link {
+  position: relative;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.375rem 0.625rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: color var(--dur-hover) var(--ease-quint), background-color var(--dur-hover) var(--ease-quint);
+}
+
+.ct-nav-link:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-interactive);
+}
+
+.ct-nav-link.is-active {
+  color: var(--text-primary);
+  background-color: var(--bg-elevated);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+/* Sub-navigation underline tabs */
+.ct-subtab {
+  position: relative;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.625rem 0.25rem;
+  margin-right: 1.25rem;
+  border-bottom: 2px solid transparent;
+  transition: color var(--dur-hover) var(--ease-quint), border-color var(--dur-hover) var(--ease-quint);
+}
+
+.ct-subtab:hover {
+  color: var(--text-primary);
+}
+
+.ct-subtab.is-active {
+  color: var(--accent-glacier);
+  border-bottom-color: var(--accent-glacier);
+}
+
+/* Buttons */
+.ct-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 0.5rem 0.875rem;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  transition: background-color var(--dur-fast) var(--ease-quint), border-color var(--dur-fast) var(--ease-quint), transform var(--dur-fast) var(--ease-quint);
+}
+
+.ct-btn:hover:not(:disabled) {
+  background-color: var(--bg-interactive);
+  border-color: var(--border-strong);
+}
+
+.ct-btn:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.ct-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ct-btn-primary {
+  background-color: var(--accent-glacier);
+  color: #06090E;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.ct-btn-primary:hover:not(:disabled) {
+  background-color: #7AC2F8;
+  border-color: transparent;
+}
+
+.ct-btn-sm {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.625rem;
+}
+
+/* Inputs & Sliders */
+.ct-input,
+.ct-select {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  padding: 0.4375rem 0.625rem;
+  transition: border-color var(--dur-fast) var(--ease-quint);
+}
+
+.ct-input:hover,
+.ct-select:hover {
+  border-color: var(--border-strong);
+}
+
+.ct-input:focus,
+.ct-select:focus {
+  outline: none;
+  border-color: var(--accent-glacier);
+}
+
+input[type="range"].ct-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-interactive);
+  outline: none;
+}
+
+input[type="range"].ct-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-glacier);
+  border: 2px solid var(--bg-primary);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-quint);
+}
+
+input[type="range"].ct-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Keyboard Focus Accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-glacier);
+  outline-offset: 2px;
+}
+
+/* Table Styling */
+.ct-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.ct-table th {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--bg-secondary);
+}
+
+.ct-table td {
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.ct-table tbody tr {
+  transition: background-color var(--dur-fast) var(--ease-quint);
+}
+
+.ct-table tbody tr:hover {
+  background-color: rgba(23, 33, 45, 0.55);
+}
+
+/* Restraint Semantic Indicators (Non-color-only clarity) */
+.ct-status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ct-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-elevated);
+  color: var(--text-secondary);
+}
+
+/* Subtle Section Entrance */
+.ct-reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity var(--dur-enter) var(--ease-quint), transform var(--dur-enter) var(--ease-quint);
+}
+
+.ct-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Custom Dark Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+/* Tank fill animation */
+.tank-fill {
+  transition: height 500ms var(--ease-quint);
+}
+
+/* MapLibre Popup Override */
+.maplibregl-popup-content {
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  font-size: 12px !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55) !important;
+  max-width: 300px !important;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: var(--bg-elevated) !important;
+}
+
+/* Reduced Motion Respect */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .ct-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
