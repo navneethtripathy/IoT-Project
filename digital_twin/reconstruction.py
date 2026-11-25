@@ -153,7 +153,7 @@ def apply_mask(
     ground_truth: list[float],
     mask: list[bool],
 ) -> list[Optional[float]]:
-    return [None if m else v for v, m in zip(ground_truth, mask)]
+    return [None if m else v for v, m in zip(ground_truth, mask, strict=False)]
 
 
 def evaluate_reconstruction(
@@ -163,7 +163,7 @@ def evaluate_reconstruction(
 ) -> dict:
     """Computes MAE and RMSE strictly on held-out positions."""
     errors = []
-    for gt, recon, is_missing in zip(ground_truth, reconstructed, mask):
+    for gt, recon, is_missing in zip(ground_truth, reconstructed, mask, strict=False):
         if is_missing and recon is not None:
             errors.append(abs(gt - recon))
 

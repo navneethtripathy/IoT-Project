@@ -31,6 +31,7 @@ dependencies = [
     "landlab>=2.8.0,<3.0",
     "osmium>=4.0.0,<5.0",
     "pillow>=10.0.0,<13.0",
+    "reportlab>=4.0.0,<6.0",
     "requests>=2.31.0,<3.0",
 ]
 

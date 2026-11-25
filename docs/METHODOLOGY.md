@@ -24,6 +24,11 @@ $$\frac{\partial h}{\partial t} + \nabla \cdot \mathbf{q} = i_{\text{rain}}(t) +
 | `monitoring_dropout` | `55 mm/hr`, `4h`, `75%` drainage | Evaluates uncertainty (`±35%`) under telemetry gaps |
 | `reservoir_discharge` | `25 mm/hr`, `12h`, `25,000 cusecs` | Chembarambakkam spillway wave down Adyar valley |
 
+### Metric Spatial Exposure & Bounded Sensitivity (`exposure_engine.py`)
+- **Single-Count Vector-Raster Intersection (`EPSG:32644`):** Each building polygon (`18,198`), deduplicated road (`48,769`), and bridge (`1,229`) is intersected in meters against active land cells (`>= threshold_m`, default `0.15 m`) using Shapely `STRtree`. Multi-cell assets are counted at most once and attributed only for overlapping wet footprint area / segment length.
+- **Official Boundary Aggregation:** Evaluates `36` South Chennai watersheds and `200` Greater Chennai Corporation (GCC) wards with explicit domain coverage % separation (`in_computational_domain`) so out-of-domain or perimeter wards are never misrepresented as zero-flooding.
+- **Bounded Parameter Sensitivity:** Executes `3–7` real Landlab 2D OverlandFlow sweeps across user-selected parameter bounds without claiming calibrated probabilistic confidence intervals.
+
 ---
 
 ## 2. Experimental Tank Physics & Parameter Calibration (Workstream B)
@@ -33,6 +38,8 @@ Water depth $h(t)$ inside cylindrical validation tanks (`tank_01`: $H = 50\text{
 $$\frac{dh}{dt} = \frac{Q_{\text{in}}(t) - k\sqrt{h(t)}}{A}$$
 
 Forward trajectories integrate with a fixed-step **4th-Order Runge-Kutta (RK4)** solver ($\Delta t = 1.0\text{ s}$). During unforced drain-down ($Q_{\text{in}} = 0$), exact integration yields $2A(\sqrt{h_0} - \sqrt{h_t}) = k t$, enabling zero-intercept Ordinary Least Squares recovery of $\hat{k}$. On synthetic Gaussian-noise tests ($\sigma = 0.3\text{ cm}$), OLS calibration recovers $\hat{k} = 4.4749$ against true $k = 4.5000$ ($0.56\%$ error, $R^2 = 0.9942$).
+
+Live telemetry window comparison (`evaluate_telemetry_window`) isolates single-device (`tank_01`/`node_01`, `tank_02`/`node_02`) streams and splits across step jumps (`reset_level`) or sampling pauses (`dt > 30 s`), evaluating piecewise causal `dt_i` and `Q_in[i-1]` for both 1-step tracking and open-loop multi-step prediction (`~0.2–0.3 cm` MAE on steady simulator ramps).
 
 ---
 

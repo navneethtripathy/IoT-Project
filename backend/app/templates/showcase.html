@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,59 +21,89 @@
       background-color: #080B10;
       border: 1px solid var(--border-subtle);
     }
+
     @media (max-width: 768px) {
-      #canvas-container { height: 380px; }
+      #canvas-container {
+        height: 380px;
+      }
     }
   </style>
 </head>
+
 <body class="min-h-screen flex flex-col bg-[#080B10] text-[#F4F6F8]">
 
   <!-- UNIFIED STICKY NAVIGATION -->
   <header id="main-navbar" class="ct-nav sticky top-0 z-50">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
       <div class="flex items-center gap-6 min-w-0">
-        <a href="#urbantwin" onclick="switchTab('urbantwin'); return false;" class="flex items-center gap-2.5 shrink-0 text-[#F4F6F8] hover:opacity-90 transition">
+        <a href="#urbantwin" onclick="switchTab('urbantwin'); return false;"
+          class="flex items-center gap-2.5 shrink-0 text-[#F4F6F8] hover:opacity-90 transition">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="#344050" stroke-width="1.5"/>
-            <path d="M5 14.5C7.5 11.5 10.5 11.5 12 13.5C13.5 15.5 16.5 15.5 19 12.5" stroke="#36C2C9" stroke-width="1.75" stroke-linecap="round"/>
-            <path d="M5 10C7.5 7.5 10.5 7.5 12 9.2C13.5 10.9 16.5 10.9 19 8.5" stroke="#62B5F5" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="#344050" stroke-width="1.5" />
+            <path d="M5 14.5C7.5 11.5 10.5 11.5 12 13.5C13.5 15.5 16.5 15.5 19 12.5" stroke="#36C2C9"
+              stroke-width="1.75" stroke-linecap="round" />
+            <path d="M5 10C7.5 7.5 10.5 7.5 12 9.2C13.5 10.9 16.5 10.9 19 8.5" stroke="#62B5F5" stroke-width="1.5"
+              stroke-linecap="round" />
           </svg>
           <span class="font-semibold text-[15px] tracking-tight">CivicTwin-R</span>
         </a>
 
-        <nav class="hidden lg:flex items-center gap-0.5" aria-label="Primary navigation">
-          <button type="button" onclick="switchTab('urbantwin')" data-nav="urbantwin" class="nav-primary ct-nav-link is-active">Overview</button>
-          <a href="/urban-twin" class="ct-nav-link">Urban Twin</a>
-          <button type="button" onclick="switchTab('urbanscenarios')" data-nav="urbanscenarios" class="nav-primary ct-nav-link">Scenarios</button>
-          <button type="button" onclick="switchTab('chennai')" data-nav="chennai" class="nav-primary ct-nav-link">Historical Analysis</button>
-          <button type="button" onclick="switchTab('twin3d')" data-nav="iot" class="nav-primary ct-nav-link">IoT Laboratory</button>
-          <button type="button" onclick="switchTab('twin')" data-nav="research" class="nav-primary ct-nav-link">Research</button>
-          <button type="button" onclick="switchTab('overview')" data-nav="system" class="nav-primary ct-nav-link">System</button>
+        <nav class="hidden lg:flex items-center gap-0.5 whitespace-nowrap" aria-label="Primary navigation">
+          <button type="button" onclick="switchTab('urbantwin')" data-nav="urbantwin"
+            class="nav-primary ct-nav-link px-2.5 text-[12.5px] is-active">Overview</button>
+          <a href="/urban-twin" class="ct-nav-link px-2.5 text-[12.5px]">Urban Explorer</a>
+          <button type="button" onclick="switchTab('urbanscenarios')" data-nav="urbanscenarios"
+            class="nav-primary ct-nav-link px-2.5 text-[12.5px]">Scenarios</button>
+          <button type="button" onclick="switchTab('impact')" data-nav="impact"
+            class="nav-primary ct-nav-link px-2.5 text-[12.5px]">Impact</button>
+          <button type="button" onclick="switchTab('chennai')" data-nav="chennai"
+            class="nav-primary ct-nav-link px-2.5 text-[12.5px]">Historical</button>
+          <button type="button" onclick="switchTab('twin3d')" data-nav="iot"
+            class="nav-primary ct-nav-link px-2.5 text-[12.5px]">IoT Lab</button>
+          <button type="button" onclick="switchTab('twin')" data-nav="research"
+            class="nav-primary ct-nav-link px-2.5 text-[12.5px]">Research</button>
+          <button type="button" onclick="switchTab('overview')" data-nav="system"
+            class="nav-primary ct-nav-link px-2.5 text-[12.5px]">System</button>
+          <button type="button" onclick="switchTab('reports')" data-nav="reports"
+            class="nav-primary ct-nav-link px-2.5 text-[12.5px]">Reports</button>
         </nav>
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-        <div id="clock" class="hidden xl:block text-[11px] mono text-[#738196]"></div>
-        <div class="hidden xl:flex items-center gap-1.5 border-l border-[#253140] pl-3">
-          <a href="http://127.0.0.1:1880/ui" target="_blank" class="ct-btn ct-btn-sm py-1 text-[11px] text-[#A0ADBD]">Node-RED</a>
-          <a href="http://127.0.0.1:8086" target="_blank" class="ct-btn ct-btn-sm py-1 text-[11px] text-[#A0ADBD]">InfluxDB</a>
+        <div id="clock" class="hidden 2xl:block text-[11px] mono text-[#738196] whitespace-nowrap"></div>
+        <div class="hidden xl:flex items-center gap-1.5 border-l border-[#253140] pl-2.5">
+          <a href="http://127.0.0.1:1880/ui" target="_blank"
+            class="ct-btn ct-btn-sm py-1 text-[11px] text-[#A0ADBD]">Node-RED</a>
+          <a href="http://127.0.0.1:8086" target="_blank"
+            class="ct-btn ct-btn-sm py-1 text-[11px] text-[#A0ADBD]">InfluxDB</a>
           <a href="/docs" target="_blank" class="ct-btn ct-btn-sm py-1 text-[11px] text-[#A0ADBD]">API Docs</a>
         </div>
         <a href="/urban-twin" class="ct-btn ct-btn-primary ct-btn-sm whitespace-nowrap">Launch Twin</a>
-        <button id="mobile-nav-btn" type="button" onclick="toggleMobileNav()" aria-expanded="false" aria-controls="mobile-nav-drawer" class="lg:hidden ct-btn ct-btn-sm">Menu</button>
+        <button id="mobile-nav-btn" type="button" onclick="toggleMobileNav()" aria-expanded="false"
+          aria-controls="mobile-nav-drawer" class="lg:hidden ct-btn ct-btn-sm">Menu</button>
       </div>
     </div>
 
     <!-- RESPONSIVE MOBILE MENU -->
     <div id="mobile-nav-drawer" class="hidden lg:hidden border-t border-[#253140] bg-[#0C1118] px-4 py-3 space-y-1">
       <div class="grid grid-cols-2 gap-1.5 text-xs">
-        <button type="button" onclick="switchTab('urbantwin'); toggleMobileNav(false)" class="ct-nav-link text-left">Overview</button>
-        <a href="/urban-twin" class="ct-nav-link text-left">Urban Twin</a>
-        <button type="button" onclick="switchTab('urbanscenarios'); toggleMobileNav(false)" class="ct-nav-link text-left">Scenarios</button>
-        <button type="button" onclick="switchTab('chennai'); toggleMobileNav(false)" class="ct-nav-link text-left">Historical Analysis</button>
-        <button type="button" onclick="switchTab('twin3d'); toggleMobileNav(false)" class="ct-nav-link text-left">IoT Laboratory</button>
-        <button type="button" onclick="switchTab('twin'); toggleMobileNav(false)" class="ct-nav-link text-left">Research</button>
-        <button type="button" onclick="switchTab('overview'); toggleMobileNav(false)" class="ct-nav-link text-left">System</button>
+        <button type="button" onclick="switchTab('urbantwin'); toggleMobileNav(false)"
+          class="ct-nav-link text-left">Overview</button>
+        <a href="/urban-twin" class="ct-nav-link text-left">Urban Explorer</a>
+        <button type="button" onclick="switchTab('urbanscenarios'); toggleMobileNav(false)"
+          class="ct-nav-link text-left">Scenarios</button>
+        <button type="button" onclick="switchTab('impact'); toggleMobileNav(false)" class="ct-nav-link text-left">Impact
+          Intelligence</button>
+        <button type="button" onclick="switchTab('chennai'); toggleMobileNav(false)"
+          class="ct-nav-link text-left">Historical Replay</button>
+        <button type="button" onclick="switchTab('twin3d'); toggleMobileNav(false)" class="ct-nav-link text-left">IoT
+          Lab</button>
+        <button type="button" onclick="switchTab('twin'); toggleMobileNav(false)"
+          class="ct-nav-link text-left">Research</button>
+        <button type="button" onclick="switchTab('overview'); toggleMobileNav(false)"
+          class="ct-nav-link text-left">System</button>
+        <button type="button" onclick="switchTab('reports'); toggleMobileNav(false)"
+          class="ct-nav-link text-left">Reports &amp; Demo</button>
         <a href="http://127.0.0.1:1880/ui" target="_blank" class="ct-nav-link text-left">Node-RED</a>
         <a href="http://127.0.0.1:8086" target="_blank" class="ct-nav-link text-left">InfluxDB</a>
         <a href="/docs" target="_blank" class="ct-nav-link text-left">API Docs</a>
@@ -83,25 +114,38 @@
     <div id="subnav-bar" class="hidden border-t border-[#253140] bg-[#0C1118]">
       <div class="max-w-[1400px] mx-auto px-4 sm:px-6 flex items-center overflow-x-auto whitespace-nowrap">
         <div id="subnav-iot" class="subnav-group hidden flex items-center">
-          <button type="button" onclick="switchTab('twin3d')" class="tab-btn ct-subtab" data-tab="twin3d">3D Tank Laboratory</button>
-          <button type="button" onclick="switchTab('nodes')" class="tab-btn ct-subtab" data-tab="nodes">Dual-Node Telemetry</button>
-          <button type="button" onclick="switchTab('scenarios')" class="tab-btn ct-subtab" data-tab="scenarios">Showcase Laboratory</button>
+          <button type="button" onclick="switchTab('twin3d')" class="tab-btn ct-subtab" data-tab="twin3d">3D Tank
+            Laboratory</button>
+          <button type="button" onclick="switchTab('nodes')" class="tab-btn ct-subtab" data-tab="nodes">Dual-Node
+            Telemetry</button>
+          <button type="button" onclick="switchTab('scenarios')" class="tab-btn ct-subtab" data-tab="scenarios">Showcase
+            Laboratory</button>
         </div>
         <div id="subnav-research" class="subnav-group hidden flex items-center">
-          <button type="button" onclick="switchTab('twin')" class="tab-btn ct-subtab" data-tab="twin">Digital Twin ODE</button>
-          <button type="button" onclick="switchTab('reconstruction')" class="tab-btn ct-subtab" data-tab="reconstruction">Missing-Data Reconstruction</button>
-          <button type="button" onclick="switchTab('reliability')" class="tab-btn ct-subtab" data-tab="reliability">Freshness &amp; Hysteresis</button>
-          <button type="button" onclick="switchTab('benchmarks')" class="tab-btn ct-subtab" data-tab="benchmarks">Benchmarks</button>
+          <button type="button" onclick="switchTab('twin')" class="tab-btn ct-subtab" data-tab="twin">Digital Twin
+            ODE</button>
+          <button type="button" onclick="switchTab('reconstruction')" class="tab-btn ct-subtab"
+            data-tab="reconstruction">Missing-Data Reconstruction</button>
+          <button type="button" onclick="switchTab('reliability')" class="tab-btn ct-subtab"
+            data-tab="reliability">Freshness &amp; Hysteresis</button>
+          <button type="button" onclick="switchTab('benchmarks')" class="tab-btn ct-subtab"
+            data-tab="benchmarks">Benchmarks</button>
         </div>
         <div id="subnav-system" class="subnav-group hidden flex items-center">
-          <button type="button" onclick="switchTab('overview')" class="tab-btn ct-subtab" data-tab="overview">System Topology</button>
-          <button type="button" onclick="switchTab('database')" class="tab-btn ct-subtab" data-tab="database">Database Explorer</button>
-          <button type="button" onclick="switchTab('mqtt')" class="tab-btn ct-subtab" data-tab="mqtt">MQTT Streamer</button>
+          <button type="button" onclick="switchTab('overview')" class="tab-btn ct-subtab" data-tab="overview">System
+            Topology</button>
+          <button type="button" onclick="switchTab('database')" class="tab-btn ct-subtab" data-tab="database">Database
+            Explorer</button>
+          <button type="button" onclick="switchTab('mqtt')" class="tab-btn ct-subtab" data-tab="mqtt">MQTT
+            Streamer</button>
         </div>
         <!-- Hidden alias buttons preserving direct selector stability -->
-        <button type="button" onclick="switchTab('urbantwin')" class="tab-btn hidden" data-tab="urbantwin">Overview</button>
-        <button type="button" onclick="switchTab('urbanscenarios')" class="tab-btn hidden" data-tab="urbanscenarios">Scenarios</button>
-        <button type="button" onclick="switchTab('chennai')" class="tab-btn hidden" data-tab="chennai">Chennai Basin</button>
+        <button type="button" onclick="switchTab('urbantwin')" class="tab-btn hidden"
+          data-tab="urbantwin">Overview</button>
+        <button type="button" onclick="switchTab('urbanscenarios')" class="tab-btn hidden"
+          data-tab="urbanscenarios">Scenarios</button>
+        <button type="button" onclick="switchTab('chennai')" class="tab-btn hidden" data-tab="chennai">Chennai
+          Basin</button>
       </div>
     </div>
   </header>
@@ -122,14 +166,17 @@
               <span class="text-[#A0ADBD]">Anticipate the water.</span>
             </h1>
             <p class="ct-body max-w-lg">
-              A geospatial environment for resilient urban monitoring and flood scenario analysis, pairing Copernicus GLO-30 terrain routing with an isolated cyber-physical sensor laboratory.
+              A geospatial environment for resilient urban monitoring and flood scenario analysis, pairing Copernicus
+              GLO-30 terrain routing with an isolated cyber-physical sensor laboratory.
             </p>
           </div>
 
           <div class="flex flex-wrap items-center gap-3">
             <a href="/urban-twin" class="ct-btn ct-btn-primary px-4 py-2.5">Open 3D Urban Twin</a>
-            <button type="button" onclick="switchTab('urbanscenarios')" class="ct-btn px-4 py-2.5">Inspect Scenarios</button>
-            <button type="button" onclick="switchTab('chennai')" class="ct-btn px-4 py-2.5 text-[#A0ADBD]">Historical Datasets</button>
+            <button type="button" onclick="switchTab('urbanscenarios')" class="ct-btn px-4 py-2.5">Inspect
+              Scenarios</button>
+            <button type="button" onclick="switchTab('chennai')" class="ct-btn px-4 py-2.5 text-[#A0ADBD]">Historical
+              Datasets</button>
           </div>
 
           <!-- Hairline Spatial Output Figures (No card soup) -->
@@ -158,17 +205,23 @@
           <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
             <div class="flex items-center gap-1.5 overflow-x-auto">
               <span class="ct-label pr-1">Fly To</span>
-              <button type="button" onclick="flyUrbanIframe('velachery')" class="ct-btn ct-btn-sm py-1 text-[11px]">Velachery</button>
-              <button type="button" onclick="flyUrbanIframe('pallikaranai')" class="ct-btn ct-btn-sm py-1 text-[11px]">Pallikaranai</button>
-              <button type="button" onclick="flyUrbanIframe('adyar')" class="ct-btn ct-btn-sm py-1 text-[11px]">Adyar</button>
-              <button type="button" onclick="flyUrbanIframe('saidapet')" class="ct-btn ct-btn-sm py-1 text-[11px]">Saidapet</button>
-              <button type="button" onclick="flyUrbanIframe('chembarambakkam')" class="ct-btn ct-btn-sm py-1 text-[11px]">Chembarambakkam</button>
+              <button type="button" onclick="flyUrbanIframe('velachery')"
+                class="ct-btn ct-btn-sm py-1 text-[11px]">Velachery</button>
+              <button type="button" onclick="flyUrbanIframe('pallikaranai')"
+                class="ct-btn ct-btn-sm py-1 text-[11px]">Pallikaranai</button>
+              <button type="button" onclick="flyUrbanIframe('adyar')"
+                class="ct-btn ct-btn-sm py-1 text-[11px]">Adyar</button>
+              <button type="button" onclick="flyUrbanIframe('saidapet')"
+                class="ct-btn ct-btn-sm py-1 text-[11px]">Saidapet</button>
+              <button type="button" onclick="flyUrbanIframe('chembarambakkam')"
+                class="ct-btn ct-btn-sm py-1 text-[11px]">Chembarambakkam</button>
             </div>
             <a href="/urban-twin" class="text-[11px] mono text-[#62B5F5] hover:underline">Full Screen &rarr;</a>
           </div>
 
           <div class="relative rounded-lg overflow-hidden border border-[#253140] bg-[#0C1118]" style="height: 520px;">
-            <iframe id="urban-twin-frame" title="Chennai 3D Urban Digital Twin Interactive Canvas" src="/urban-twin" class="w-full h-full border-0"></iframe>
+            <iframe id="urban-twin-frame" title="Chennai 3D Urban Digital Twin Interactive Canvas" src="/urban-twin"
+              class="w-full h-full border-0"></iframe>
           </div>
         </div>
       </div>
@@ -190,15 +243,18 @@
             <span class="text-[#A0ADBD]">SQLite <span id="storage-text" class="text-[#F4F6F8]">checking...</span></span>
           </div>
           <div id="status-influx" class="flex items-center gap-2">
-            <a href="http://127.0.0.1:8086" target="_blank" class="flex items-center gap-2 hover:text-[#62B5F5] transition">
+            <a href="http://127.0.0.1:8086" target="_blank"
+              class="flex items-center gap-2 hover:text-[#62B5F5] transition">
               <span id="influx-dot" class="ct-status-dot bg-[#738196]"></span>
               <span class="text-[#A0ADBD]">InfluxDB <span id="influx-text" class="text-[#F4F6F8]">:8086</span></span>
             </a>
           </div>
           <div id="status-nodered" class="flex items-center gap-2">
-            <a href="http://127.0.0.1:1880/ui" target="_blank" class="flex items-center gap-2 hover:text-[#62B5F5] transition">
+            <a href="http://127.0.0.1:1880/ui" target="_blank"
+              class="flex items-center gap-2 hover:text-[#62B5F5] transition">
               <span id="nodered-dot" class="ct-status-dot bg-[#738196]"></span>
-              <span class="text-[#A0ADBD]">Node-RED <span id="nodered-text" class="text-[#F4F6F8]">:1880/ui</span></span>
+              <span class="text-[#A0ADBD]">Node-RED <span id="nodered-text"
+                  class="text-[#F4F6F8]">:1880/ui</span></span>
             </a>
           </div>
         </div>
@@ -210,11 +266,13 @@
           <div class="ct-label">Architectural Separation</div>
           <h2 class="ct-page-title">Two decoupled research workstreams</h2>
           <p class="ct-support">
-            Urban hydrological scenario screening remains strictly isolated from synthetic ultrasonic laboratory tank telemetry so simulated bench signals are never misattributed as Chennai street sensors.
+            Urban hydrological scenario screening remains strictly isolated from synthetic ultrasonic laboratory tank
+            telemetry so simulated bench signals are never misattributed as Chennai street sensors.
           </p>
           <div class="pt-2 flex flex-wrap gap-2">
             <button type="button" onclick="switchTab('twin3d')" class="ct-btn ct-btn-sm">Inspect IoT Tank Twin</button>
-            <button type="button" onclick="switchTab('reconstruction')" class="ct-btn ct-btn-sm">Reconstruction Study</button>
+            <button type="button" onclick="switchTab('reconstruction')" class="ct-btn ct-btn-sm">Reconstruction
+              Study</button>
           </div>
         </div>
 
@@ -223,7 +281,8 @@
             <div class="ct-label text-[#62B5F5]">Workstream A · Geospatial Hydrology</div>
             <h3 class="ct-section-title">South Chennai 2D OverlandFlow</h3>
             <p class="ct-support">
-              Executes de Almeida shallow-water routing on a 150 m UTM 44N Copernicus GLO-30 terrain grid paired with 18,198 extruded OSM buildings, 465 official waterways, and 56 verified CFM-DSS stations.
+              Executes de Almeida shallow-water routing on a 150 m UTM 44N Copernicus GLO-30 terrain grid paired with
+              18,198 extruded OSM buildings, 465 official waterways, and 56 verified CFM-DSS stations.
             </p>
             <div class="mono text-[11px] text-[#738196] pt-1">Global mass-balance residual &le; 0.1503%</div>
           </div>
@@ -232,7 +291,8 @@
             <div class="ct-label text-[#36C2C9]">Workstream B · Virtual IoT Validation</div>
             <h3 class="ct-section-title">Dual-Node MQTT &amp; RK4 Bench Twin</h3>
             <p class="ct-support">
-              Streams simulated ultrasonic telemetry across Mosquitto QoS 1, Node-RED, SQLite WAL, and InfluxDB 2.x to evaluate freshness transitions, edge hysteresis, and zero-leakage RK4 gap recovery.
+              Streams simulated ultrasonic telemetry across Mosquitto QoS 1, Node-RED, SQLite WAL, and InfluxDB 2.x to
+              evaluate freshness transitions, edge hysteresis, and zero-leakage RK4 gap recovery.
             </p>
             <div class="mono text-[11px] text-[#738196] pt-1">Source provenance tagged PYTHON_SIMULATED</div>
           </div>
@@ -240,8 +300,10 @@
       </div>
 
       <!-- SCIENTIFIC SCOPE DISCLOSURE FOOTER -->
-      <footer class="pt-4 border-t border-[#253140] flex flex-wrap items-center justify-between gap-4 text-xs text-[#738196]">
-        <span>Academic research and scenario screening tool only. Copernicus 150 m DSM omits bare-earth LiDAR and subsurface SWMM drainage pipes; not validated for emergency flood alerts.</span>
+      <footer
+        class="pt-4 border-t border-[#253140] flex flex-wrap items-center justify-between gap-4 text-xs text-[#738196]">
+        <span>Academic research and scenario screening tool only. Copernicus 150 m DSM omits bare-earth LiDAR and
+          subsurface SWMM drainage pipes; not validated for emergency flood alerts.</span>
         <span class="mono">Team #5 · MIT License</span>
       </footer>
     </section>
@@ -288,7 +350,8 @@
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-[#738196]">
-        <span>Modeled screening depth over 150 m Copernicus GLO-30 DSM (no physical SWMM pipe network or field depth calibration).</span>
+        <span>Modeled screening depth over 150 m Copernicus GLO-30 DSM (no physical SWMM pipe network or field depth
+          calibration).</span>
         <span class="mono text-[#36C2C9]">LANDLAB_2D_OVERLANDFLOW</span>
       </div>
     </section>
@@ -299,10 +362,12 @@
         <div>
           <div class="ct-label">TN CFM-DSS · WRD · ERA5 / IMD Calibrated</div>
           <h2 class="ct-page-title mt-1">Chennai Basin &amp; Catchment Historical Analysis</h2>
-          <p class="ct-support mt-1">Preserved rainfall records, WRD reservoir capacities, and observed Cyclone Michaung precipitation time-series.</p>
+          <p class="ct-support mt-1">Preserved rainfall records, WRD reservoir capacities, and observed Cyclone Michaung
+            precipitation time-series.</p>
         </div>
         <div class="flex items-center gap-2">
-          <button type="button" onclick="controlReplay('start')" class="ct-btn ct-btn-sm text-[#36C2C9]">Start Replay Stream</button>
+          <button type="button" onclick="controlReplay('start')" class="ct-btn ct-btn-sm text-[#36C2C9]">Start Replay
+            Stream</button>
           <button type="button" onclick="controlReplay('stop')" class="ct-btn ct-btn-sm">Stop</button>
         </div>
       </div>
@@ -313,7 +378,9 @@
           <div class="ct-label">Spatial Separation Rule</div>
           <div class="ct-metric text-xl text-[#F4F6F8]">56 Pins · 13 ARG Basins</div>
           <p class="ct-support text-xs">
-            Only the 56 CFM-DSS WFS stations with official WGS84 coordinates plot on the 3D map. The 328-row <span class="mono text-[#62B5F5]">chennai_arg_rainfall.csv</span> corpus has no coordinates and remains segregated in the table below.
+            Only the 56 CFM-DSS WFS stations with official WGS84 coordinates plot on the 3D map. The 328-row <span
+              class="mono text-[#62B5F5]">chennai_arg_rainfall.csv</span> corpus has no coordinates and remains
+            segregated in the table below.
           </p>
         </div>
         <div class="space-y-1.5">
@@ -324,7 +391,8 @@
           <div class="ct-label">Cyclone Michaung (Dec 1–6, 2023)</div>
           <div id="michaung-summary-stat" class="ct-metric text-xl text-[#36C2C9]">144 Hourly Obs</div>
           <p class="ct-support text-xs">
-            Observed precipitation series driving historical replay forcing without fabricating hydrological gauge stages.
+            Observed precipitation series driving historical replay forcing without fabricating hydrological gauge
+            stages.
           </p>
         </div>
       </div>
@@ -363,17 +431,22 @@
         <div>
           <div class="ct-label">Cyber-Physical Messaging &amp; Persistence</div>
           <h2 class="ct-page-title mt-1">IoT System Topology &amp; Runtime Health</h2>
-          <p class="ct-support mt-1">Local macOS stack linking virtual ultrasonic bench nodes through Mosquitto MQTT, IngestionService, SQLite WAL, and InfluxDB 2.x.</p>
+          <p class="ct-support mt-1">Local macOS stack linking virtual ultrasonic bench nodes through Mosquitto MQTT,
+            IngestionService, SQLite WAL, and InfluxDB 2.x.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <button type="button" onclick="triggerShowcaseScenario('normal')" class="ct-btn ct-btn-sm text-[#43C59E]">Run Normal Baseline</button>
-          <button type="button" onclick="triggerShowcaseScenario('heavy_surge')" class="ct-btn ct-btn-sm text-[#E9B65C]">Inject Inflow Surge</button>
-          <button type="button" onclick="triggerShowcaseScenario('critical_inundation')" class="ct-btn ct-btn-sm text-[#F16D75]">Trigger Critical Breach</button>
+          <button type="button" onclick="triggerShowcaseScenario('normal')" class="ct-btn ct-btn-sm text-[#43C59E]">Run
+            Normal Baseline</button>
+          <button type="button" onclick="triggerShowcaseScenario('heavy_surge')"
+            class="ct-btn ct-btn-sm text-[#E9B65C]">Inject Inflow Surge</button>
+          <button type="button" onclick="triggerShowcaseScenario('critical_inundation')"
+            class="ct-btn ct-btn-sm text-[#F16D75]">Trigger Critical Breach</button>
         </div>
       </div>
 
       <!-- Clean Hairline 5-Tier Pipeline Matrix -->
-      <div class="ct-surface grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-[#253140] mono text-xs">
+      <div
+        class="ct-surface grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-[#253140] mono text-xs">
         <div class="p-4 space-y-1">
           <div class="ct-label text-[#62B5F5]">Tier 1 · Sensing</div>
           <div class="font-sans font-semibold text-[#F4F6F8] text-sm">Node 01 &amp; Node 02</div>
@@ -402,7 +475,8 @@
       </div>
 
       <!-- Live Counters -->
-      <div class="grid grid-cols-2 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y md:divide-y-0 divide-[#253140] mono">
+      <div
+        class="grid grid-cols-2 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y md:divide-y-0 divide-[#253140] mono">
         <div class="p-4">
           <div class="text-xs font-sans text-[#738196]">Telemetry Stored</div>
           <div id="metric-stored" class="text-2xl font-semibold text-[#F4F6F8] mt-1">--</div>
@@ -429,7 +503,8 @@
       <div class="ct-surface p-4 space-y-3">
         <div class="ct-label">Recent Edge Alerts &amp; State Transitions</div>
         <div id="alerts-container" class="divide-y divide-[#253140] text-xs mono">
-          <div class="text-[#738196] py-4 text-center font-sans">No active alerts triggered. Monitored nodes nominal.</div>
+          <div class="text-[#738196] py-4 text-center font-sans">No active alerts triggered. Monitored nodes nominal.
+          </div>
         </div>
       </div>
     </section>
@@ -440,12 +515,16 @@
         <div>
           <div class="ct-label">Virtual Laboratory Nodes · PYTHON_SIMULATED</div>
           <h2 class="ct-page-title mt-1">Dual-Node Telemetry &amp; Fault Isolation</h2>
-          <p class="ct-support mt-1">Independent simulated ultrasonic sensors running Torricelli tank physics with isolated link testing.</p>
+          <p class="ct-support mt-1">Independent simulated ultrasonic sensors running Torricelli tank physics with
+            isolated link testing.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2 text-xs">
-          <button type="button" onclick="controlNode('node_01', 'disconnect')" class="ct-btn ct-btn-sm text-[#F16D75]">Disconnect Node 1</button>
-          <button type="button" onclick="controlNode('node_01', 'reconnect')" class="ct-btn ct-btn-sm text-[#43C59E]">Reconnect Node 1</button>
-          <button type="button" onclick="controlNode('both', 'reconnect')" class="ct-btn ct-btn-sm">Reconnect Both</button>
+          <button type="button" onclick="controlNode('node_01', 'disconnect')"
+            class="ct-btn ct-btn-sm text-[#F16D75]">Disconnect Node 1</button>
+          <button type="button" onclick="controlNode('node_01', 'reconnect')"
+            class="ct-btn ct-btn-sm text-[#43C59E]">Reconnect Node 1</button>
+          <button type="button" onclick="controlNode('both', 'reconnect')" class="ct-btn ct-btn-sm">Reconnect
+            Both</button>
         </div>
       </div>
 
@@ -462,20 +541,28 @@
 
           <div class="grid grid-cols-12 gap-5 items-center">
             <div class="col-span-4 flex flex-col items-center">
-              <div class="w-20 h-44 rounded-md bg-[#080B10] border border-[#344050] relative overflow-hidden flex flex-col justify-end p-1">
-                <div class="absolute w-full border-t border-dashed border-[#F16D75] top-[15%] left-0 z-10" title="85% Critical"></div>
-                <div class="absolute w-full border-t border-dashed border-[#E9B65C] top-[30%] left-0 z-10" title="70% Warning"></div>
+              <div
+                class="w-20 h-44 rounded-md bg-[#080B10] border border-[#344050] relative overflow-hidden flex flex-col justify-end p-1">
+                <div class="absolute w-full border-t border-dashed border-[#F16D75] top-[15%] left-0 z-10"
+                  title="85% Critical"></div>
+                <div class="absolute w-full border-t border-dashed border-[#E9B65C] top-[30%] left-0 z-10"
+                  title="70% Warning"></div>
                 <div id="tank1-fill" class="tank-fill w-full bg-[#62B5F5]/85 rounded-sm" style="height: 30%;"></div>
               </div>
               <div class="mono text-[10.5px] text-[#738196] mt-2">50.0 cm max</div>
             </div>
 
             <div class="col-span-8 divide-y divide-[#253140] mono text-xs">
-              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Water Height</span><span id="node1-level-cm" class="text-base font-semibold text-[#F4F6F8]">-- cm</span></div>
-              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Fill Ratio</span><span id="node1-level-pct" class="text-base font-semibold text-[#62B5F5]">-- %</span></div>
-              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Ullage Distance</span><span id="node1-dist-cm" class="text-[#A0ADBD]">-- cm</span></div>
-              <div class="py-2 flex justify-between items-center"><span class="text-[#738196] font-sans">Edge Alert</span><span id="node1-alert" class="ct-tag">NORMAL</span></div>
-              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Sequence / Age</span><span id="node1-seq" class="text-[#A0ADBD]">seq=-- | age=0s</span></div>
+              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Water Height</span><span
+                  id="node1-level-cm" class="text-base font-semibold text-[#F4F6F8]">-- cm</span></div>
+              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Fill Ratio</span><span
+                  id="node1-level-pct" class="text-base font-semibold text-[#62B5F5]">-- %</span></div>
+              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Ullage Distance</span><span
+                  id="node1-dist-cm" class="text-[#A0ADBD]">-- cm</span></div>
+              <div class="py-2 flex justify-between items-center"><span class="text-[#738196] font-sans">Edge
+                  Alert</span><span id="node1-alert" class="ct-tag">NORMAL</span></div>
+              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Sequence / Age</span><span
+                  id="node1-seq" class="text-[#A0ADBD]">seq=-- | age=0s</span></div>
             </div>
           </div>
 
@@ -498,20 +585,28 @@
 
           <div class="grid grid-cols-12 gap-5 items-center">
             <div class="col-span-4 flex flex-col items-center">
-              <div class="w-20 h-44 rounded-md bg-[#080B10] border border-[#344050] relative overflow-hidden flex flex-col justify-end p-1">
-                <div class="absolute w-full border-t border-dashed border-[#F16D75] top-[15%] left-0 z-10" title="85% Critical"></div>
-                <div class="absolute w-full border-t border-dashed border-[#E9B65C] top-[30%] left-0 z-10" title="70% Warning"></div>
+              <div
+                class="w-20 h-44 rounded-md bg-[#080B10] border border-[#344050] relative overflow-hidden flex flex-col justify-end p-1">
+                <div class="absolute w-full border-t border-dashed border-[#F16D75] top-[15%] left-0 z-10"
+                  title="85% Critical"></div>
+                <div class="absolute w-full border-t border-dashed border-[#E9B65C] top-[30%] left-0 z-10"
+                  title="70% Warning"></div>
                 <div id="tank2-fill" class="tank-fill w-full bg-[#36C2C9]/85 rounded-sm" style="height: 30%;"></div>
               </div>
               <div class="mono text-[10.5px] text-[#738196] mt-2">60.0 cm max</div>
             </div>
 
             <div class="col-span-8 divide-y divide-[#253140] mono text-xs">
-              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Water Height</span><span id="node2-level-cm" class="text-base font-semibold text-[#F4F6F8]">-- cm</span></div>
-              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Fill Ratio</span><span id="node2-level-pct" class="text-base font-semibold text-[#36C2C9]">-- %</span></div>
-              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Ullage Distance</span><span id="node2-dist-cm" class="text-[#A0ADBD]">-- cm</span></div>
-              <div class="py-2 flex justify-between items-center"><span class="text-[#738196] font-sans">Edge Alert</span><span id="node2-alert" class="ct-tag">NORMAL</span></div>
-              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Sequence / Age</span><span id="node2-seq" class="text-[#A0ADBD]">seq=-- | age=0s</span></div>
+              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Water Height</span><span
+                  id="node2-level-cm" class="text-base font-semibold text-[#F4F6F8]">-- cm</span></div>
+              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Fill Ratio</span><span
+                  id="node2-level-pct" class="text-base font-semibold text-[#36C2C9]">-- %</span></div>
+              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Ullage Distance</span><span
+                  id="node2-dist-cm" class="text-[#A0ADBD]">-- cm</span></div>
+              <div class="py-2 flex justify-between items-center"><span class="text-[#738196] font-sans">Edge
+                  Alert</span><span id="node2-alert" class="ct-tag">NORMAL</span></div>
+              <div class="py-2 flex justify-between"><span class="text-[#738196] font-sans">Sequence / Age</span><span
+                  id="node2-seq" class="text-[#A0ADBD]">seq=-- | age=0s</span></div>
             </div>
           </div>
 
@@ -530,49 +625,71 @@
         <div>
           <div class="ct-label text-[#36C2C9]">Virtual Bench Simulation · PYTHON_SIMULATED · Not Physical Hardware</div>
           <h2 class="ct-page-title mt-1">Experimental IoT Tank Digital Twin</h2>
-          <p class="ct-support mt-1">Synchronized Three.js model driven by live MQTT packets for validating ODE physics, hysteresis thresholds, and telemetry dropouts.</p>
+          <p class="ct-support mt-1">Synchronized Three.js model driven by live MQTT packets for validating ODE physics,
+            hysteresis thresholds, and telemetry dropouts.</p>
         </div>
         <div class="flex items-center gap-2 text-xs">
           <button type="button" onclick="reset3DCamera()" class="ct-btn ct-btn-sm">Reset Camera</button>
           <button type="button" onclick="set3DView('front')" class="ct-btn ct-btn-sm">Front Elevation</button>
           <button type="button" onclick="set3DView('top')" class="ct-btn ct-btn-sm">Top Plan</button>
-          <button type="button" onclick="toggle3DFullscreen()" class="ct-btn ct-btn-sm text-[#62B5F5]">Fullscreen</button>
+          <button type="button" onclick="toggle3DFullscreen()"
+            class="ct-btn ct-btn-sm text-[#62B5F5]">Fullscreen</button>
         </div>
       </div>
 
       <div id="canvas-container">
         <div id="three-canvas" class="w-full h-full"></div>
 
-        <div class="absolute top-3.5 left-3.5 px-3 py-2.5 rounded-md bg-[#0C1118]/92 border border-[#253140] mono text-xs pointer-events-none space-y-1">
+        <div
+          class="absolute top-3.5 left-3.5 px-3 py-2.5 rounded-md bg-[#0C1118]/92 border border-[#253140] mono text-xs pointer-events-none space-y-1">
           <div class="flex items-center gap-2 font-medium text-[#62B5F5]">
             <span class="ct-status-dot bg-[#62B5F5]"></span>
             <span>Tank 1 · Virtual Node 01</span>
           </div>
-          <div class="text-[#F4F6F8]">Level <span id="hud-tank1-level" class="font-semibold">-- cm</span> <span class="text-[#62B5F5]">(<span id="hud-tank1-pct">--%</span>)</span></div>
-          <div class="text-[11px] text-[#738196]">Dia 19.54 cm · Max 50.0 cm · <span id="hud-tank1-inflow">25.0 cm³/s</span></div>
+          <div class="text-[#F4F6F8]">Level <span id="hud-tank1-level" class="font-semibold">-- cm</span> <span
+              class="text-[#62B5F5]">(<span id="hud-tank1-pct">--%</span>)</span></div>
+          <div class="text-[11px] text-[#738196]">Dia 19.54 cm · Max 50.0 cm · <span id="hud-tank1-inflow">25.0
+              cm³/s</span></div>
           <div><span id="hud-tank1-alert" class="ct-tag text-[10px]">NORMAL</span></div>
         </div>
 
-        <div class="absolute top-3.5 right-3.5 px-3 py-2.5 rounded-md bg-[#0C1118]/92 border border-[#253140] mono text-xs pointer-events-none space-y-1 text-right">
+        <div
+          class="absolute top-3.5 right-3.5 px-3 py-2.5 rounded-md bg-[#0C1118]/92 border border-[#253140] mono text-xs pointer-events-none space-y-1 text-right">
           <div class="flex items-center justify-end gap-2 font-medium text-[#36C2C9]">
             <span>Tank 2 · Virtual Node 02</span>
             <span class="ct-status-dot bg-[#36C2C9]"></span>
           </div>
-          <div class="text-[#F4F6F8]">Level <span id="hud-tank2-level" class="font-semibold">-- cm</span> <span class="text-[#36C2C9]">(<span id="hud-tank2-pct">--%</span>)</span></div>
-          <div class="text-[11px] text-[#738196]">Dia 23.94 cm · Max 60.0 cm · <span id="hud-tank2-inflow">35.0 cm³/s</span></div>
+          <div class="text-[#F4F6F8]">Level <span id="hud-tank2-level" class="font-semibold">-- cm</span> <span
+              class="text-[#36C2C9]">(<span id="hud-tank2-pct">--%</span>)</span></div>
+          <div class="text-[11px] text-[#738196]">Dia 23.94 cm · Max 60.0 cm · <span id="hud-tank2-inflow">35.0
+              cm³/s</span></div>
           <div><span id="hud-tank2-alert" class="ct-tag text-[10px]">NORMAL</span></div>
         </div>
 
-        <div class="absolute bottom-3 left-3.5 text-[11px] mono text-[#738196] pointer-events-none bg-[#080B10]/85 px-2.5 py-1 rounded border border-[#253140]">
+        <div
+          class="absolute bottom-3 left-3.5 text-[11px] mono text-[#738196] pointer-events-none bg-[#080B10]/85 px-2.5 py-1 rounded border border-[#253140]">
           Drag: Orbit · Right-Drag: Pan · Scroll: Zoom · Threshold Rings: 70% Warn / 85% Crit
         </div>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y md:divide-y-0 divide-[#253140] text-xs">
-        <div class="p-3.5"><div class="ct-label">Bench Cylinders</div><div class="text-[#A0ADBD] mt-1">19.54 cm &amp; 23.94 cm acrylic test columns.</div></div>
-        <div class="p-3.5"><div class="ct-label text-[#62B5F5]">Fluid State</div><div class="text-[#A0ADBD] mt-1">Interpolated from QoS 1 MQTT depth messages.</div></div>
-        <div class="p-3.5"><div class="ct-label text-[#E9B65C]">Threshold Rings</div><div class="text-[#A0ADBD] mt-1">70% amber warn &amp; 85% coral critical bands.</div></div>
-        <div class="p-3.5"><div class="ct-label text-[#43C59E]">GPIO 2 Edge LED</div><div class="text-[#A0ADBD] mt-1">Mirrors autonomous firmware warning state.</div></div>
+      <div
+        class="grid grid-cols-2 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y md:divide-y-0 divide-[#253140] text-xs">
+        <div class="p-3.5">
+          <div class="ct-label">Bench Cylinders</div>
+          <div class="text-[#A0ADBD] mt-1">19.54 cm &amp; 23.94 cm acrylic test columns.</div>
+        </div>
+        <div class="p-3.5">
+          <div class="ct-label text-[#62B5F5]">Fluid State</div>
+          <div class="text-[#A0ADBD] mt-1">Interpolated from QoS 1 MQTT depth messages.</div>
+        </div>
+        <div class="p-3.5">
+          <div class="ct-label text-[#E9B65C]">Threshold Rings</div>
+          <div class="text-[#A0ADBD] mt-1">70% amber warn &amp; 85% coral critical bands.</div>
+        </div>
+        <div class="p-3.5">
+          <div class="ct-label text-[#43C59E]">GPIO 2 Edge LED</div>
+          <div class="text-[#A0ADBD] mt-1">Mirrors autonomous firmware warning state.</div>
+        </div>
       </div>
     </section>
 
@@ -582,7 +699,8 @@
         <div>
           <div class="ct-label">Torricelli Mass Continuity · RK4 Solver</div>
           <h2 class="ct-page-title mt-1">Digital Twin ODE Forward Trajectory</h2>
-          <p class="ct-support mt-1">Forward Runge-Kutta 4th Order integration <span class="mono text-[#62B5F5]">dh/dt = (Q_in - k * sqrt(h)) / A</span> evaluated against stored telemetry.</p>
+          <p class="ct-support mt-1">Forward Runge-Kutta 4th Order integration <span class="mono text-[#62B5F5]">dh/dt =
+              (Q_in - k * sqrt(h)) / A</span> evaluated against stored telemetry.</p>
         </div>
         <div class="flex items-center gap-2 text-xs">
           <label for="twin-tank-select" class="sr-only">Select validation tank</label>
@@ -590,19 +708,44 @@
             <option value="tank_01">Tank 1 (node_01: k=4.5, A=299.87)</option>
             <option value="tank_02">Tank 2 (node_02: k=6.0, A=450.13)</option>
           </select>
-          <button type="button" onclick="updateTwinComparison()" class="ct-btn ct-btn-primary ct-btn-sm">Refresh RK4</button>
+          <button type="button" onclick="updateTwinComparison()" class="ct-btn ct-btn-primary ct-btn-sm">Refresh
+            RK4</button>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y md:divide-y-0 divide-[#253140] mono">
-        <div class="p-4"><div class="text-xs font-sans text-[#738196]">Mean Absolute Error</div><div id="twin-mae" class="text-lg font-semibold text-[#43C59E] mt-1">-- cm</div></div>
-        <div class="p-4"><div class="text-xs font-sans text-[#738196]">Root Mean Square Error</div><div id="twin-rmse" class="text-lg font-semibold text-[#62B5F5] mt-1">-- cm</div></div>
-        <div class="p-4"><div class="text-xs font-sans text-[#738196]">Pearson r</div><div id="twin-corr" class="text-lg font-semibold text-[#F4F6F8] mt-1">--</div></div>
-        <div class="p-4"><div class="text-xs font-sans text-[#738196]">Theoretical Equilibrium</div><div id="twin-heq" class="text-lg font-semibold text-[#E9B65C] mt-1">30.86 cm</div></div>
+      <div
+        class="grid grid-cols-2 md:grid-cols-5 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y md:divide-y-0 divide-[#253140] mono">
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">Open-Loop Trajectory MAE</div>
+          <div id="twin-mae" class="text-lg font-semibold text-[#43C59E] mt-1">-- cm</div>
+        </div>
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">1-Step Causal MAE</div>
+          <div id="twin-mae-1step" class="text-lg font-semibold text-[#36C2C9] mt-1">-- cm</div>
+        </div>
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">Root Mean Square Error</div>
+          <div id="twin-rmse" class="text-lg font-semibold text-[#62B5F5] mt-1">-- cm</div>
+        </div>
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">Pearson r</div>
+          <div id="twin-corr" class="text-lg font-semibold text-[#F4F6F8] mt-1">--</div>
+        </div>
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">Theoretical Equilibrium</div>
+          <div id="twin-heq" class="text-lg font-semibold text-[#E9B65C] mt-1">30.86 cm</div>
+        </div>
       </div>
 
       <div class="ct-surface p-4 h-80 relative">
         <canvas id="twinChart"></canvas>
+      </div>
+
+      <div class="border-l-2 border-[#62B5F5] pl-4 py-1 text-xs space-y-1">
+        <div class="ct-label text-[#62B5F5]">Numerical Audit &amp; Physical Validation Boundary</div>
+        <p id="twin-audit-note" class="ct-support text-xs">Loading causal segment audit...</p>
+        <p id="twin-phys-note" class="mono text-[11px] text-[#738196]">Physical sensor validation: unavailable (software
+          simulation stream)</p>
       </div>
     </section>
 
@@ -611,7 +754,8 @@
       <div class="pb-4 border-b border-[#253140]">
         <div class="ct-label">Zero Future-Leakage Experimental Protocol</div>
         <h2 class="ct-page-title mt-1">Missing-Data Reconstruction Laboratory</h2>
-        <p class="ct-support mt-1">Compares causal online estimation (Setting A) against offline retrospective gap interpolation (Setting B) over 15 s to 120 s packet dropouts.</p>
+        <p class="ct-support mt-1">Compares causal online estimation (Setting A) against offline retrospective gap
+          interpolation (Setting B) over 15 s to 120 s packet dropouts.</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -622,7 +766,9 @@
         <div class="lg:col-span-5 space-y-4">
           <div class="border-l-2 border-[#62B5F5] pl-4 space-y-1.5">
             <div class="ct-label text-[#62B5F5]">Setting A · Online Causal Streaming</div>
-            <p class="ct-support text-xs">Operates strictly from past values (<span class="mono">x<sub>k&#8722;1</sub></span>); future recovery observation <span class="mono">x<sub>k+m</sub></span> is inaccessible.</p>
+            <p class="ct-support text-xs">Operates strictly from past values (<span
+                class="mono">x<sub>k&#8722;1</sub></span>); future recovery observation <span
+                class="mono">x<sub>k+m</sub></span> is inaccessible.</p>
             <div class="mono text-[11px] text-[#A0ADBD] pt-1 space-y-0.5">
               <div>LOCF (15 s): MAE 0.1103 cm</div>
               <div>Causal Trend (15 s): MAE 0.0637 cm</div>
@@ -632,7 +778,8 @@
 
           <div class="border-l-2 border-[#E9B65C] pl-4 space-y-1.5">
             <div class="ct-label text-[#E9B65C]">Setting B · Offline Retrospective</div>
-            <p class="ct-support text-xs">Runs after link restoration using both past and future gap boundaries. Linear interpolation outperforms uncalibrated extrapolations on &ge; 60 s gaps.</p>
+            <p class="ct-support text-xs">Runs after link restoration using both past and future gap boundaries. Linear
+              interpolation outperforms uncalibrated extrapolations on &ge; 60 s gaps.</p>
             <div class="mono text-[11px] text-[#A0ADBD] pt-1 space-y-0.5">
               <div>Linear Interp (15 s): MAE 0.0418 cm</div>
               <div>Linear Interp (120 s): MAE 0.2628 cm</div>
@@ -647,14 +794,32 @@
       <div class="pb-4 border-b border-[#253140]">
         <div class="ct-label">Autonomous Edge Resilience</div>
         <h2 class="ct-page-title mt-1">Freshness State Machine &amp; Hysteresis Logic</h2>
-        <p class="ct-support mt-1">Time-bounded freshness classification paired with 3% anti-chatter firmware thresholds.</p>
+        <p class="ct-support mt-1">Time-bounded freshness classification paired with 3% anti-chatter firmware
+          thresholds.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-y md:divide-y-0 md:divide-x divide-[#253140] mono text-xs">
-        <div class="p-4 space-y-1"><div class="text-[#43C59E] font-semibold">1. FRESH</div><div class="text-[#F4F6F8]">Age &lt; 30.0 s</div><p class="font-sans text-[#738196]">Active 5 s cadence telemetry.</p></div>
-        <div class="p-4 space-y-1"><div class="text-[#E9B65C] font-semibold">2. STALE</div><div class="text-[#F4F6F8]">30.0 s &le; Age &lt; 90.0 s</div><p class="font-sans text-[#738196]">Last reading retained and flagged stale.</p></div>
-        <div class="p-4 space-y-1"><div class="text-[#F16D75] font-semibold">3. OFFLINE</div><div class="text-[#F4F6F8]">Age &ge; 90.0 s</div><p class="font-sans text-[#738196]">Node disconnected; isolation active.</p></div>
-        <div class="p-4 space-y-1"><div class="text-[#A0ADBD] font-semibold">4. INVALID</div><div class="text-[#F4F6F8]">Echo Out-of-Range</div><p class="font-sans text-[#738196]">Emits null; zero fabrication blocked.</p></div>
+      <div
+        class="grid grid-cols-1 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-y md:divide-y-0 md:divide-x divide-[#253140] mono text-xs">
+        <div class="p-4 space-y-1">
+          <div class="text-[#43C59E] font-semibold">1. FRESH</div>
+          <div class="text-[#F4F6F8]">Age &lt; 30.0 s</div>
+          <p class="font-sans text-[#738196]">Active 5 s cadence telemetry.</p>
+        </div>
+        <div class="p-4 space-y-1">
+          <div class="text-[#E9B65C] font-semibold">2. STALE</div>
+          <div class="text-[#F4F6F8]">30.0 s &le; Age &lt; 90.0 s</div>
+          <p class="font-sans text-[#738196]">Last reading retained and flagged stale.</p>
+        </div>
+        <div class="p-4 space-y-1">
+          <div class="text-[#F16D75] font-semibold">3. OFFLINE</div>
+          <div class="text-[#F4F6F8]">Age &ge; 90.0 s</div>
+          <p class="font-sans text-[#738196]">Node disconnected; isolation active.</p>
+        </div>
+        <div class="p-4 space-y-1">
+          <div class="text-[#A0ADBD] font-semibold">4. INVALID</div>
+          <div class="text-[#F4F6F8]">Echo Out-of-Range</div>
+          <p class="font-sans text-[#738196]">Emits null; zero fabrication blocked.</p>
+        </div>
       </div>
 
       <div class="ct-surface overflow-x-auto">
@@ -668,10 +833,30 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td class="text-[#43C59E] font-semibold">NORMAL</td><td>Level &lt; 70.0%</td><td>Baseline quiescent state</td><td>LED OFF (Digital LOW)</td></tr>
-            <tr><td class="text-[#E9B65C] font-semibold">WARNING</td><td>Level &ge; 70.0%</td><td>Clears strictly below 67.0% (-3.0%)</td><td>1 Hz Blink (500 ms ON / OFF)</td></tr>
-            <tr><td class="text-[#F16D75] font-semibold">CRITICAL</td><td>Level &ge; 85.0%</td><td>Steps down strictly below 82.0% (-3.0%)</td><td>Solid Illumination (HIGH)</td></tr>
-            <tr><td class="text-[#A0ADBD] font-semibold">FAULT</td><td>5+ consecutive echo timeouts</td><td>Clears on 1 valid measurement</td><td>5 Hz Strobe (100 ms pulse)</td></tr>
+            <tr>
+              <td class="text-[#43C59E] font-semibold">NORMAL</td>
+              <td>Level &lt; 70.0%</td>
+              <td>Baseline quiescent state</td>
+              <td>LED OFF (Digital LOW)</td>
+            </tr>
+            <tr>
+              <td class="text-[#E9B65C] font-semibold">WARNING</td>
+              <td>Level &ge; 70.0%</td>
+              <td>Clears strictly below 67.0% (-3.0%)</td>
+              <td>1 Hz Blink (500 ms ON / OFF)</td>
+            </tr>
+            <tr>
+              <td class="text-[#F16D75] font-semibold">CRITICAL</td>
+              <td>Level &ge; 85.0%</td>
+              <td>Steps down strictly below 82.0% (-3.0%)</td>
+              <td>Solid Illumination (HIGH)</td>
+            </tr>
+            <tr>
+              <td class="text-[#A0ADBD] font-semibold">FAULT</td>
+              <td>5+ consecutive echo timeouts</td>
+              <td>Clears on 1 valid measurement</td>
+              <td>5 Hz Strobe (100 ms pulse)</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -682,49 +867,100 @@
       <div class="pb-4 border-b border-[#253140]">
         <div class="ct-label">Dual-Node Simulator Control</div>
         <h2 class="ct-page-title mt-1">Showcase Laboratory — Operational Profiles</h2>
-        <p class="ct-support mt-1">Inject inflow surges, blocked drainage orifices, sensor faults, and link dropouts directly into live MQTT simulator nodes.</p>
+        <p class="ct-support mt-1">Inject inflow surges, blocked drainage orifices, sensor faults, and link dropouts
+          directly into live MQTT simulator nodes.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#43C59E]">Profile 01</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Normal Baseline</h3><p class="text-[#738196] mt-1">Nominal 25 / 35 cm³/s inflows.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('normal')" class="ct-btn ct-btn-sm w-full text-[#43C59E]">Trigger Baseline</button>
+          <div>
+            <div class="ct-label text-[#43C59E]">Profile 01</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Normal Baseline</h3>
+            <p class="text-[#738196] mt-1">Nominal 25 / 35 cm³/s inflows.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('normal')"
+            class="ct-btn ct-btn-sm w-full text-[#43C59E]">Trigger Baseline</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#E9B65C]">Profile 02</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Rainfall Surge</h3><p class="text-[#738196] mt-1">Raises Q_in to 55 / 65 cm³/s.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('heavy_surge')" class="ct-btn ct-btn-sm w-full text-[#E9B65C]">Trigger Surge</button>
+          <div>
+            <div class="ct-label text-[#E9B65C]">Profile 02</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Rainfall Surge</h3>
+            <p class="text-[#738196] mt-1">Raises Q_in to 55 / 65 cm³/s.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('heavy_surge')"
+            class="ct-btn ct-btn-sm w-full text-[#E9B65C]">Trigger Surge</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#E9B65C]">Profile 03</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Drainage Block</h3><p class="text-[#738196] mt-1">Cuts orifice coefficient k by ~60%.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('drainage_obstruction')" class="ct-btn ct-btn-sm w-full text-[#E9B65C]">Trigger Blockage</button>
+          <div>
+            <div class="ct-label text-[#E9B65C]">Profile 03</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Drainage Block</h3>
+            <p class="text-[#738196] mt-1">Cuts orifice coefficient k by ~60%.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('drainage_obstruction')"
+            class="ct-btn ct-btn-sm w-full text-[#E9B65C]">Trigger Blockage</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#E9B65C]">Profile 04</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Warning Breach</h3><p class="text-[#738196] mt-1">Crosses 70% threshold; 1 Hz blink.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('warning_breach')" class="ct-btn ct-btn-sm w-full text-[#E9B65C]">Trigger Warning</button>
+          <div>
+            <div class="ct-label text-[#E9B65C]">Profile 04</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Warning Breach</h3>
+            <p class="text-[#738196] mt-1">Crosses 70% threshold; 1 Hz blink.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('warning_breach')"
+            class="ct-btn ct-btn-sm w-full text-[#E9B65C]">Trigger Warning</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#F16D75]">Profile 05</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Critical Inundation</h3><p class="text-[#738196] mt-1">Crosses 85% critical alert ceiling.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('critical_inundation')" class="ct-btn ct-btn-sm w-full text-[#F16D75]">Trigger Critical</button>
+          <div>
+            <div class="ct-label text-[#F16D75]">Profile 05</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Critical Inundation</h3>
+            <p class="text-[#738196] mt-1">Crosses 85% critical alert ceiling.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('critical_inundation')"
+            class="ct-btn ct-btn-sm w-full text-[#F16D75]">Trigger Critical</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#F16D75]">Profile 06</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Node 1 Timeout</h3><p class="text-[#738196] mt-1">Echo fault; null telemetry, 5 Hz LED.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('node1_dropout')" class="ct-btn ct-btn-sm w-full text-[#F16D75]">Trigger Fault</button>
+          <div>
+            <div class="ct-label text-[#F16D75]">Profile 06</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Node 1 Timeout</h3>
+            <p class="text-[#738196] mt-1">Echo fault; null telemetry, 5 Hz LED.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('node1_dropout')"
+            class="ct-btn ct-btn-sm w-full text-[#F16D75]">Trigger Fault</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#A0ADBD]">Profile 07</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Node 2 Stale Link</h3><p class="text-[#738196] mt-1">Pauses Node 2 packets -> STALE.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('node2_stale')" class="ct-btn ct-btn-sm w-full">Trigger Stale</button>
+          <div>
+            <div class="ct-label text-[#A0ADBD]">Profile 07</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Node 2 Stale Link</h3>
+            <p class="text-[#738196] mt-1">Pauses Node 2 packets -> STALE.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('node2_stale')" class="ct-btn ct-btn-sm w-full">Trigger
+            Stale</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#62B5F5]">Profile 08</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Twin Gap Recovery</h3><p class="text-[#738196] mt-1">Restores telemetry &amp; RK4 continuity.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('missing_data_recovery')" class="ct-btn ct-btn-sm w-full text-[#62B5F5]">Recover Data</button>
+          <div>
+            <div class="ct-label text-[#62B5F5]">Profile 08</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Twin Gap Recovery</h3>
+            <p class="text-[#738196] mt-1">Restores telemetry &amp; RK4 continuity.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('missing_data_recovery')"
+            class="ct-btn ct-btn-sm w-full text-[#62B5F5]">Recover Data</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#36C2C9]">Profile 09</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Rapid Reconnect</h3><p class="text-[#738196] mt-1">Clears faults and resyncs streams.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('rapid_reconnect')" class="ct-btn ct-btn-sm w-full text-[#36C2C9]">Reconnect Nodes</button>
+          <div>
+            <div class="ct-label text-[#36C2C9]">Profile 09</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Rapid Reconnect</h3>
+            <p class="text-[#738196] mt-1">Clears faults and resyncs streams.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('rapid_reconnect')"
+            class="ct-btn ct-btn-sm w-full text-[#36C2C9]">Reconnect Nodes</button>
         </div>
         <div class="ct-surface p-3.5 flex flex-col justify-between gap-3">
-          <div><div class="ct-label text-[#43C59E]">Profile 10</div><h3 class="font-semibold text-[#F4F6F8] mt-1">Return to Normal</h3><p class="text-[#738196] mt-1">Restores default flow &amp; clears alarms.</p></div>
-          <button type="button" onclick="triggerShowcaseScenario('return_to_normal')" class="ct-btn ct-btn-sm w-full text-[#43C59E]">Reset Normal</button>
+          <div>
+            <div class="ct-label text-[#43C59E]">Profile 10</div>
+            <h3 class="font-semibold text-[#F4F6F8] mt-1">Return to Normal</h3>
+            <p class="text-[#738196] mt-1">Restores default flow &amp; clears alarms.</p>
+          </div>
+          <button type="button" onclick="triggerShowcaseScenario('return_to_normal')"
+            class="ct-btn ct-btn-sm w-full text-[#43C59E]">Reset Normal</button>
         </div>
       </div>
     </section>
@@ -735,7 +971,8 @@
         <div>
           <div class="ct-label">Persistent Local Storage</div>
           <h2 class="ct-page-title mt-1">SQLite Database Explorer</h2>
-          <p class="ct-support mt-1">Read-only pagination of persisted telemetry sequences, fill percentages, and provenance tags.</p>
+          <p class="ct-support mt-1">Read-only pagination of persisted telemetry sequences, fill percentages, and
+            provenance tags.</p>
         </div>
         <div class="flex items-center gap-2 text-xs">
           <button type="button" onclick="refreshDatabaseView()" class="ct-btn ct-btn-primary ct-btn-sm">Refresh</button>
@@ -743,11 +980,24 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y md:divide-y-0 divide-[#253140] mono">
-        <div class="p-3.5"><div class="text-xs font-sans text-[#738196]">Engine</div><div id="db-engine" class="text-base font-semibold text-[#F4F6F8] mt-1">SQLite WAL</div></div>
-        <div class="p-3.5"><div class="text-xs font-sans text-[#738196]">Database Size</div><div id="db-size" class="text-base font-semibold text-[#62B5F5] mt-1">-- KB</div></div>
-        <div class="p-3.5"><div class="text-xs font-sans text-[#738196]">Stored Telemetry</div><div id="db-rows" class="text-base font-semibold text-[#43C59E] mt-1">--</div></div>
-        <div class="p-3.5"><div class="text-xs font-sans text-[#738196]">Deduplication Key</div><div id="db-integrity" class="text-base font-semibold text-[#A0ADBD] mt-1">UNIQUE(dev, seq)</div></div>
+      <div
+        class="grid grid-cols-2 md:grid-cols-4 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y md:divide-y-0 divide-[#253140] mono">
+        <div class="p-3.5">
+          <div class="text-xs font-sans text-[#738196]">Engine</div>
+          <div id="db-engine" class="text-base font-semibold text-[#F4F6F8] mt-1">SQLite WAL</div>
+        </div>
+        <div class="p-3.5">
+          <div class="text-xs font-sans text-[#738196]">Database Size</div>
+          <div id="db-size" class="text-base font-semibold text-[#62B5F5] mt-1">-- KB</div>
+        </div>
+        <div class="p-3.5">
+          <div class="text-xs font-sans text-[#738196]">Stored Telemetry</div>
+          <div id="db-rows" class="text-base font-semibold text-[#43C59E] mt-1">--</div>
+        </div>
+        <div class="p-3.5">
+          <div class="text-xs font-sans text-[#738196]">Deduplication Key</div>
+          <div id="db-integrity" class="text-base font-semibold text-[#A0ADBD] mt-1">UNIQUE(dev, seq)</div>
+        </div>
       </div>
 
       <div class="flex flex-wrap items-center justify-between gap-3 text-xs mono">
@@ -776,11 +1026,22 @@
         <table class="ct-table mono">
           <thead>
             <tr>
-              <th>ID</th><th>Device</th><th>Zone</th><th>Seq</th><th>Level (cm)</th><th>Fill</th><th>Dist (cm)</th><th>Status</th><th>Provenance</th><th>Timestamp (UTC)</th>
+              <th>ID</th>
+              <th>Device</th>
+              <th>Zone</th>
+              <th>Seq</th>
+              <th>Level (cm)</th>
+              <th>Fill</th>
+              <th>Dist (cm)</th>
+              <th>Status</th>
+              <th>Provenance</th>
+              <th>Timestamp (UTC)</th>
             </tr>
           </thead>
           <tbody id="db-records-body">
-            <tr><td colspan="10" class="p-4 text-center text-[#738196] font-sans">Loading telemetry records...</td></tr>
+            <tr>
+              <td colspan="10" class="p-4 text-center text-[#738196] font-sans">Loading telemetry records...</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -792,16 +1053,20 @@
         <div>
           <div class="ct-label">Mosquitto · 127.0.0.1:1883 · QoS 1</div>
           <h2 class="ct-page-title mt-1">MQTT Live Packet Inspector</h2>
-          <p class="ct-support mt-1">Real-time frame inspection across <span class="mono">civictwin/v1/#</span> telemetry, heartbeat, and alert topics.</p>
+          <p class="ct-support mt-1">Real-time frame inspection across <span class="mono">civictwin/v1/#</span>
+            telemetry, heartbeat, and alert topics.</p>
         </div>
         <div class="flex items-center gap-2 text-xs">
           <span id="mqtt-stream-status" class="ct-tag text-[#43C59E]">STREAMING ACTIVE</span>
-          <button id="btn-toggle-mqtt" type="button" onclick="toggleMqttStream()" class="ct-btn ct-btn-sm">Pause Stream</button>
-          <button type="button" onclick="fetchRecentMqttMessages()" class="ct-btn ct-btn-primary ct-btn-sm">Refresh</button>
+          <button id="btn-toggle-mqtt" type="button" onclick="toggleMqttStream()" class="ct-btn ct-btn-sm">Pause
+            Stream</button>
+          <button type="button" onclick="fetchRecentMqttMessages()"
+            class="ct-btn ct-btn-primary ct-btn-sm">Refresh</button>
         </div>
       </div>
 
-      <div id="mqtt-messages-container" class="ct-surface max-h-[540px] overflow-y-auto divide-y divide-[#253140] mono text-xs">
+      <div id="mqtt-messages-container"
+        class="ct-surface max-h-[540px] overflow-y-auto divide-y divide-[#253140] mono text-xs">
         <div class="p-6 text-center text-[#738196] font-sans">Listening for live MQTT packets on port 1883...</div>
       </div>
     </section>
@@ -811,31 +1076,350 @@
       <div class="pb-4 border-b border-[#253140]">
         <div class="ct-label">Reproducible Multi-Seed Study · Seeds [42, 101, 2024]</div>
         <h2 class="ct-page-title mt-1">Verified Reconstruction Benchmarks</h2>
-        <p class="ct-support mt-1">Audited accuracy metrics matching <span class="mono">results/tables/three_method_reconstruction.json</span>.</p>
+        <p class="ct-support mt-1">Audited accuracy metrics matching <span
+            class="mono">results/tables/three_method_reconstruction.json</span>.</p>
       </div>
 
       <div class="ct-surface overflow-x-auto">
         <table class="ct-table mono">
           <thead>
             <tr>
-              <th>Method</th><th>Evaluation Setting</th><th>Gap Duration</th><th>MAE (cm)</th><th>RMSE (cm)</th><th>Interpretation</th>
+              <th>Method</th>
+              <th>Evaluation Setting</th>
+              <th>Gap Duration</th>
+              <th>MAE (cm)</th>
+              <th>RMSE (cm)</th>
+              <th>Interpretation</th>
             </tr>
           </thead>
           <tbody id="benchmark-table-body">
-            <tr><td class="text-[#62B5F5] font-semibold">Physics Digital Twin</td><td>Setting A &amp; B (Model Guided)</td><td>15.0 s (3 steps)</td><td class="text-[#43C59E] font-semibold">0.0227</td><td>0.0247</td><td class="text-[#43C59E] font-sans">Lowest online error (-79.4% vs LOCF)</td></tr>
-            <tr><td class="text-[#62B5F5] font-semibold">Physics Digital Twin</td><td>Setting A &amp; B (Model Guided)</td><td>30.0 s (6 steps)</td><td class="text-[#43C59E] font-semibold">0.0685</td><td>0.0951</td><td class="text-[#43C59E] font-sans">Outperforms linear &amp; causal trend</td></tr>
-            <tr><td class="text-[#E9B65C] font-semibold">Linear Interpolation</td><td>Setting B (Retrospective)</td><td>60.0 s (12 steps)</td><td class="text-[#E9B65C] font-semibold">0.2842</td><td>0.3027</td><td class="font-sans">Uses post-gap boundary observation</td></tr>
-            <tr><td class="text-[#E9B65C] font-semibold">Linear Interpolation</td><td>Setting B (Retrospective)</td><td>120.0 s (24 steps)</td><td class="text-[#E9B65C] font-semibold">0.2628</td><td>0.3095</td><td class="font-sans">Optimal offline historical bridging</td></tr>
-            <tr><td class="text-[#A0ADBD]">LOCF Baseline</td><td>Setting A &amp; B (Past Only)</td><td>120.0 s (24 steps)</td><td class="text-[#F16D75] font-semibold">0.8144</td><td>1.0643</td><td class="font-sans">Steep bias under active rise/drain</td></tr>
+            <tr>
+              <td class="text-[#62B5F5] font-semibold">Physics Digital Twin</td>
+              <td>Setting A &amp; B (Model Guided)</td>
+              <td>15.0 s (3 steps)</td>
+              <td class="text-[#43C59E] font-semibold">0.0227</td>
+              <td>0.0247</td>
+              <td class="text-[#43C59E] font-sans">Lowest online error (-79.4% vs LOCF)</td>
+            </tr>
+            <tr>
+              <td class="text-[#62B5F5] font-semibold">Physics Digital Twin</td>
+              <td>Setting A &amp; B (Model Guided)</td>
+              <td>30.0 s (6 steps)</td>
+              <td class="text-[#43C59E] font-semibold">0.0685</td>
+              <td>0.0951</td>
+              <td class="text-[#43C59E] font-sans">Outperforms linear &amp; causal trend</td>
+            </tr>
+            <tr>
+              <td class="text-[#E9B65C] font-semibold">Linear Interpolation</td>
+              <td>Setting B (Retrospective)</td>
+              <td>60.0 s (12 steps)</td>
+              <td class="text-[#E9B65C] font-semibold">0.2842</td>
+              <td>0.3027</td>
+              <td class="font-sans">Uses post-gap boundary observation</td>
+            </tr>
+            <tr>
+              <td class="text-[#E9B65C] font-semibold">Linear Interpolation</td>
+              <td>Setting B (Retrospective)</td>
+              <td>120.0 s (24 steps)</td>
+              <td class="text-[#E9B65C] font-semibold">0.2628</td>
+              <td>0.3095</td>
+              <td class="font-sans">Optimal offline historical bridging</td>
+            </tr>
+            <tr>
+              <td class="text-[#A0ADBD]">LOCF Baseline</td>
+              <td>Setting A &amp; B (Past Only)</td>
+              <td>120.0 s (24 steps)</td>
+              <td class="text-[#F16D75] font-semibold">0.8144</td>
+              <td>1.0643</td>
+              <td class="font-sans">Steep bias under active rise/drain</td>
+            </tr>
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- 14. IMPACT INTELLIGENCE, NEIGHBOURHOODS & SENSITIVITY WORKBENCH -->
+    <section id="view-impact" class="view-panel hidden space-y-8">
+      <div class="flex flex-wrap items-end justify-between gap-4 pb-4 border-b border-[#253140]">
+        <div>
+          <div class="ct-label text-[#36C2C9]">EPSG:32644 Vector-Raster Intersection · Official Boundaries</div>
+          <h2 class="ct-page-title mt-1">Impact Intelligence &amp; Sensitivity Workbench</h2>
+          <p class="ct-support mt-1">Modelled potential exposure across 18,198 buildings, 48,769 deduplicated roads, 36
+            watersheds, and 200 GCC wards — plus bounded parameter sweeps.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <select id="impact-scenario-sel" onchange="refreshImpactIntelligence()" aria-label="Impact scenario selector"
+            class="ct-select text-xs">
+            <option value="heavy_rainfall" selected>2. Heavy Monsoon (45 mm/hr)</option>
+            <option value="normal">1. Normal Dry Baseline</option>
+            <option value="extreme_rainfall">3. Extreme Cloudburst (85 mm/hr)</option>
+            <option value="reduced_drainage">4. Reduced Drainage (25%)</option>
+            <option value="improved_drainage">5. Improved Drainage (200%)</option>
+            <option value="michaung_replay">6. Cyclone Michaung Replay</option>
+            <option value="reservoir_discharge">8. Chembarambakkam Spillway</option>
+          </select>
+          <select id="impact-thresh-sel" onchange="refreshImpactIntelligence()" aria-label="Exposure depth threshold"
+            class="ct-select text-xs">
+            <option value="0.05">Depth &ge; 0.05 m</option>
+            <option value="0.15" selected>Depth &ge; 0.15 m</option>
+            <option value="0.30">Depth &ge; 0.30 m</option>
+            <option value="0.60">Depth &ge; 0.60 m</option>
+          </select>
+          <a href="/urban-twin" class="ct-btn ct-btn-primary ct-btn-sm">Highlight on 3D Map</a>
+        </div>
+      </div>
+
+      <div
+        class="grid grid-cols-2 lg:grid-cols-5 border border-[#253140] rounded-lg bg-[#0C1118] divide-x divide-y lg:divide-y-0 divide-[#253140] mono">
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">Exposed Buildings (Modelled)</div>
+          <div id="imp-bld-count" class="text-lg font-semibold text-[#F16D75] mt-1">--</div>
+          <div id="imp-bld-pct" class="text-[11px] text-[#738196] mt-0.5">-- of in-domain</div>
+        </div>
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">Exposed Footprint Area</div>
+          <div id="imp-bld-area" class="text-lg font-semibold text-[#E9B65C] mt-1">-- ha</div>
+          <div id="imp-bld-m2" class="text-[11px] text-[#738196] mt-0.5">-- m²</div>
+        </div>
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">Exposed Roads (Deduplicated)</div>
+          <div id="imp-road-km" class="text-lg font-semibold text-[#62B5F5] mt-1">-- km</div>
+          <div id="imp-road-seg" class="text-[11px] text-[#738196] mt-0.5">-- segments</div>
+        </div>
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">OSM Civic Facilities</div>
+          <div id="imp-civic-cnt" class="text-lg font-semibold text-[#36C2C9] mt-1">--</div>
+          <div id="imp-civic-tags" class="text-[11px] text-[#738196] mt-0.5 truncate">Hospital / school / rail</div>
+        </div>
+        <div class="p-4">
+          <div class="text-xs font-sans text-[#738196]">Road Bridges (Wet Cells)</div>
+          <div id="imp-bridge-cnt" class="text-lg font-semibold text-[#43C59E] mt-1">--</div>
+          <div id="imp-cov-note" class="text-[11px] text-[#738196] mt-0.5">EPSG:32644</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-6 ct-surface p-4 h-72 relative">
+          <canvas id="impactTierChart"></canvas>
+        </div>
+        <div class="lg:col-span-6 ct-surface p-4 h-72 relative">
+          <canvas id="impactRoadChart"></canvas>
+        </div>
+      </div>
+
+      <!-- OFFICIAL NEIGHBOURHOOD BOUNDARY ANALYTICS -->
+      <div class="space-y-3 pt-2 border-t border-[#253140]">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="ct-label">Boundary-Level Hydrological Aggregation</div>
+            <p id="nb-coverage-note" class="text-xs text-[#738196] mt-0.5">Coverage % indicates intersection with the
+              150 m South Chennai pilot domain; inundation % applies only inside the computational grid.</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <button type="button" onclick="setNeighbourhoodType('watersheds')" id="btn-nb-ws"
+              class="ct-btn ct-btn-primary ct-btn-sm">Watersheds (36)</button>
+            <button type="button" onclick="setNeighbourhoodType('wards')" id="btn-nb-wards" class="ct-btn ct-btn-sm">GCC
+              Wards (200)</button>
+          </div>
+        </div>
+        <div class="ct-surface overflow-x-auto max-h-80 overflow-y-auto">
+          <table class="ct-table mono">
+            <thead>
+              <tr>
+                <th>Boundary</th>
+                <th>In-Domain Cov</th>
+                <th>Inundated (km² / %)</th>
+                <th>Max / Mean Depth</th>
+                <th>Buildings Exp</th>
+                <th>Roads (km)</th>
+                <th>Stations / Waterways</th>
+              </tr>
+            </thead>
+            <tbody id="impact-nb-tbody">
+              <tr>
+                <td colspan="7" class="p-4 text-center text-[#738196] font-sans">Loading boundary analytics...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BOUNDED PARAMETER SENSITIVITY ANALYSIS -->
+      <div class="space-y-4 pt-4 border-t border-[#253140]">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <div class="ct-label text-[#E9B65C]">Bounded One-at-a-Time Numerical Sensitivity</div>
+            <h3 class="ct-section-title mt-1">Landlab 2D Parameter Sweep (3–7 Steps)</h3>
+            <p class="ct-support text-xs">Executes real Landlab 2D OverlandFlow grids across parameter values; does not
+              represent calibrated probabilistic confidence intervals.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <select id="sens-param" onchange="updateSensitivityDefaults()" aria-label="Sensitivity parameter"
+              class="ct-select text-xs">
+              <option value="rainfall_intensity_mm_hr">Rainfall Intensity (mm/hr)</option>
+              <option value="drainage_efficiency_pct">Drainage Capacity (%)</option>
+              <option value="infiltration_rate_mm_hr">Soil Infiltration (mm/hr)</option>
+              <option value="initial_depth_m">Initial Water Depth (m)</option>
+            </select>
+            <input id="sens-min" type="number" value="15" class="ct-input w-20 text-xs py-1 mono"
+              aria-label="Sweep minimum" />
+            <span class="text-[#738196]">to</span>
+            <input id="sens-max" type="number" value="105" class="ct-input w-20 text-xs py-1 mono"
+              aria-label="Sweep maximum" />
+            <select id="sens-steps" aria-label="Sweep steps" class="ct-select text-xs">
+              <option value="4">4 steps</option>
+              <option value="5" selected>5 steps</option>
+              <option value="6">6 steps</option>
+            </select>
+            <button id="sens-run-btn" type="button" onclick="runSensitivityAnalysis()"
+              class="ct-btn ct-btn-primary ct-btn-sm">Run Sensitivity Sweep</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div class="lg:col-span-7 ct-surface p-4 h-72 relative">
+            <canvas id="sensitivityChart"></canvas>
+          </div>
+          <div class="lg:col-span-5 ct-surface overflow-x-auto max-h-72 overflow-y-auto">
+            <table class="ct-table mono text-[11px]">
+              <thead>
+                <tr>
+                  <th>Value</th>
+                  <th>Vol (MCM)</th>
+                  <th>Area (km²)</th>
+                  <th>Max (m)</th>
+                  <th>Bldgs</th>
+                </tr>
+              </thead>
+              <tbody id="sens-tbody">
+                <tr>
+                  <td colspan="5" class="p-4 text-center text-[#738196] font-sans">Run sweep to populate solver table.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p id="impact-disclaimer" class="text-[11px] text-[#738196] border-t border-[#253140] pt-3"></p>
+    </section>
+
+    <!-- 15. ENGINEERING PDF REPORTS & GUIDED DEMONSTRATION -->
+    <section id="view-reports" class="view-panel hidden space-y-8">
+      <div class="pb-4 border-b border-[#253140]">
+        <div class="ct-label text-[#62B5F5]">Offline ReportLab + Matplotlib Generation · Reproducible Dossier</div>
+        <h2 class="ct-page-title mt-1">Engineering Reports &amp; Guided Demonstration</h2>
+        <p class="ct-support mt-1">Download print-ready A4 PDF dossiers containing actual maps, mass-balance
+          conservation, infrastructure exposure, provenance, and limitations.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-6 ct-surface p-5 space-y-4">
+          <div class="ct-label">Report Configuration</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label for="rep-scen" class="block text-[#738196] mb-1">Primary Scenario</label>
+              <select id="rep-scen" class="ct-select w-full text-xs">
+                <option value="heavy_rainfall" selected>Heavy Monsoon (45 mm/hr)</option>
+                <option value="normal">Normal Baseline</option>
+                <option value="extreme_rainfall">Extreme Cloudburst (85 mm/hr)</option>
+                <option value="reduced_drainage">Reduced Drainage (25%)</option>
+                <option value="improved_drainage">Improved Drainage (200%)</option>
+                <option value="michaung_replay">Cyclone Michaung Replay</option>
+                <option value="reservoir_discharge">Chembarambakkam Spillway</option>
+              </select>
+            </div>
+            <div>
+              <label for="rep-cmp" class="block text-[#738196] mb-1">Comparison Scenario (Optional)</label>
+              <select id="rep-cmp" class="ct-select w-full text-xs">
+                <option value="">None (Single Scenario)</option>
+                <option value="reduced_drainage" selected>Reduced Drainage (25%)</option>
+                <option value="improved_drainage">Improved Drainage (200%)</option>
+                <option value="extreme_rainfall">Extreme Cloudburst</option>
+              </select>
+            </div>
+            <div>
+              <label for="rep-nb" class="block text-[#738196] mb-1">Boundary Summarization</label>
+              <select id="rep-nb" class="ct-select w-full text-xs">
+                <option value="watersheds" selected>South Chennai Watersheds (36)</option>
+                <option value="wards">Official GCC Wards (200)</option>
+              </select>
+            </div>
+            <div>
+              <label for="rep-thresh" class="block text-[#738196] mb-1">Exposure Depth Threshold</label>
+              <select id="rep-thresh" class="ct-select w-full text-xs">
+                <option value="0.05">0.05 m (Shallow+)</option>
+                <option value="0.15" selected>0.15 m (Curb / Standard)</option>
+                <option value="0.30">0.30 m (Moderate/High)</option>
+                <option value="0.60">0.60 m (Severe)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="rep-obj" class="block text-xs text-[#738196] mb-1">Analysis Objective</label>
+            <input id="rep-obj" type="text"
+              value="South Chennai terrain-aware flood screening &amp; projected infrastructure exposure evaluation."
+              class="ct-input w-full text-xs" />
+          </div>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button type="button" onclick="downloadUrbanReport('pdf')" class="ct-btn ct-btn-primary text-xs">Generate
+              &amp; Download PDF Report</button>
+            <button type="button" onclick="downloadUrbanReport('csv')" class="ct-btn text-xs">Export Analysis
+              CSV</button>
+            <button type="button" onclick="downloadUrbanScenarioAsset('geojson')" class="ct-btn text-xs">Export Flood
+              GeoJSON</button>
+            <button type="button" onclick="downloadUrbanScenarioAsset('summary')" class="ct-btn text-xs">Export Summary
+              JSON</button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 ct-surface p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="ct-label text-[#36C2C9]">13-Step Academic Demonstration Sequence (10–15 Min)</span>
+            <a href="/urban-twin?demo=1" class="text-xs text-[#62B5F5] hover:underline">Open Guided Tour in 3D Map
+              &rarr;</a>
+          </div>
+          <ol class="text-xs text-[#A0ADBD] space-y-1.5 list-decimal list-inside">
+            <li><button type="button" onclick="switchTab('urbantwin')"
+                class="text-[#F4F6F8] hover:text-[#62B5F5]">CivicTwin-R Overview &amp; Dual Workstreams</button></li>
+            <li><a href="/urban-twin" class="text-[#F4F6F8] hover:text-[#62B5F5]">Chennai 3D Geographical &amp;
+                Copernicus Elevation Exploration</a></li>
+            <li><a href="/urban-twin?loc=velachery" class="text-[#F4F6F8] hover:text-[#62B5F5]">Selected Neighbourhood
+                &amp; Asset Provenance Inspector (Velachery)</a></li>
+            <li><a href="/urban-twin?preset=heavy_rainfall" class="text-[#F4F6F8] hover:text-[#62B5F5]">Heavy-Rainfall
+                Landlab OverlandFlow Simulation (45 mm/hr)</a></li>
+            <li><a href="/urban-twin?compare=reduced_drainage" class="text-[#F4F6F8] hover:text-[#62B5F5]">Side-by-Side
+                Drainage Scenario Comparison &amp; Delta Mapping</a></li>
+            <li><button type="button" onclick="switchTab('impact')"
+                class="text-[#F4F6F8] hover:text-[#62B5F5]">Infrastructure Exposure &amp; Official Boundary
+                Intelligence</button></li>
+            <li><a href="/urban-twin?preset=michaung_replay" class="text-[#F4F6F8] hover:text-[#62B5F5]">Cyclone
+                Michaung Historical Rainfall Replay (Dec 2023)</a></li>
+            <li><span class="text-[#F4F6F8]">Offline A4 Engineering PDF Report &amp; CSV/GeoJSON Export</span> (left
+              panel)</li>
+            <li><button type="button" onclick="switchTab('twin3d')"
+                class="text-[#F4F6F8] hover:text-[#62B5F5]">Experimental Three.js Dual-Tank IoT Laboratory</button></li>
+            <li><a href="http://127.0.0.1:1880/ui/" target="_blank"
+                class="text-[#F4F6F8] hover:text-[#62B5F5]">Mosquitto MQTT &amp; Node-RED Operational Dashboard
+                (:1880/ui)</a></li>
+            <li><button type="button" onclick="switchTab('database')" class="text-[#F4F6F8] hover:text-[#62B5F5]">SQLite
+                WAL Explorer &amp; InfluxDB 2.x Time-Series (:8086)</button></li>
+            <li><button type="button" onclick="switchTab('scenarios')"
+                class="text-[#F4F6F8] hover:text-[#62B5F5]">Sensor Dropout, Freshness Transitions &amp; Failure
+                Recovery</button></li>
+            <li><button type="button" onclick="switchTab('reconstruction')"
+                class="text-[#F4F6F8] hover:text-[#62B5F5]">Causal Reconstruction &amp; Scientific Accuracy
+                Benchmarks</button></li>
+          </ol>
+        </div>
       </div>
     </section>
 
   </main>
 
   <!-- TOAST NOTIFICATION -->
-  <div id="toast" role="status" aria-live="polite" class="fixed bottom-5 right-5 z-50 transform translate-y-16 opacity-0 transition-all duration-200 bg-[#111821] px-3.5 py-2.5 rounded-md border border-[#344050] shadow-2xl flex items-center gap-2.5 text-xs mono">
+  <div id="toast" role="status" aria-live="polite"
+    class="fixed bottom-5 right-5 z-50 transform translate-y-16 opacity-0 transition-all duration-200 bg-[#111821] px-3.5 py-2.5 rounded-md border border-[#344050] shadow-2xl flex items-center gap-2.5 text-xs mono">
     <span id="toast-icon" class="text-[#62B5F5]"></span>
     <span id="toast-msg" class="text-[#F4F6F8]"></span>
   </div>
@@ -852,6 +1436,7 @@
     const TAB_GROUPS = {
       urbantwin: 'urbantwin',
       urbanscenarios: 'urbanscenarios',
+      impact: 'impact',
       chennai: 'chennai',
       twin3d: 'iot',
       nodes: 'iot',
@@ -863,6 +1448,7 @@
       overview: 'system',
       database: 'system',
       mqtt: 'system',
+      reports: 'reports',
     };
 
     function toggleMobileNav(force) {
@@ -906,6 +1492,7 @@
       if (tabId === 'database') refreshDatabaseView();
       if (tabId === 'mqtt') fetchRecentMqttMessages();
       if (tabId === 'urbanscenarios') fetchUrbanScenarioTable();
+      if (tabId === 'impact') refreshImpactIntelligence();
     }
 
     function flyUrbanIframe(locId) {
@@ -1242,7 +1829,7 @@
 
     function toggle3DFullscreen() {
       const el = document.getElementById('canvas-container');
-      if (!document.fullscreenElement) el.requestFullscreen().catch(() => {});
+      if (!document.fullscreenElement) el.requestFullscreen().catch(() => { });
       else document.exitFullscreen();
       setTimeout(onWindowResize3D, 200);
     }
@@ -1350,7 +1937,7 @@
         }
         container.innerHTML = messages.map(m => {
           let parsedJson = null;
-          try { parsedJson = JSON.parse(m.payload); } catch (_) {}
+          try { parsedJson = JSON.parse(m.payload); } catch (_) { }
           const isStatus = m.topic && m.topic.endsWith('/status');
           const isAlert = m.topic && m.topic.endsWith('/alerts');
           const tone = isAlert ? '#F16D75' : isStatus ? '#E9B65C' : '#62B5F5';
@@ -1539,8 +2126,16 @@
         if (!res.ok) return;
         const data = await res.json();
         document.getElementById('twin-mae').innerText = (data.mae_cm || 0).toFixed(4) + ' cm';
+        const oneStep = data.one_step_tracking || {};
+        document.getElementById('twin-mae-1step').innerText = (oneStep.mae_cm !== undefined ? oneStep.mae_cm : (data.mae_cm || 0)).toFixed(4) + ' cm';
         document.getElementById('twin-rmse').innerText = (data.rmse_cm || 0).toFixed(4) + ' cm';
         document.getElementById('twin-corr').innerText = (data.correlation || 1.0).toFixed(4);
+        if (document.getElementById('twin-audit-note') && data.discrepancy_audit_note) {
+          document.getElementById('twin-audit-note').innerText = data.discrepancy_audit_note + ` (Discontinuities isolated: ${data.discontinuities_isolated ?? 0})`;
+        }
+        if (document.getElementById('twin-phys-note') && data.physical_validation) {
+          document.getElementById('twin-phys-note').innerText = 'Physical sensor validation: ' + data.physical_validation;
+        }
         if (twinChartInstance) {
           twinChartInstance.data.labels = (data.times_sec || []).map(t => `${t}s`);
           twinChartInstance.data.datasets[0].data = data.measured_levels_cm || [];
@@ -1666,6 +2261,189 @@
       }
     }
 
+    // -------------------------------------------------------------
+    // IMPACT INTELLIGENCE, NEIGHBOURHOODS, SENSITIVITY & REPORTS
+    // -------------------------------------------------------------
+    let activeNbBoundaryType = 'watersheds';
+    let impactTierChartInstance = null;
+    let impactRoadChartInstance = null;
+    let sensChartInstance = null;
+
+    function setNeighbourhoodType(bType) {
+      activeNbBoundaryType = bType;
+      document.getElementById('btn-nb-ws').classList.toggle('ct-btn-primary', bType === 'watersheds');
+      document.getElementById('btn-nb-wards').classList.toggle('ct-btn-primary', bType === 'wards');
+      refreshImpactIntelligence(true);
+    }
+
+    async function refreshImpactIntelligence(nbOnly = false) {
+      const sid = document.getElementById('impact-scenario-sel')?.value || 'heavy_rainfall';
+      const thresh = parseFloat(document.getElementById('impact-thresh-sel')?.value || '0.15');
+      try {
+        if (!nbOnly) {
+          const eRes = await fetch(`/api/urban/exposure?scenario_id=${encodeURIComponent(sid)}&threshold_m=${thresh}&include_geojson=false`);
+          if (eRes.ok) {
+            const e = await eRes.json();
+            const b = e.buildings || {};
+            const r = e.roads || {};
+            const cov = e.coverage || {};
+            document.getElementById('imp-bld-count').innerText = (b.exposed_count || 0).toLocaleString();
+            document.getElementById('imp-bld-pct').innerText = `${b.exposed_pct_of_in_domain ?? 0}% of ${cov.buildings_in_domain?.toLocaleString() || '--'} in-domain`;
+            document.getElementById('imp-bld-area').innerText = `${b.exposed_footprint_area_ha ?? 0} ha`;
+            document.getElementById('imp-bld-m2').innerText = `${(b.exposed_footprint_area_m2 || 0).toLocaleString()} m²`;
+            document.getElementById('imp-road-km').innerText = `${r.exposed_length_km ?? 0} km`;
+            document.getElementById('imp-road-seg').innerText = `${(r.exposed_segments_count || 0).toLocaleString()} segments`;
+            const crit = b.critical_civic_facilities || {};
+            document.getElementById('imp-civic-cnt').innerText = String(crit.total_exposed ?? 0);
+            const critEntries = Object.entries(crit.by_type || {}).slice(0, 3).map(([k, v]) => `${k}:${v}`).join(' · ');
+            document.getElementById('imp-civic-tags').innerText = critEntries || 'None >= threshold';
+            document.getElementById('imp-bridge-cnt').innerText = String(e.bridges?.intersecting_wet_cells_count ?? 0);
+            document.getElementById('impact-disclaimer').innerText = e.scientific_disclaimer || '';
+
+            const tierKeys = Object.keys(b.depth_tiers_count || {});
+            const tierVals = tierKeys.map(k => b.depth_tiers_count[k]);
+            if (impactTierChartInstance) impactTierChartInstance.destroy();
+            impactTierChartInstance = new Chart(document.getElementById('impactTierChart').getContext('2d'), {
+              type: 'bar',
+              data: {
+                labels: tierKeys,
+                datasets: [{ label: 'Modelled Exposed Buildings', data: tierVals, backgroundColor: ['#4BA3D9', '#36C2C9', '#E9B65C', '#F16D75'] }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { title: { display: true, text: 'Buildings by Max Cell Depth Tier', color: '#F4F6F8' }, legend: { display: false } },
+                scales: { x: { grid: { color: '#17212D' } }, y: { grid: { color: '#17212D' } } }
+              }
+            });
+
+            const rClasses = (r.by_highway_class || []).slice(0, 8);
+            if (impactRoadChartInstance) impactRoadChartInstance.destroy();
+            impactRoadChartInstance = new Chart(document.getElementById('impactRoadChart').getContext('2d'), {
+              type: 'bar',
+              data: {
+                labels: rClasses.map(c => c.highway_class),
+                datasets: [{ label: 'Exposed Length (km)', data: rClasses.map(c => c.exposed_length_km), backgroundColor: '#62B5F5' }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { title: { display: true, text: 'Road Exposure by OSM Classification (km)', color: '#F4F6F8' }, legend: { display: false } },
+                scales: { x: { grid: { color: '#17212D' } }, y: { grid: { color: '#17212D' } } }
+              }
+            });
+          }
+        }
+
+        const nRes = await fetch(`/api/urban/neighbourhoods?scenario_id=${encodeURIComponent(sid)}&boundary_type=${activeNbBoundaryType}&threshold_m=${thresh}`);
+        if (nRes.ok) {
+          const nd = await nRes.json();
+          document.getElementById('nb-coverage-note').innerText = `${nd.source_dataset}: ${nd.in_domain_regions_count} inside pilot grid, ${nd.outside_domain_regions_count} outside domain (coverage % kept separate from inundation severity).`;
+          const tbody = document.getElementById('impact-nb-tbody');
+          tbody.innerHTML = (nd.regions || []).slice(0, 60).map(rg => {
+            if (!rg.in_computational_domain) {
+              return `<tr class="opacity-60"><td class="font-sans text-[#A0ADBD]">${esc(rg.name)} <span class="text-[#738196]">(${esc(rg.sublabel)})</span></td><td>${rg.domain_coverage_pct}%</td><td colspan="4" class="font-sans text-[#738196]">Outside 150 m computational domain</td><td>${rg.stations_count} / ${rg.waterways_count}</td></tr>`;
+            }
+            return `<tr><td class="font-sans text-[#F4F6F8]">${esc(rg.name)} <span class="text-[#738196] text-[11px]">${esc(rg.sublabel)}</span></td><td class="text-[#A0ADBD]">${rg.domain_coverage_pct}%</td><td class="text-[#36C2C9]">${rg.inundated_area_km2} km² (${rg.inundated_pct_of_in_domain}%)</td><td class="text-[#E9B65C]">${rg.max_depth_m}m / ${rg.mean_depth_m}m</td><td class="text-[#F16D75]">${rg.exposed_buildings_count}</td><td class="text-[#62B5F5]">${rg.exposed_roads_km} km</td><td class="text-[#738196]">${rg.stations_count} / ${rg.waterways_count}</td></tr>`;
+          }).join('');
+        }
+      } catch (err) {
+        console.warn('Impact intelligence fetch error:', err);
+      }
+    }
+
+    function updateSensitivityDefaults() {
+      const p = document.getElementById('sens-param').value;
+      const mn = document.getElementById('sens-min');
+      const mx = document.getElementById('sens-max');
+      if (p === 'rainfall_intensity_mm_hr') { mn.value = 15; mx.value = 105; }
+      else if (p === 'drainage_efficiency_pct') { mn.value = 25; mx.value = 200; }
+      else if (p === 'infiltration_rate_mm_hr') { mn.value = 0; mx.value = 25; }
+      else { mn.value = 0; mx.value = 0.6; }
+    }
+
+    async function runSensitivityAnalysis() {
+      const btn = document.getElementById('sens-run-btn');
+      btn.disabled = true;
+      btn.innerText = 'Running Landlab...';
+      try {
+        const res = await fetch('/api/urban/sensitivity', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            parameter: document.getElementById('sens-param').value,
+            min_val: parseFloat(document.getElementById('sens-min').value),
+            max_val: parseFloat(document.getElementById('sens-max').value),
+            steps: parseInt(document.getElementById('sens-steps').value, 10),
+            base_scenario_id: document.getElementById('impact-scenario-sel')?.value || 'heavy_rainfall',
+            include_exposure: true,
+            threshold_m: parseFloat(document.getElementById('impact-thresh-sel')?.value || '0.15')
+          })
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          showToast(err.detail || 'Sensitivity bounds error', 'ERR');
+          return;
+        }
+        const d = await res.json();
+        const pts = d.points || [];
+        document.getElementById('sens-tbody').innerHTML = pts.map(p => `
+          <tr>
+            <td class="text-[#F4F6F8]">${p.parameter_value} ${esc(d.unit)}</td>
+            <td class="text-[#62B5F5]">${p.stored_water_volume_mcm}</td>
+            <td class="text-[#36C2C9]">${p.urban_inundated_area_km2}</td>
+            <td class="text-[#E9B65C]">${p.max_urban_depth_m}</td>
+            <td class="text-[#F16D75]">${p.exposed_buildings_count ?? '--'}</td>
+          </tr>
+        `).join('');
+        if (sensChartInstance) sensChartInstance.destroy();
+        sensChartInstance = new Chart(document.getElementById('sensitivityChart').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: pts.map(p => `${p.parameter_value} ${d.unit}`),
+            datasets: [
+              { label: 'Stored Volume (MCM)', data: pts.map(p => p.stored_water_volume_mcm), borderColor: '#62B5F5', borderWidth: 2 },
+              { label: 'Flooded Area (km²)', data: pts.map(p => p.urban_inundated_area_km2), borderColor: '#36C2C9', borderWidth: 2, yAxisID: 'y1' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { color: '#17212D' } },
+              y: { grid: { color: '#17212D' }, title: { display: true, text: 'Volume (MCM)', color: '#62B5F5' } },
+              y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Area (km²)', color: '#36C2C9' } }
+            }
+          }
+        });
+        showToast(`Sensitivity sweep finished (${pts.length} Landlab runs)`, 'OK');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Run Sensitivity Sweep';
+      }
+    }
+
+    function downloadUrbanReport(fmt) {
+      const sid = document.getElementById('rep-scen').value || 'heavy_rainfall';
+      const cmp = document.getElementById('rep-cmp').value || '';
+      const nb = document.getElementById('rep-nb').value || 'watersheds';
+      const thresh = document.getElementById('rep-thresh').value || '0.15';
+      const obj = document.getElementById('rep-obj').value || '';
+      if (fmt === 'pdf') {
+        const qs = new URLSearchParams({ scenario_id: sid, boundary_type: nb, threshold_m: thresh, objective: obj });
+        if (cmp) qs.set('compare_id', cmp);
+        window.open(`/api/urban/report/pdf?${qs.toString()}`, '_blank');
+      } else {
+        const qs = new URLSearchParams({ scenario_id: sid, boundary_type: nb, threshold_m: thresh });
+        window.open(`/api/urban/report/csv?${qs.toString()}`, '_blank');
+      }
+    }
+
+    function downloadUrbanScenarioAsset(fmt) {
+      const sid = document.getElementById('rep-scen').value || 'heavy_rainfall';
+      window.open(`/api/urban/scenario/${encodeURIComponent(sid)}/export?fmt=${fmt}`, '_blank');
+    }
+
     setInterval(() => {
       const clk = document.getElementById('clock');
       if (clk) clk.innerText = new Date().toUTCString().replace('GMT', 'UTC');
@@ -1684,4 +2462,5 @@
     }
   </script>
 </body>
+
 </html>

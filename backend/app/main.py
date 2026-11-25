@@ -16,7 +16,7 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from pydantic import BaseModel, Field
@@ -31,11 +31,10 @@ from digital_twin.scenarios import ScenarioController, list_scenarios, SCENARIOS
 from digital_twin.forecast import BaselineForecaster, evaluate_forecaster_time_aware
 from digital_twin.tank_twin import (
     PhysicalTankModel,
-    TankGeometry,
-    TankCalibrationResult,
     create_default_tanks,
     calibrate_drain_down,
     evaluate_tank_prediction,
+    evaluate_telemetry_window,
 )
 from scripts.replay_historical import HistoricalReplayController
 
@@ -252,8 +251,8 @@ def get_alerts(level: Optional[str] = None, limit: int = Query(50, ge=1, le=200)
         try:
             level_enum = AlertLevel(level.lower())
             alerts = [a for a in alerts if a.alert_level == level_enum]
-        except ValueError:
-            raise HTTPException(400, f"Invalid alert level: {level}")
+        except ValueError as err:
+            raise HTTPException(400, f"Invalid alert level: {level}") from err
 
     alerts = alerts[-limit:]
     return {
@@ -595,7 +594,7 @@ def calibrate_tank(req: DrainDownCalibrationRequest):
 
     tank = tanks[req.tank_id]
     area = req.area_cm2 if req.area_cm2 is not None else tank.geometry.area_cm2
-    samples = list(zip(req.times_sec, req.levels_cm))
+    samples = list(zip(req.times_sec, req.levels_cm, strict=False))
 
     result = calibrate_drain_down(samples=samples, area_cm2=area, tank_id=req.tank_id)
     if result.status == "success" and result.calibrated_k > 0:
@@ -651,8 +650,9 @@ def compare_tank_prediction_vs_measured(
     q_in_cm3_s: Optional[float] = Query(None, description="Optional inlet flow override"),
 ):
     """
-    Evaluates digital-twin fidelity by simulating forward from the earliest measurement
-    in the window and computing MAE and RMSE against actual stored telemetry.
+    Evaluates digital-twin fidelity against stored telemetry chronologically using causal
+    inter-sample timestamps and piecewise past inflow rates, reporting both one-step tracking
+    and contiguous multi-step prediction metrics plus historical discrepancy audit context.
     """
     if not storage:
         raise HTTPException(503, "Storage not initialized")
@@ -661,56 +661,34 @@ def compare_tank_prediction_vs_measured(
 
     tank = tanks[tank_id]
     node_id = tank.geometry.node_id
-    records = storage.query_latest(node_id, limit=limit)
+    records = storage.query_latest(node_id, limit=min(500, max(limit, 80)))
     if not records:
-        # Fall back to zone_01 / zone_02 if node-specific telemetry is not yet populated
         fallback_zone = "zone_01" if tank_id == "tank_01" else "zone_02"
         records = storage.query_latest(fallback_zone, limit=limit)
 
-    if len(records) < 5:
-        # Generate demonstration comparison using calibrated ODE simulation
-        trajectory = tank.simulate_trajectory(duration_sec=60.0, dt_sec=2.0)
-        times = [p["time_sec"] for p in trajectory]
-        measured = [p["level_cm"] for p in trajectory]
-        import random
-        rng = random.Random(42)
-        noisy_measured = [round(max(0.0, m + rng.gauss(0, 0.4)), 2) for m in measured]
-        eval_metrics = evaluate_tank_prediction(measured=noisy_measured, predicted=measured)
-        eval_metrics["data_source"] = "SIMULATED_DEMO"
-        eval_metrics["tank_id"] = tank_id
-        eval_metrics["measured_levels_cm"] = noisy_measured
-        eval_metrics["predicted_levels_cm"] = measured
-        eval_metrics["times_sec"] = times
-        return eval_metrics
+    evaluated = evaluate_telemetry_window(tank=tank, records=records, q_in_override=q_in_cm3_s)
+    if not evaluated.get("insufficient_records", True):
+        evaluated.pop("insufficient_records", None)
+        return evaluated
 
-    chronological = list(reversed(records))
-    measured_levels = [r.get("water_level_cm", 0.0) for r in chronological if r.get("water_level_cm") is not None]
-
-    h0 = measured_levels[0]
-    dt = 5.0
-    duration = dt * (len(measured_levels) - 1)
-
-    # Determine effective inflow rate from stored telemetry or configuration
-    inflows = [r.get("inflow_cm3_s") for r in chronological if r.get("inflow_cm3_s") is not None]
-    if q_in_cm3_s is not None:
-        eff_q_in = q_in_cm3_s
-    elif inflows:
-        eff_q_in = sum(inflows) / len(inflows)
-    else:
-        eff_q_in = tank.default_q_in
-
-    trajectory = tank.simulate_trajectory(duration_sec=duration, dt_sec=dt, q_in=eff_q_in, h0_cm=h0)
+    # Fallback demonstration trajectory when DB holds fewer than 3 valid contiguous tank records
+    trajectory = tank.simulate_trajectory(duration_sec=60.0, dt_sec=2.0, q_in=q_in_cm3_s)
     times = [p["time_sec"] for p in trajectory]
-    predicted_levels = [p["level_cm"] for p in trajectory]
-
-    eval_metrics = evaluate_tank_prediction(measured=measured_levels, predicted=predicted_levels)
-    eval_metrics["data_source"] = chronological[0].get("source", "SIMULATED")
+    measured = [p["level_cm"] for p in trajectory]
+    import random
+    rng = random.Random(42)
+    noisy_measured = [round(max(0.0, m + rng.gauss(0, 0.4)), 2) for m in measured]
+    eval_metrics = evaluate_tank_prediction(measured=noisy_measured, predicted=measured)
+    eval_metrics["data_source"] = "SIMULATED_DEMO"
     eval_metrics["tank_id"] = tank_id
     eval_metrics["node_id"] = node_id
-    eval_metrics["measured_levels_cm"] = measured_levels
-    eval_metrics["predicted_levels_cm"] = predicted_levels[:len(measured_levels)]
-    eval_metrics["times_sec"] = times[:len(measured_levels)]
-    eval_metrics["q_in_cm3_s"] = round(eff_q_in, 2)
+    eval_metrics["measured_levels_cm"] = noisy_measured
+    eval_metrics["predicted_levels_cm"] = measured
+    eval_metrics["times_sec"] = times
+    eval_metrics["q_in_cm3_s"] = round(q_in_cm3_s if q_in_cm3_s is not None else tank.default_q_in, 2)
+    eval_metrics["one_step_tracking"] = evaluate_tank_prediction(measured=noisy_measured[1:], predicted=measured[1:])
+    eval_metrics["multi_step_prediction"] = dict(eval_metrics)
+    eval_metrics["physical_validation"] = "unavailable (virtual simulator stream only — no physical sensor hardware deployed)"
     return eval_metrics
 
 
@@ -822,7 +800,6 @@ def get_influx_latest(
 def get_services_status():
     """Live runtime status checks for every service (no hardcoded placeholder greens)."""
     import socket
-    import urllib.request
 
     # 1. MQTT TCP & client check
     mqtt_tcp_up = False
@@ -839,19 +816,19 @@ def get_services_status():
     influx_count = influx_target.count() if influx_ok else 0
 
     # 3. Node-RED HTTP UI check
-    import urllib.error
+    import httpx
     nodered_ok = False
     nodered_editor_ok = False
     nr_base = f"http://127.0.0.1:{config.NODERED_PORT}"
     for path_probe, flag in [("/ui/", "ui"), ("/", "ed")]:
         try:
-            with urllib.request.urlopen(f"{nr_base}{path_probe}", timeout=0.5) as resp:
-                if resp.status < 400:
-                    if flag == "ui":
-                        nodered_ok = True
-                    else:
-                        nodered_editor_ok = True
-        except (OSError, urllib.error.URLError) as e:
+            resp = httpx.get(f"{nr_base}{path_probe}", timeout=0.5, follow_redirects=False)
+            if resp.status_code < 400:
+                if flag == "ui":
+                    nodered_ok = True
+                else:
+                    nodered_editor_ok = True
+        except (OSError, httpx.HTTPError) as e:
             logger.debug("Node-RED probe %s skipped: %s", path_probe, e)
 
     # 4. Simulator health via ingestion stats & node freshness
@@ -1177,6 +1154,51 @@ _GEO_LAYER_FILES = {
 }
 
 
+def _safe_filename_slug(value: str) -> str:
+    import re
+    clean = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(value or "scenario")).strip("._")
+    return clean[:64] or "scenario"
+
+
+def _resolve_urban_scenario_result(scenario_id: str) -> dict:
+    from digital_twin.terrain_hydrology import (
+        HydroScenarioConfig,
+        PREDEFINED_SCENARIOS,
+        normalize_scenario_id,
+        terrain_engine,
+    )
+
+    nid = normalize_scenario_id(scenario_id)
+    if nid in _ACTIVE_SCENARIO_RESULT:
+        return _ACTIVE_SCENARIO_RESULT[nid]
+    if nid in PREDEFINED_SCENARIOS:
+        res = terrain_engine.run_scenario(PREDEFINED_SCENARIOS[nid])
+        _ACTIVE_SCENARIO_RESULT[nid] = res
+        return res
+    for saved in terrain_engine.list_saved_scenarios():
+        if saved.get("id") == nid or saved.get("saved_name") == scenario_id:
+            cfg = HydroScenarioConfig(**saved["config"])
+            res = terrain_engine.run_scenario(cfg)
+            _ACTIVE_SCENARIO_RESULT[nid] = res
+            return res
+    raise HTTPException(404, f"Scenario '{scenario_id}' not found")
+
+
+@app.get("/api/urban/geo/terrain_tiles/{z}/{x}/{y}.png")
+def get_urban_terrain_tile(z: int, x: int, y: int):
+    """Serves offline Terrarium RGB elevation tiles derived from local Copernicus GLO-30 DEM."""
+    from digital_twin.terrain_hydrology import terrain_engine
+
+    if z < 0 or z > 17 or x < 0 or y < 0 or x >= (1 << z) or y >= (1 << z):
+        raise HTTPException(400, "Invalid XYZ terrain tile coordinates")
+    png_bytes = terrain_engine.render_terrarium_tile_png(z, x, y)
+    return Response(
+        content=png_bytes,
+        media_type="image/png",
+        headers={"Cache-Control": "public, max-age=86400"},
+    )
+
+
 @app.get("/api/urban/geo/{layer}")
 def get_urban_geo_layer(layer: str):
     """Serves processed offline geospatial assets (Copernicus DEM relief, WFS polygons, OSM features)."""
@@ -1203,12 +1225,13 @@ def search_urban_features(q: str = Query(..., min_length=1, max_length=80), limi
 @app.get("/api/urban/point")
 def inspect_urban_point(lon: float = Query(...), lat: float = Query(...), scenario_id: Optional[str] = Query(None)):
     """Inspect Copernicus DSM elevation, UTM coordinates, surface mask, and modeled depth at (lon, lat)."""
-    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS, normalize_scenario_id
+    from digital_twin.terrain_hydrology import terrain_engine
     active = _get_default_urban_result()
     if scenario_id:
-        nid = normalize_scenario_id(scenario_id)
-        if nid in PREDEFINED_SCENARIOS:
-            active = terrain_engine.run_scenario(PREDEFINED_SCENARIOS[nid])
+        try:
+            active = _resolve_urban_scenario_result(scenario_id)
+        except HTTPException:
+            pass
     return terrain_engine.query_point(lon, lat, active_result=active)
 
 
@@ -1255,6 +1278,7 @@ def execute_urban_scenario(payload: Optional[dict] = None):
         "drainage_capacity_pct",
         "chembarambakkam_discharge_cusecs",
         "mannings_n",
+        "initial_depth_m",
     }
     if scenario_id in PREDEFINED_SCENARIOS and not any(k in payload for k in custom_keys):
         cfg = PREDEFINED_SCENARIOS[scenario_id]
@@ -1271,6 +1295,7 @@ def execute_urban_scenario(payload: Optional[dict] = None):
             nominal_drain_cap_mm_hr=float(payload.get("nominal_drain_cap_mm_hr", 12.0)),
             chembarambakkam_discharge_cusecs=float(payload.get("chembarambakkam_discharge_cusecs", 0.0)),
             mannings_n=float(payload.get("mannings_n", 0.045)),
+            initial_depth_m=float(payload.get("initial_depth_m", 0.0)),
             description=payload.get("description", "Custom interactive urban flood simulation scenario."),
             provenance_tags=["user_defined_scenario", "terrain_routed_landlab"],
         )
@@ -1278,7 +1303,7 @@ def execute_urban_scenario(payload: Optional[dict] = None):
     try:
         res = terrain_engine.run_scenario(cfg)
     except ValueError as ve:
-        raise HTTPException(422, str(ve))
+        raise HTTPException(422, str(ve)) from ve
 
     _ACTIVE_SCENARIO_RESULT["last"] = res
     _ACTIVE_SCENARIO_RESULT[scenario_id] = res
@@ -1287,15 +1312,24 @@ def execute_urban_scenario(payload: Optional[dict] = None):
 
 @app.post("/api/urban/scenario/compare")
 def compare_urban_scenarios(payload: dict):
-    """Computes explicit cell-by-cell numerical difference between two scenarios."""
-    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS, normalize_scenario_id
-    b_id = normalize_scenario_id(payload.get("baseline_id", "heavy_rainfall"))
-    a_id = normalize_scenario_id(payload.get("alternate_id", "reduced_drainage"))
-    r_base = _ACTIVE_SCENARIO_RESULT.get(b_id) or (terrain_engine.run_scenario(PREDEFINED_SCENARIOS[b_id]) if b_id in PREDEFINED_SCENARIOS else None)
-    r_alt = _ACTIVE_SCENARIO_RESULT.get(a_id) or (terrain_engine.run_scenario(PREDEFINED_SCENARIOS[a_id]) if a_id in PREDEFINED_SCENARIOS else None)
-    if not r_base or not r_alt:
-        raise HTTPException(404, "Baseline or alternate scenario not found")
-    return terrain_engine.compare_scenarios(r_base, r_alt)
+    """Computes explicit cell-by-cell numerical, spatial delta raster, and exposure comparison."""
+    from digital_twin.terrain_hydrology import terrain_engine
+
+    b_raw = str(payload.get("baseline_id", "heavy_rainfall"))
+    a_raw = str(payload.get("alternate_id", "reduced_drainage"))
+    threshold_m = float(payload.get("threshold_m", 0.15))
+    if not (0.01 <= threshold_m <= 2.0):
+        raise HTTPException(422, "threshold_m must be between 0.01 and 2.0 m")
+    include_exposure = bool(payload.get("include_exposure", True))
+
+    r_base = _resolve_urban_scenario_result(b_raw)
+    r_alt = _resolve_urban_scenario_result(a_raw)
+    return terrain_engine.compare_scenarios(
+        r_base,
+        r_alt,
+        include_exposure=include_exposure,
+        threshold_m=threshold_m,
+    )
 
 
 @app.post("/api/urban/scenario/save")
@@ -1315,9 +1349,13 @@ def save_urban_scenario(payload: dict):
         drainage_efficiency_pct=float(payload.get("drainage_efficiency_pct", 100.0)),
         chembarambakkam_discharge_cusecs=float(payload.get("chembarambakkam_discharge_cusecs", 0.0)),
         mannings_n=float(payload.get("mannings_n", 0.045)),
+        initial_depth_m=float(payload.get("initial_depth_m", 0.0)),
         description=payload.get("description", f"Saved scenario: {saved_name}"),
     )
-    cfg.validate()
+    try:
+        cfg.validate()
+    except ValueError as ve:
+        raise HTTPException(422, str(ve)) from ve
     return terrain_engine.save_scenario_config(saved_name, cfg)
 
 
@@ -1328,37 +1366,248 @@ def get_saved_urban_scenarios():
     return {"count": len(saved), "scenarios": saved}
 
 
+@app.patch("/api/urban/scenarios/saved/{scenario_key}")
+def rename_saved_urban_scenario(scenario_key: str, payload: dict):
+    from digital_twin.terrain_hydrology import terrain_engine
+    new_name = str(payload.get("new_name", "")).strip()
+    if not new_name:
+        raise HTTPException(422, "new_name is required")
+    updated = terrain_engine.rename_saved_scenario(scenario_key, new_name)
+    if not updated:
+        raise HTTPException(404, f"Saved scenario '{scenario_key}' not found")
+    return updated
+
+
+@app.post("/api/urban/scenarios/saved/{scenario_key}/duplicate")
+def duplicate_saved_urban_scenario(scenario_key: str, payload: Optional[dict] = None):
+    from digital_twin.terrain_hydrology import terrain_engine
+    new_name = str((payload or {}).get("new_name", "")).strip() or None
+    dup = terrain_engine.duplicate_saved_scenario(scenario_key, new_name=new_name)
+    if not dup:
+        raise HTTPException(404, f"Saved scenario '{scenario_key}' not found")
+    return dup
+
+
+@app.delete("/api/urban/scenarios/saved/{scenario_key}")
+def delete_saved_urban_scenario(scenario_key: str):
+    from digital_twin.terrain_hydrology import terrain_engine
+    ok = terrain_engine.delete_saved_scenario(scenario_key)
+    if not ok:
+        raise HTTPException(404, f"Saved scenario '{scenario_key}' not found")
+    return {"status": "deleted", "key": scenario_key}
+
+
+@app.get("/api/urban/exposure")
+def get_urban_exposure(
+    scenario_id: str = Query("heavy_rainfall"),
+    threshold_m: float = Query(0.15, ge=0.01, le=2.0),
+    include_geojson: bool = Query(True),
+):
+    """Computes EPSG:32644 potential exposure of buildings, roads, bridges, and OSM civic facilities."""
+    from digital_twin.exposure_engine import get_exposure_engine
+
+    res = _resolve_urban_scenario_result(scenario_id)
+    return get_exposure_engine().evaluate_scenario_exposure(
+        res["_final_depth_grid"],
+        scenario_id=res["scenario"]["id"],
+        scenario_name=res["scenario"]["name"],
+        threshold_m=threshold_m,
+        include_highlight_geojson=include_geojson,
+    )
+
+
+@app.get("/api/urban/neighbourhoods")
+def get_urban_neighbourhoods(
+    scenario_id: str = Query("heavy_rainfall"),
+    boundary_type: str = Query("watersheds", pattern="^(watersheds|wards)$"),
+    threshold_m: float = Query(0.15, ge=0.01, le=2.0),
+):
+    """Aggregates hydrological depth and projected exposure across official Watersheds or GCC Wards."""
+    from digital_twin.exposure_engine import get_exposure_engine
+
+    res = _resolve_urban_scenario_result(scenario_id)
+    return get_exposure_engine().evaluate_neighbourhoods(
+        res["_final_depth_grid"],
+        scenario_id=res["scenario"]["id"],
+        scenario_name=res["scenario"]["name"],
+        boundary_type=boundary_type,
+        threshold_m=threshold_m,
+    )
+
+
+@app.post("/api/urban/sensitivity")
+def run_urban_sensitivity(payload: dict):
+    """Executes bounded parameter sensitivity sweeps over real Landlab 2D OverlandFlow grids."""
+    from digital_twin.terrain_hydrology import (
+        HydroScenarioConfig,
+        PREDEFINED_SCENARIOS,
+        normalize_scenario_id,
+        terrain_engine,
+    )
+
+    param = str(payload.get("parameter", "rainfall_intensity_mm_hr")).strip()
+    min_val = float(payload.get("min_val", 10.0))
+    max_val = float(payload.get("max_val", 110.0))
+    steps = int(payload.get("steps", 5))
+    base_id = normalize_scenario_id(str(payload.get("base_scenario_id", "heavy_rainfall")))
+    threshold_m = float(payload.get("threshold_m", 0.15))
+    include_exposure = bool(payload.get("include_exposure", True))
+
+    if not (0.01 <= threshold_m <= 2.0):
+        raise HTTPException(422, "threshold_m must be between 0.01 and 2.0 m")
+
+    base_cfg = PREDEFINED_SCENARIOS.get(base_id)
+    if base_cfg is None:
+        base_res = _resolve_urban_scenario_result(base_id)
+        sc = base_res["scenario"]
+        base_cfg = HydroScenarioConfig(
+            scenario_id=sc["id"],
+            scenario_name=sc["name"],
+            mode=sc["mode"],
+            rainfall_intensity_mm_hr=sc["rainfall_intensity_mm_hr"],
+            duration_hours=sc["duration_hours"],
+            infiltration_rate_mm_hr=sc["infiltration_rate_mm_hr"],
+            drainage_efficiency_pct=sc["drainage_efficiency_pct"],
+            chembarambakkam_discharge_cusecs=sc["chembarambakkam_discharge_cusecs"],
+            mannings_n=sc["mannings_n"],
+            initial_depth_m=sc.get("initial_depth_m", 0.0),
+        )
+
+    try:
+        return terrain_engine.run_sensitivity_sweep(
+            parameter=param,
+            min_val=min_val,
+            max_val=max_val,
+            steps=steps,
+            base_cfg=base_cfg,
+            include_exposure=include_exposure,
+            threshold_m=threshold_m,
+        )
+    except ValueError as ve:
+        raise HTTPException(422, str(ve)) from ve
+
+
+@app.get("/api/urban/report/pdf")
+def download_urban_pdf_report(
+    scenario_id: str = Query("heavy_rainfall"),
+    compare_id: Optional[str] = Query(None),
+    boundary_type: str = Query("watersheds", pattern="^(watersheds|wards)$"),
+    threshold_m: float = Query(0.15, ge=0.01, le=2.0),
+    objective: str = Query(
+        "South Chennai terrain-aware flood screening & projected infrastructure exposure assessment.",
+        max_length=260,
+    ),
+):
+    """Generates and downloads an offline A4 PDF engineering report from actual solver & exposure results."""
+    from digital_twin.exposure_engine import get_exposure_engine
+    from digital_twin.report_generator import generate_engineering_pdf_bytes
+    from digital_twin.terrain_hydrology import terrain_engine
+
+    res = _resolve_urban_scenario_result(scenario_id)
+    exp_eng = get_exposure_engine()
+    exposure = exp_eng.evaluate_scenario_exposure(
+        res["_final_depth_grid"],
+        scenario_id=res["scenario"]["id"],
+        scenario_name=res["scenario"]["name"],
+        threshold_m=threshold_m,
+        include_highlight_geojson=False,
+    )
+    neighbourhoods = exp_eng.evaluate_neighbourhoods(
+        res["_final_depth_grid"],
+        scenario_id=res["scenario"]["id"],
+        scenario_name=res["scenario"]["name"],
+        boundary_type=boundary_type,
+        threshold_m=threshold_m,
+    )
+    compare_rep = None
+    if compare_id and compare_id.strip():
+        alt_res = _resolve_urban_scenario_result(compare_id.strip())
+        compare_rep = terrain_engine.compare_scenarios(
+            res,
+            alt_res,
+            include_exposure=True,
+            threshold_m=threshold_m,
+        )
+
+    pdf_bundle = generate_engineering_pdf_bytes(
+        terrain_engine_obj=terrain_engine,
+        scenario_result=res,
+        exposure_report=exposure,
+        neighbourhood_report=neighbourhoods,
+        compare_report=compare_rep,
+        analysis_objective=objective,
+    )
+    safe_fn = _safe_filename_slug(pdf_bundle["filename"])
+    return Response(
+        content=pdf_bundle["pdf_bytes"],
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{safe_fn}"',
+            "X-CivicTwin-Report-Id": pdf_bundle["report_id"],
+        },
+    )
+
+
+@app.get("/api/urban/report/csv")
+def download_urban_csv_report(
+    scenario_id: str = Query("heavy_rainfall"),
+    boundary_type: str = Query("watersheds", pattern="^(watersheds|wards)$"),
+    threshold_m: float = Query(0.15, ge=0.01, le=2.0),
+):
+    """Exports scenario summary, infrastructure exposure, and neighbourhood analysis as CSV."""
+    from digital_twin.exposure_engine import get_exposure_engine
+    from digital_twin.report_generator import generate_scenario_csv_text
+
+    res = _resolve_urban_scenario_result(scenario_id)
+    exp_eng = get_exposure_engine()
+    exposure = exp_eng.evaluate_scenario_exposure(
+        res["_final_depth_grid"],
+        scenario_id=res["scenario"]["id"],
+        scenario_name=res["scenario"]["name"],
+        threshold_m=threshold_m,
+        include_highlight_geojson=False,
+    )
+    neighbourhoods = exp_eng.evaluate_neighbourhoods(
+        res["_final_depth_grid"],
+        scenario_id=res["scenario"]["id"],
+        scenario_name=res["scenario"]["name"],
+        boundary_type=boundary_type,
+        threshold_m=threshold_m,
+    )
+    csv_txt = generate_scenario_csv_text(res, exposure, neighbourhoods)
+    safe_slug = _safe_filename_slug(res["scenario"]["id"])
+    return Response(
+        content=csv_txt,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="civictwin_{safe_slug}_analysis.csv"'},
+    )
+
+
 @app.get("/api/urban/scenario/{scenario_id}/export")
 def export_urban_scenario(scenario_id: str, fmt: str = Query("geojson", pattern="^(geojson|summary)$")):
     """Downloads active/cached scenario flood polygons GeoJSON or summary JSON."""
     from fastapi.responses import JSONResponse
-    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS, normalize_scenario_id, strip_internal_grids
-    nid = normalize_scenario_id(scenario_id)
-    res = _ACTIVE_SCENARIO_RESULT.get(nid)
-    if not res and nid in PREDEFINED_SCENARIOS:
-        res = terrain_engine.run_scenario(PREDEFINED_SCENARIOS[nid])
-    if not res:
-        raise HTTPException(404, f"Scenario '{scenario_id}' not found")
+    from digital_twin.terrain_hydrology import normalize_scenario_id, strip_internal_grids
+
+    res = _resolve_urban_scenario_result(scenario_id)
+    safe_slug = _safe_filename_slug(normalize_scenario_id(scenario_id))
     if fmt == "geojson":
         return JSONResponse(
             content=res["flood_overlay_geojson"],
-            headers={"Content-Disposition": f'attachment; filename="civictwin_{nid}_flood.geojson"'},
+            headers={"Content-Disposition": f'attachment; filename="civictwin_{safe_slug}_flood.geojson"'},
         )
     return JSONResponse(
         content=strip_internal_grids(res),
-        headers={"Content-Disposition": f'attachment; filename="civictwin_{nid}_summary.json"'},
+        headers={"Content-Disposition": f'attachment; filename="civictwin_{safe_slug}_summary.json"'},
     )
 
 
 @app.get("/api/urban/scenario/{scenario_id}")
 def get_urban_scenario_result(scenario_id: str):
-    """Retrieves computed Landlab 2D flood results for a predefined scenario ID or alias."""
-    from digital_twin.terrain_hydrology import terrain_engine, PREDEFINED_SCENARIOS, normalize_scenario_id, strip_internal_grids
-    nid = normalize_scenario_id(scenario_id)
-    if nid not in PREDEFINED_SCENARIOS:
-        raise HTTPException(404, f"Scenario '{scenario_id}' not found")
-    res = terrain_engine.run_scenario(PREDEFINED_SCENARIOS[nid])
-    _ACTIVE_SCENARIO_RESULT[nid] = res
+    """Retrieves computed Landlab 2D flood results for a predefined, cached, or saved scenario ID."""
+    from digital_twin.terrain_hydrology import strip_internal_grids
+
+    res = _resolve_urban_scenario_result(scenario_id)
     return strip_internal_grids(res)
 
 

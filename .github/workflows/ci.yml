@@ -40,4 +40,5 @@ jobs:
             tests/test_chennai_twin.py \
             tests/test_terrain_hydrology.py \
             tests/test_urban_twin.py \
+            tests/test_urban_intelligence.py \
             -v

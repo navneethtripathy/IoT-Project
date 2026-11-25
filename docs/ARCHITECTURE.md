@@ -14,10 +14,13 @@ Workstream A — Urban Flood Terrain Twin
   Copernicus GLO-30 DEM + CFM-DSS WFS + OSM PBF
         |
         v (EPSG:32644 UTM 44N, dx=150m, 111x175 cells)
-  digital_twin/terrain_hydrology.py (Landlab OverlandFlow)
+  digital_twin/terrain_hydrology.py (Landlab OverlandFlow + Terrarium 3D DEM + Sensitivity)
         |
-        v (GeoJSON + RGBA depth PNG + mass-balance summary)
-  FastAPI REST (/api/urban/*) -> Offline MapLibre 3D UI (/urban-twin)
+        +--> digital_twin/exposure_engine.py (EPSG:32644 buildings, deduplicated roads, watersheds/wards)
+        +--> digital_twin/report_generator.py (Offline A4 ReportLab + Matplotlib PDF & CSV reports)
+        |
+        v (GeoJSON + RGBA/Delta PNG + Terrarium tiles + exposure/neighbourhood summaries)
+  FastAPI REST (/api/urban/*) -> Offline MapLibre 3D UI (/urban-twin) & Showcase (/showcase)
 
 Workstream B — Experimental IoT Bench Pipeline
   Node 01 (50 cm tank) & Node 02 (60 cm tank) [MQTT QoS 1]
@@ -66,8 +69,9 @@ Prefix: `civictwin/v1/` (QoS `1`).
 
 | Component | URL / Address | Function |
 | :--- | :--- | :--- |
-| Primary 3D Urban Twin | `http://127.0.0.1:8000/urban-twin` | Interactive MapLibre 3D flood terrain & scenario studio |
-| Control Center | `http://127.0.0.1:8000/showcase` | Unified multi-tab interface (Urban + IoT Lab + Explorer) |
+| Primary 3D Urban Twin | `http://127.0.0.1:8000/urban-twin` | Interactive MapLibre 3D terrain, comparison swipe & scenario studio |
+| Control Center | `http://127.0.0.1:8000/showcase` | Unified hub (Impact Intelligence, Sensitivity, IoT Lab, Reports) |
+| Urban API Endpoints | `/api/urban/exposure`, `/neighbourhoods`, `/sensitivity`, `/report/pdf` | Spatial exposure, watershed/ward rollups, sweeps & A4 dossiers |
 | Live Service Probes | `http://127.0.0.1:8000/api/services/status` | Real TCP/HTTP/DB health JSON for UI & verification |
 | OpenAPI / Swagger UI | `http://127.0.0.1:8000/docs` | Full interactive REST documentation |
 | InfluxDB 2.x UI | `http://127.0.0.1:8086` | Flux Data Explorer & time-series visualization |

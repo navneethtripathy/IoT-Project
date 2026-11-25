@@ -94,7 +94,7 @@ class StorageBackend(abc.ABC):
             "journal_mode": "none",
         }
 
-    def close(self):
+    def close(self):  # noqa: B027
         """Clean up resources."""
         pass
 
@@ -319,10 +319,29 @@ class SQLiteStorage(StorageBackend):
     def get_table_schema(self, table_name: str) -> list[dict]:
         with self._lock:
             allowed = self.get_table_names()
-            if table_name not in allowed:
+            if table_name not in allowed or table_name != "telemetry":
                 return []
-            cur = self._conn.execute(f"PRAGMA table_info({table_name})")
+            cur = self._conn.execute("PRAGMA table_info(telemetry)")
             return [dict(row) for row in cur.fetchall()]
+
+    _PAGINATED_SQL = {
+        (False, False): (
+            "SELECT COUNT(*) FROM telemetry",
+            "SELECT * FROM telemetry ORDER BY id DESC LIMIT ? OFFSET ?",
+        ),
+        (True, False): (
+            "SELECT COUNT(*) FROM telemetry WHERE zone_id = ?",
+            "SELECT * FROM telemetry WHERE zone_id = ? ORDER BY id DESC LIMIT ? OFFSET ?",
+        ),
+        (False, True): (
+            "SELECT COUNT(*) FROM telemetry WHERE device_id = ?",
+            "SELECT * FROM telemetry WHERE device_id = ? ORDER BY id DESC LIMIT ? OFFSET ?",
+        ),
+        (True, True): (
+            "SELECT COUNT(*) FROM telemetry WHERE zone_id = ? AND device_id = ?",
+            "SELECT * FROM telemetry WHERE zone_id = ? AND device_id = ? ORDER BY id DESC LIMIT ? OFFSET ?",
+        ),
+    }
 
     def query_records_paginated(
         self,
@@ -334,24 +353,19 @@ class SQLiteStorage(StorageBackend):
     ) -> dict:
         with self._lock:
             allowed_tables = self.get_table_names()
-            if table_name not in allowed_tables:
+            if table_name not in allowed_tables or table_name != "telemetry":
                 table_name = "telemetry"
 
-            conditions = []
-            params = []
+            params: list = []
             if zone_id:
-                conditions.append("zone_id = ?")
                 params.append(zone_id)
             if device_id:
-                conditions.append("device_id = ?")
                 params.append(device_id)
 
-            where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
-
-            count_cur = self._conn.execute(f"SELECT COUNT(*) FROM {table_name} {where_clause}", params)
+            count_sql, query_sql = self._PAGINATED_SQL[(bool(zone_id), bool(device_id))]
+            count_cur = self._conn.execute(count_sql, params)
             total_count = count_cur.fetchone()[0]
 
-            query_sql = f"SELECT * FROM {table_name} {where_clause} ORDER BY id DESC LIMIT ? OFFSET ?"
             cur = self._conn.execute(query_sql, params + [limit, offset])
             rows = self._rows_to_dicts(cur.fetchall())
 

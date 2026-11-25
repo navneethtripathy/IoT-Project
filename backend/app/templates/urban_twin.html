@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,18 +11,27 @@
   <link href="/static/css/obsidian_ocean.css" rel="stylesheet" />
   <script src="/static/js/ui_core.js"></script>
   <style>
-    html, body {
+    html,
+    body {
       max-width: 100vw;
       overflow-x: hidden;
     }
+
     body {
       background-color: var(--bg-primary);
       color: var(--text-primary);
       margin: 0;
       overflow: hidden;
     }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
     .ut-drawer {
       background-color: rgba(12, 17, 24, 0.96);
@@ -51,6 +61,7 @@
       cursor: pointer;
       transition: border-color 150ms var(--ease-quint), transform 150ms var(--ease-quint);
     }
+
     .ut-focus-marker:hover {
       border-color: var(--accent-glacier);
       transform: translateY(-1px);
@@ -70,6 +81,7 @@
         z-index: 40;
         box-shadow: 12px 0 32px rgba(0, 0, 0, 0.6);
       }
+
       #right-drawer {
         position: fixed;
         top: 48px;
@@ -81,20 +93,26 @@
     }
   </style>
 </head>
+
 <body class="h-screen w-screen flex flex-col">
 
   <!-- TOP COMMAND HEADER -->
-  <header id="ut-header" class="h-12 ct-nav px-2.5 sm:px-4 flex items-center justify-between gap-2 sm:gap-3 shrink-0 z-30">
+  <header id="ut-header"
+    class="h-12 ct-nav px-2.5 sm:px-4 flex items-center justify-between gap-2 sm:gap-3 shrink-0 z-30">
     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-      <a href="/showcase" class="flex items-center gap-2 text-[#F4F6F8] hover:opacity-90 transition shrink-0" aria-label="CivicTwin-R Overview">
+      <a href="/showcase" class="flex items-center gap-2 text-[#F4F6F8] hover:opacity-90 transition shrink-0"
+        aria-label="CivicTwin-R Overview">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="#344050" stroke-width="1.5"/>
-          <path d="M5 14.5C7.5 11.5 10.5 11.5 12 13.5C13.5 15.5 16.5 15.5 19 12.5" stroke="#36C2C9" stroke-width="1.75" stroke-linecap="round"/>
-          <path d="M5 10C7.5 7.5 10.5 7.5 12 9.2C13.5 10.9 16.5 10.9 19 8.5" stroke="#62B5F5" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="#344050" stroke-width="1.5" />
+          <path d="M5 14.5C7.5 11.5 10.5 11.5 12 13.5C13.5 15.5 16.5 15.5 19 12.5" stroke="#36C2C9" stroke-width="1.75"
+            stroke-linecap="round" />
+          <path d="M5 10C7.5 7.5 10.5 7.5 12 9.2C13.5 10.9 16.5 10.9 19 8.5" stroke="#62B5F5" stroke-width="1.5"
+            stroke-linecap="round" />
         </svg>
         <span class="font-semibold text-sm tracking-tight whitespace-nowrap">CivicTwin-R</span>
       </a>
-      <span class="hidden 2xl:inline-block whitespace-nowrap text-[11px] mono text-[#738196] pl-2 border-l border-[#253140]">
+      <span
+        class="hidden 2xl:inline-block whitespace-nowrap text-[11px] mono text-[#738196] pl-2 border-l border-[#253140]">
         South Chennai · EPSG:32644 · 150 m
       </span>
     </div>
@@ -102,34 +120,35 @@
     <!-- UNIFIED PRODUCT NAVIGATION -->
     <nav class="hidden xl:flex items-center gap-0.5 shrink-0" aria-label="Primary navigation">
       <a href="/showcase#urbantwin" class="ct-nav-link whitespace-nowrap">Overview</a>
-      <a href="/urban-twin" class="ct-nav-link is-active whitespace-nowrap" aria-current="page">Urban Twin</a>
+      <a href="/urban-twin" class="ct-nav-link is-active whitespace-nowrap" aria-current="page">Urban Explorer</a>
       <a href="/showcase#urbanscenarios" class="ct-nav-link whitespace-nowrap">Scenarios</a>
-      <a href="/showcase#chennai" class="ct-nav-link whitespace-nowrap">Historical Analysis</a>
-      <a href="/showcase#twin3d" class="ct-nav-link whitespace-nowrap">IoT Laboratory</a>
+      <a href="/showcase#impact" class="ct-nav-link whitespace-nowrap">Impact</a>
+      <a href="/showcase#chennai" class="ct-nav-link whitespace-nowrap">Historical</a>
+      <a href="/showcase#twin3d" class="ct-nav-link whitespace-nowrap">IoT Lab</a>
       <a href="/showcase#twin" class="ct-nav-link whitespace-nowrap">Research</a>
       <a href="/showcase#overview" class="ct-nav-link whitespace-nowrap">System</a>
+      <a href="/showcase#reports" class="ct-nav-link whitespace-nowrap">Reports</a>
     </nav>
 
     <!-- LIVE GEOGRAPHICAL SEARCH + WORKSPACE TOGGLES -->
     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-      <div class="relative w-28 sm:w-48 xl:w-56">
+      <div class="relative w-28 sm:w-44 xl:w-52">
         <label for="urban-search-input" class="sr-only">Search South Chennai locations</label>
-        <input
-          id="urban-search-input"
-          type="text"
-          role="combobox"
-          aria-expanded="false"
-          aria-controls="search-results-box"
-          placeholder="Search..."
-          autocomplete="off"
-          class="ct-input w-full pr-6 py-1 text-xs"
-        />
-        <span class="hidden sm:inline absolute right-2.5 top-1.5 text-[#738196] text-xs pointer-events-none" aria-hidden="true">/</span>
-        <div id="search-results-box" role="listbox" class="hidden absolute right-0 sm:left-0 w-64 sm:w-full top-9 bg-[#111821] border border-[#344050] rounded-lg shadow-2xl max-h-64 overflow-y-auto z-50 divide-y divide-[#253140] text-xs"></div>
+        <input id="urban-search-input" type="text" role="combobox" aria-expanded="false"
+          aria-controls="search-results-box" placeholder="Search..." autocomplete="off"
+          class="ct-input w-full pr-6 py-1 text-xs" />
+        <span class="hidden sm:inline absolute right-2.5 top-1.5 text-[#738196] text-xs pointer-events-none"
+          aria-hidden="true">/</span>
+        <div id="search-results-box" role="listbox"
+          class="hidden absolute right-0 sm:left-0 w-64 sm:w-full top-9 bg-[#111821] border border-[#344050] rounded-lg shadow-2xl max-h-64 overflow-y-auto z-50 divide-y divide-[#253140] text-xs">
+        </div>
       </div>
 
-      <button type="button" onclick="toggleDrawer('left')" class="ct-btn ct-btn-sm px-2 sm:px-2.5" aria-label="Toggle Scenario Controls" title="Toggle Scenario Studio">Controls</button>
-      <button type="button" onclick="toggleDrawer('right')" class="ct-btn ct-btn-sm px-2 sm:px-2.5" aria-label="Toggle Analytics Inspector" title="Toggle Analytics & Inspector">Inspector</button>
+      <button type="button" onclick="toggleDemoTour()" class="hidden md:inline-flex ct-btn ct-btn-sm px-2 text-[#36C2C9]" title="Guided Demo Walkthrough">Demo</button>
+      <button type="button" onclick="toggleDrawer('left')" class="ct-btn ct-btn-sm px-2 sm:px-2.5"
+        aria-label="Toggle Scenario Controls" title="Toggle Scenario Studio">Controls</button>
+      <button type="button" onclick="toggleDrawer('right')" class="ct-btn ct-btn-sm px-2 sm:px-2.5"
+        aria-label="Toggle Analytics Inspector" title="Toggle Analytics & Inspector">Inspector</button>
     </div>
   </header>
 
@@ -167,21 +186,29 @@
               <div class="flex justify-between items-center text-xs mb-1">
                 <label for="sl-rain" class="text-[#A0ADBD]">Rainfall Intensity</label>
                 <div class="flex items-center gap-1 mono text-[11px]">
-                  <input id="num-rain" type="number" min="0" max="200" step="5" value="45" oninput="syncFromNumber('rain')" class="w-12 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]" aria-label="Rainfall intensity in mm per hour" />
+                  <input id="num-rain" type="number" min="0" max="200" step="5" value="45"
+                    oninput="syncFromNumber('rain')"
+                    class="w-12 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]"
+                    aria-label="Rainfall intensity in mm per hour" />
                   <span id="val-rain" class="text-[#62B5F5]">mm/hr</span>
                 </div>
               </div>
-              <input id="sl-rain" type="range" min="0" max="200" step="5" value="45" oninput="syncFromSlider('rain')" class="ct-slider" />
+              <input id="sl-rain" type="range" min="0" max="200" step="5" value="45" oninput="syncFromSlider('rain')"
+                class="ct-slider" />
             </div>
             <div>
               <div class="flex justify-between items-center text-xs mb-1">
                 <label for="sl-dur" class="text-[#A0ADBD]">Storm Duration</label>
                 <div class="flex items-center gap-1 mono text-[11px]">
-                  <input id="num-dur" type="number" min="1" max="24" step="0.5" value="4" oninput="syncFromNumber('dur')" class="w-12 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]" aria-label="Storm duration in hours" />
+                  <input id="num-dur" type="number" min="1" max="24" step="0.5" value="4"
+                    oninput="syncFromNumber('dur')"
+                    class="w-12 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]"
+                    aria-label="Storm duration in hours" />
                   <span id="val-dur" class="text-[#62B5F5]">hrs</span>
                 </div>
               </div>
-              <input id="sl-dur" type="range" min="1" max="24" step="0.5" value="4" oninput="syncFromSlider('dur')" class="ct-slider" />
+              <input id="sl-dur" type="range" min="1" max="24" step="0.5" value="4" oninput="syncFromSlider('dur')"
+                class="ct-slider" />
             </div>
           </div>
 
@@ -192,46 +219,72 @@
               <div class="flex justify-between items-center text-xs mb-1">
                 <label for="sl-drain" class="text-[#A0ADBD]">Drainage Efficiency</label>
                 <div class="flex items-center gap-1 mono text-[11px]">
-                  <input id="num-drain" type="number" min="10" max="200" step="5" value="100" oninput="syncFromNumber('drain')" class="w-12 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]" aria-label="Drainage efficiency percentage" />
+                  <input id="num-drain" type="number" min="10" max="200" step="5" value="100"
+                    oninput="syncFromNumber('drain')"
+                    class="w-12 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]"
+                    aria-label="Drainage efficiency percentage" />
                   <span id="val-drain" class="text-[#43C59E]">%</span>
                 </div>
               </div>
-              <input id="sl-drain" type="range" min="10" max="200" step="5" value="100" oninput="syncFromSlider('drain')" class="ct-slider" />
+              <input id="sl-drain" type="range" min="10" max="200" step="5" value="100"
+                oninput="syncFromSlider('drain')" class="ct-slider" />
             </div>
             <div>
               <div class="flex justify-between items-center text-xs mb-1">
                 <label for="sl-infil" class="text-[#A0ADBD]">Soil Infiltration</label>
                 <div class="flex items-center gap-1 mono text-[11px]">
-                  <input id="num-infil" type="number" min="0" max="25" step="0.5" value="5" oninput="syncFromNumber('infil')" class="w-12 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]" aria-label="Soil infiltration rate in mm per hour" />
+                  <input id="num-infil" type="number" min="0" max="25" step="0.5" value="5"
+                    oninput="syncFromNumber('infil')"
+                    class="w-12 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]"
+                    aria-label="Soil infiltration rate in mm per hour" />
                   <span id="val-infil" class="text-[#36C2C9]">mm/hr</span>
                 </div>
               </div>
-              <input id="sl-infil" type="range" min="0" max="25" step="0.5" value="5" oninput="syncFromSlider('infil')" class="ct-slider" />
+              <input id="sl-infil" type="range" min="0" max="25" step="0.5" value="5" oninput="syncFromSlider('infil')"
+                class="ct-slider" />
             </div>
             <div>
               <div class="flex justify-between items-center text-xs mb-1">
                 <label for="sl-mann" class="text-[#A0ADBD]">Manning Roughness</label>
                 <div class="flex items-center gap-1 mono text-[11px]">
-                  <input id="num-mann" type="number" min="0.02" max="0.12" step="0.005" value="0.045" oninput="syncFromNumber('mann')" class="w-14 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]" aria-label="Manning roughness coefficient" />
+                  <input id="num-mann" type="number" min="0.02" max="0.12" step="0.005" value="0.045"
+                    oninput="syncFromNumber('mann')"
+                    class="w-14 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]"
+                    aria-label="Manning roughness coefficient" />
                   <span id="val-mann" class="text-[#738196]">n</span>
                 </div>
               </div>
-              <input id="sl-mann" type="range" min="0.02" max="0.12" step="0.005" value="0.045" oninput="syncFromSlider('mann')" class="ct-slider" />
+              <input id="sl-mann" type="range" min="0.02" max="0.12" step="0.005" value="0.045"
+                oninput="syncFromSlider('mann')" class="ct-slider" />
             </div>
           </div>
 
-          <!-- Group 3: Upstream Boundary Inflow -->
+          <!-- Group 3: Upstream Boundary Inflow & Initial Condition -->
           <div class="space-y-2">
-            <div class="ct-label">Reservoir Boundary</div>
+            <div class="ct-label">Boundary &amp; Initial State</div>
             <div>
               <div class="flex justify-between items-center text-xs mb-1">
                 <label for="sl-spill" class="text-[#A0ADBD]">Chembarambakkam Release</label>
                 <div class="flex items-center gap-1 mono text-[11px]">
-                  <input id="num-spill" type="number" min="0" max="40000" step="1000" value="0" oninput="syncFromNumber('spill')" class="w-14 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]" aria-label="Chembarambakkam spillway release in cusecs" />
+                  <input id="num-spill" type="number" min="0" max="40000" step="1000" value="0"
+                    oninput="syncFromNumber('spill')"
+                    class="w-14 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]"
+                    aria-label="Chembarambakkam spillway release in cusecs" />
                   <span id="val-spill" class="text-[#E9B65C]">cfs</span>
                 </div>
               </div>
-              <input id="sl-spill" type="range" min="0" max="40000" step="1000" value="0" oninput="syncFromSlider('spill')" class="ct-slider" />
+              <input id="sl-spill" type="range" min="0" max="40000" step="1000" value="0"
+                oninput="syncFromSlider('spill')" class="ct-slider" />
+            </div>
+            <div>
+              <div class="flex justify-between items-center text-xs mb-1">
+                <label for="sl-initd" class="text-[#A0ADBD]">Initial Ponded Depth</label>
+                <div class="flex items-center gap-1 mono text-[11px]">
+                  <input id="num-initd" type="number" min="0" max="2" step="0.05" value="0" oninput="syncFromNumber('initd')" class="w-14 bg-[#080B10] border border-[#253140] rounded px-1 py-0.5 text-right text-[#F4F6F8]" aria-label="Initial water depth in meters" />
+                  <span class="text-[#36C2C9]">m</span>
+                </div>
+              </div>
+              <input id="sl-initd" type="range" min="0" max="2" step="0.05" value="0" oninput="syncFromSlider('initd')" class="ct-slider" />
             </div>
           </div>
 
@@ -239,11 +292,13 @@
             Parameters adjusted — execute model to update grid.
           </div>
 
-          <button id="btn-run-sim" type="button" onclick="runCustomScenario()" class="ct-btn ct-btn-primary w-full py-2 text-xs">
+          <button id="btn-run-sim" type="button" onclick="runCustomScenario()"
+            class="ct-btn ct-btn-primary w-full py-2 text-xs">
             Run 2D OverlandFlow Model
           </button>
 
-          <div id="sim-error-box" role="alert" class="hidden text-xs bg-[#1A0D10] border border-[#F16D75]/60 text-[#F16D75] rounded-md px-2.5 py-2"></div>
+          <div id="sim-error-box" role="alert"
+            class="hidden text-xs bg-[#1A0D10] border border-[#F16D75]/60 text-[#F16D75] rounded-md px-2.5 py-2"></div>
         </div>
       </div>
 
@@ -263,25 +318,41 @@
             <option value="reservoir_discharge">Spillway Surge</option>
           </select>
         </div>
-        <button type="button" onclick="runScenarioCompare()" class="ct-btn w-full ct-btn-sm">
-          Compare Impact Delta
-        </button>
-        <div id="compare-output" class="hidden text-[11px] mono bg-[#080B10] p-2.5 rounded border border-[#253140] space-y-1"></div>
+        <div class="grid grid-cols-2 gap-1.5">
+          <button type="button" onclick="runScenarioCompare()" class="ct-btn ct-btn-sm text-[11px]">
+            Compare Impact Delta
+          </button>
+          <button type="button" onclick="toggleComparisonWorkspace()" id="btn-swipe-cmp" class="ct-btn ct-btn-sm text-[11px] text-[#36C2C9]">
+            Swipe Split Map
+          </button>
+        </div>
+        <div id="compare-output"
+          class="hidden text-[11px] mono bg-[#080B10] p-2.5 rounded border border-[#253140] space-y-1"></div>
       </div>
 
-      <!-- SAVE & EXPORT -->
+      <!-- SAVE & EXPORT (COMPLETE CRUD + PDF REPORT) -->
       <div class="p-3.5 space-y-2.5">
-        <div class="ct-label">Save &amp; Export</div>
+        <div class="ct-label">Scenario Library &amp; Reports</div>
         <div class="flex gap-1.5">
-          <input id="save-name-input" type="text" placeholder="Preset name..." class="ct-input flex-1 text-xs py-1" aria-label="Preset name" />
+          <input id="save-name-input" type="text" placeholder="Preset name..." class="ct-input flex-1 text-xs py-1"
+            aria-label="Preset name" />
           <button type="button" onclick="saveCurrentScenario()" class="ct-btn ct-btn-sm">Save</button>
         </div>
-        <select id="saved-scenarios-select" onchange="loadSavedScenario(this.value)" aria-label="Load saved scenario" class="ct-select w-full text-xs py-1">
+        <select id="saved-scenarios-select" onchange="loadSavedScenario(this.value)" aria-label="Load saved scenario"
+          class="ct-select w-full text-xs py-1">
           <option value="">Load saved scenario...</option>
         </select>
-        <div class="grid grid-cols-2 gap-1.5 pt-0.5">
-          <button type="button" onclick="exportActive('geojson')" class="ct-btn ct-btn-sm text-[#62B5F5]">Export GeoJSON</button>
-          <button type="button" onclick="exportActive('summary')" class="ct-btn ct-btn-sm text-[#A0ADBD]">Export Summary</button>
+        <div class="grid grid-cols-3 gap-1">
+          <button type="button" onclick="duplicateSelectedSaved()" class="ct-btn ct-btn-sm text-[10.5px] py-1">Duplicate</button>
+          <button type="button" onclick="toggleRenamePrompt()" class="ct-btn ct-btn-sm text-[10.5px] py-1">Rename</button>
+          <button type="button" onclick="requestDeleteSaved()" class="ct-btn ct-btn-sm text-[10.5px] py-1 text-[#F16D75]">Delete</button>
+        </div>
+        <div id="saved-crud-confirm" class="hidden bg-[#080B10] border border-[#344050] rounded p-2 space-y-1.5 text-[11px]"></div>
+        <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-[#253140]">
+          <button type="button" onclick="downloadPdfReport()" class="ct-btn ct-btn-primary ct-btn-sm text-[11px] col-span-2">Download PDF Report</button>
+          <button type="button" onclick="exportActive('geojson')" class="ct-btn ct-btn-sm text-[#62B5F5]">GeoJSON</button>
+          <button type="button" onclick="exportCsvReport()" class="ct-btn ct-btn-sm text-[#36C2C9]">Export CSV</button>
+          <button type="button" onclick="exportActive('summary')" class="ct-btn ct-btn-sm text-[#A0ADBD] col-span-2">Export Summary JSON</button>
         </div>
       </div>
     </aside>
@@ -290,39 +361,108 @@
     <main class="flex-1 relative bg-[#080B10] min-w-0">
       <div id="map" class="w-full h-full"></div>
 
-      <!-- SINGLE-ROW FOCUS LOCALITY RIBBON (Never wraps into clutter) -->
-      <div class="absolute top-3 left-3 right-32 z-10 pointer-events-none">
-        <div class="pointer-events-auto inline-flex max-w-full items-center gap-1 ut-float-panel px-2 py-1 overflow-x-auto no-scrollbar">
-          <span class="text-[10px] mono uppercase tracking-wider text-[#738196] pr-1.5 border-r border-[#253140] shrink-0">Focus</span>
-          <button type="button" onclick="flyToLocation('velachery')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Velachery</button>
-          <button type="button" onclick="flyToLocation('pallikaranai')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Pallikaranai</button>
-          <button type="button" onclick="flyToLocation('adyar')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Adyar Estuary</button>
-          <button type="button" onclick="flyToLocation('saidapet')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Saidapet</button>
-          <button type="button" onclick="flyToLocation('madipakkam')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Madipakkam</button>
-          <button type="button" onclick="flyToLocation('perungudi')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Perungudi</button>
-          <button type="button" onclick="flyToLocation('porur')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Porur</button>
-          <button type="button" onclick="flyToLocation('pallavaram')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Pallavaram</button>
-          <button type="button" onclick="flyToLocation('tambaram')" class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Tambaram</button>
-          <button type="button" onclick="flyToLocation('chembarambakkam')" class="px-2 py-0.5 rounded text-[11px] text-[#62B5F5] hover:bg-[#17212D] transition shrink-0">Chembarambakkam</button>
+      <!-- SIDE-BY-SIDE / SWIPE COMPARISON OVERLAY -->
+      <div id="compare-split-pane" class="hidden absolute inset-0 z-20 pointer-events-none">
+        <div id="map-alt-wrap" class="absolute inset-0 pointer-events-auto" style="clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);">
+          <div id="map-alt" class="w-full h-full"></div>
+        </div>
+        <div id="compare-divider-line" class="absolute top-0 bottom-0 w-0.5 bg-[#62B5F5] shadow-[0_0_12px_rgba(98,181,245,0.6)] pointer-events-none" style="left: 50%;"></div>
+        <div class="pointer-events-auto absolute top-14 left-1/2 -translate-x-1/2 ut-float-panel px-3 py-1.5 flex items-center gap-3 text-[11px] mono shadow-2xl">
+          <span class="text-[#A0ADBD]">L: <strong id="cmp-left-lbl" class="text-[#F4F6F8]">Baseline</strong></span>
+          <label for="compare-swipe-range" class="sr-only">Swipe comparison divider</label>
+          <input id="compare-swipe-range" type="range" min="10" max="90" value="50" oninput="updateCompareSwipe(this.value)" class="ct-slider w-24" />
+          <span class="text-[#36C2C9]">R: <strong id="cmp-right-lbl" class="text-[#F4F6F8]">Alternate</strong></span>
+          <button type="button" onclick="toggleDeltaRasterMode()" id="btn-delta-raster" class="ct-btn ct-btn-sm py-0.5 text-[10px]">Delta Overlay</button>
+          <button type="button" onclick="toggleComparisonWorkspace(false)" class="ct-btn ct-btn-sm py-0.5 text-[10px] text-[#F16D75]">Exit Compare</button>
+        </div>
+      </div>
+
+      <!-- SINGLE-ROW FOCUS LOCALITY & SAVED VIEWPOINTS RIBBON -->
+      <div class="absolute top-3 left-3 right-36 z-10 pointer-events-none">
+        <div
+          class="pointer-events-auto inline-flex max-w-full items-center gap-1 ut-float-panel px-2 py-1 overflow-x-auto no-scrollbar">
+          <span
+            class="text-[10px] mono uppercase tracking-wider text-[#738196] pr-1.5 border-r border-[#253140] shrink-0">Focus</span>
+          <button type="button" onclick="flyToLocation('velachery')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Velachery</button>
+          <button type="button" onclick="flyToLocation('pallikaranai')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Pallikaranai</button>
+          <button type="button" onclick="flyToLocation('adyar')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Adyar
+            Estuary</button>
+          <button type="button" onclick="flyToLocation('saidapet')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Saidapet</button>
+          <button type="button" onclick="flyToLocation('madipakkam')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Madipakkam</button>
+          <button type="button" onclick="flyToLocation('perungudi')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Perungudi</button>
+          <button type="button" onclick="flyToLocation('porur')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Porur</button>
+          <button type="button" onclick="flyToLocation('pallavaram')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Pallavaram</button>
+          <button type="button" onclick="flyToLocation('tambaram')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#A0ADBD] hover:text-[#F4F6F8] hover:bg-[#17212D] transition shrink-0">Tambaram</button>
+          <button type="button" onclick="flyToLocation('chembarambakkam')"
+            class="px-2 py-0.5 rounded text-[11px] text-[#62B5F5] hover:bg-[#17212D] transition shrink-0">Chembarambakkam</button>
+          <span class="border-l border-[#253140] pl-1.5 flex items-center gap-1 shrink-0">
+            <select id="viewpoints-select" onchange="jumpSavedViewpoint(this.value)" aria-label="Saved viewpoints" class="bg-transparent text-[11px] text-[#A0ADBD] outline-none">
+              <option value="">Viewpoints...</option>
+            </select>
+            <button type="button" onclick="saveCurrentViewpoint()" class="px-1.5 py-0.5 rounded text-[10.5px] text-[#36C2C9] hover:bg-[#17212D]" title="Save current camera viewpoint">+View</button>
+          </span>
+        </div>
+      </div>
+
+      <!-- LIGHTWEIGHT GUIDED DEMONSTRATION TOUR DOCK -->
+      <div id="demo-guide-dock" class="hidden absolute top-14 left-3 z-20 w-72 ut-float-panel p-3 text-xs space-y-2 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-[#253140] pb-1.5">
+          <span class="ct-label text-[#36C2C9]">Guided Showcase (<span id="demo-step-num">1</span>/13)</span>
+          <button type="button" onclick="toggleDemoTour(false)" class="text-[#738196] hover:text-[#F4F6F8] text-[11px]">Close</button>
+        </div>
+        <div id="demo-step-title" class="font-medium text-[#F4F6F8]">Loading step...</div>
+        <p id="demo-step-desc" class="text-[11px] text-[#A0ADBD] leading-relaxed"></p>
+        <div class="flex items-center justify-between pt-1">
+          <button type="button" onclick="stepDemoTour(-1)" class="ct-btn ct-btn-sm py-0.5 text-[11px]">Prev</button>
+          <button type="button" onclick="executeDemoStepAction()" class="ct-btn ct-btn-primary ct-btn-sm py-0.5 text-[11px]">Run Step</button>
+          <button type="button" onclick="stepDemoTour(1)" class="ct-btn ct-btn-sm py-0.5 text-[11px]">Next</button>
         </div>
       </div>
 
       <!-- TOP-RIGHT MAP & LAYER CONTROLS -->
       <div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
-        <button id="btn-layers" type="button" onclick="toggleLayerMenu()" aria-expanded="false" aria-controls="layer-popover" class="ct-btn ct-btn-sm text-[#62B5F5]">Layers</button>
+        <button id="btn-layers" type="button" onclick="toggleLayerMenu()" aria-expanded="false"
+          aria-controls="layer-popover" class="ct-btn ct-btn-sm text-[#62B5F5]">Layers</button>
+        <button id="btn-terrain" type="button" onclick="cycleTerrainExaggeration()" class="ct-btn ct-btn-sm text-[#36C2C9]" title="Cycle Copernicus 3D elevation scale">3D DEM 3x</button>
         <button id="btn-tilt" type="button" onclick="toggle3DPitch()" class="ct-btn ct-btn-sm">3D Pitch</button>
+        <button type="button" onclick="resetNorth()" class="ct-btn ct-btn-sm" title="Align camera due North">North</button>
         <button type="button" onclick="resetOverview()" class="ct-btn ct-btn-sm">Reset</button>
         <button type="button" onclick="toggleFullscreen()" class="ct-btn ct-btn-sm">Full</button>
       </div>
 
       <!-- LAYER MANAGER POPOVER -->
-      <div id="layer-popover" class="hidden absolute top-3 right-24 z-20 w-64 ut-float-panel p-3 text-xs space-y-1.5 shadow-2xl">
+      <div id="layer-popover" class="hidden absolute top-3 right-24 z-20 w-68 ut-float-panel p-3 text-xs space-y-1.5 shadow-2xl">
         <div class="flex justify-between items-center border-b border-[#253140] pb-1.5">
-          <span class="ct-label">Geospatial Layers</span>
-          <button type="button" onclick="toggleLayerMenu()" aria-label="Close layer menu" class="text-[#738196] hover:text-[#F4F6F8] px-1">Close</button>
+          <span class="ct-label">Geospatial &amp; Flood Layers</span>
+          <button type="button" onclick="toggleLayerMenu()" aria-label="Close layer menu"
+            class="text-[#738196] hover:text-[#F4F6F8] px-1">Close</button>
+        </div>
+        <div class="space-y-1 pb-1.5 border-b border-[#253140]">
+          <div class="flex justify-between items-center text-[11px]">
+            <span class="text-[#A0ADBD]">Flood Raster Mode</span>
+            <select id="flood-depth-mode" onchange="updateFloodRasterMode(this.value)" class="bg-[#080B10] border border-[#253140] rounded px-1.5 py-0.5 text-[10.5px] text-[#62B5F5]">
+              <option value="final" selected>Final Step Depth</option>
+              <option value="max">Peak Max Depth</option>
+            </select>
+          </div>
+          <div class="flex justify-between items-center text-[11px] gap-2">
+            <label for="flood-opacity-sl" class="text-[#A0ADBD] shrink-0">Overlay Opacity</label>
+            <input id="flood-opacity-sl" type="range" min="0.15" max="0.95" step="0.05" value="0.50" oninput="setFloodOpacity(this.value)" class="ct-slider w-24" />
+          </div>
         </div>
         <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Flood Depth Raster</span><input type="checkbox" checked onchange="toggleMapLayer(['flood-raster'], this.checked)" class="accent-[#62B5F5]" /></label>
         <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>3D Flood Depth Prisms</span><input type="checkbox" checked onchange="toggleMapLayer(['flood-cells-3d'], this.checked)" class="accent-[#62B5F5]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Scenario Delta Raster (Alt-Base)</span><input id="chk-delta-layer" type="checkbox" onchange="toggleDeltaRasterMode(this.checked)" class="accent-[#36C2C9]" /></label>
+        <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Exposed Infrastructure Highlight</span><input id="chk-exposure-layer" type="checkbox" onchange="toggleMapLayer(['exposure-buildings-fill','exposure-roads-line'], this.checked)" class="accent-[#F16D75]" /></label>
         <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Discharge Flow Vectors</span><input type="checkbox" checked onchange="toggleMapLayer(['flow-vectors'], this.checked)" class="accent-[#62B5F5]" /></label>
         <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>3D OSM Buildings (18,198)</span><input type="checkbox" checked onchange="toggleMapLayer(['osm-buildings-3d'], this.checked)" class="accent-[#62B5F5]" /></label>
         <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Roads &amp; Local Streets</span><input type="checkbox" checked onchange="toggleMapLayer(['roads-major','streets-pilot'], this.checked)" class="accent-[#62B5F5]" /></label>
@@ -335,110 +475,180 @@
         <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>WRD Reservoirs (5)</span><input type="checkbox" checked onchange="toggleMapLayer(['reservoir-pts'], this.checked)" class="accent-[#62B5F5]" /></label>
         <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Historical Flood Spots (230)</span><input type="checkbox" onchange="toggleMapLayer(['hist-flood-spots'], this.checked)" class="accent-[#62B5F5]" /></label>
         <label class="flex items-center justify-between cursor-pointer text-[#A0ADBD] hover:text-[#F4F6F8]"><span>Copernicus Hillshade</span><input type="checkbox" checked onchange="toggleMapLayer(['dem-hillshade'], this.checked)" class="accent-[#62B5F5]" /></label>
-        <div class="pt-1.5 border-t border-[#253140] text-[10px] text-[#738196]">
-          Local offline GIS assets · Zero external calls
+        <div class="pt-1.5 border-t border-[#253140] text-[10px] text-[#738196] leading-snug">
+          Offline Copernicus 3D Terrarium DEM (150 m grid; bilinear visual resampling, 0x/1x/3x exaggeration). Permanent lakes masked separately.
         </div>
       </div>
 
       <!-- BOTTOM INTEGRATED TIMELINE & SCIENTIFIC DEPTH LEGEND -->
-      <div class="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 right-12 z-10 flex flex-col gap-1.5 pointer-events-none max-w-full">
-        <div class="pointer-events-auto ut-float-panel px-2.5 sm:px-3 py-2 flex flex-wrap items-center justify-between gap-2 sm:gap-3 min-w-0">
+      <div
+        class="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 right-12 z-10 flex flex-col gap-1.5 pointer-events-none max-w-full">
+        <div
+          class="pointer-events-auto ut-float-panel px-2.5 sm:px-3 py-2 flex flex-wrap items-center justify-between gap-2 sm:gap-3 min-w-0">
           <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
-            <button type="button" onclick="restartTimeline()" class="ct-btn ct-btn-sm py-1 px-2 text-[11px] shrink-0" title="Restart timeline">Restart</button>
-            <button id="btn-play-timeline" type="button" onclick="toggleTimelinePlayback()" class="ct-btn ct-btn-sm py-1 px-2.5 text-[11px] text-[#62B5F5] shrink-0">Play</button>
+            <button type="button" onclick="restartTimeline()" class="ct-btn ct-btn-sm py-1 px-2 text-[11px] shrink-0"
+              title="Restart timeline">Restart</button>
+            <button id="btn-play-timeline" type="button" onclick="toggleTimelinePlayback()"
+              class="ct-btn ct-btn-sm py-1 px-2.5 text-[11px] text-[#62B5F5] shrink-0">Play</button>
             <div class="flex-1 min-w-[70px] flex flex-col gap-0.5">
               <label for="timeline-slider" class="sr-only">Simulation timeline step</label>
-              <input id="timeline-slider" type="range" min="0" max="7" value="7" oninput="scrubTimelineFrame(this.value)" class="ct-slider" />
+              <input id="timeline-slider" type="range" min="0" max="7" value="7"
+                oninput="scrubTimelineFrame(this.value)" class="ct-slider" />
             </div>
           </div>
 
           <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 mono text-[10.5px] sm:text-[11px] min-w-0">
-            <span id="timeline-mode-badge" class="text-[10px] px-1.5 py-0.5 rounded border border-[#253140] bg-[#111821] text-[#62B5F5]">SIMULATED SCENARIO</span>
+            <span id="timeline-mode-badge"
+              class="text-[10px] px-1.5 py-0.5 rounded border border-[#253140] bg-[#111821] text-[#62B5F5]">SIMULATED
+              SCENARIO</span>
             <span id="timeline-label" class="text-[#F4F6F8]">Final Step</span>
             <span id="timeline-step-stats" class="text-[#A0ADBD]">-- MCM | -- km²</span>
           </div>
         </div>
 
         <!-- COMPACT LEGEND & CURSOR BAR -->
-        <div class="pointer-events-auto flex flex-wrap items-center justify-between gap-2 sm:gap-3 ut-float-panel px-2.5 sm:px-3 py-1.5 text-[10px] sm:text-[10.5px] min-w-0">
+        <div
+          class="pointer-events-auto flex flex-wrap items-center justify-between gap-2 sm:gap-3 ut-float-panel px-2.5 sm:px-3 py-1.5 text-[10px] sm:text-[10.5px] min-w-0">
           <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
             <span class="text-[#A0ADBD] font-medium">Modeled Depth (m):</span>
-            <span class="inline-flex items-center gap-1.5 text-[#A0ADBD] mono"><i class="w-2.5 h-2.5 rounded-sm bg-[#4BA3D9] inline-block"></i>0.03–0.15 m</span>
-            <span class="inline-flex items-center gap-1.5 text-[#A0ADBD] mono"><i class="w-2.5 h-2.5 rounded-sm bg-[#36C2C9] inline-block"></i>0.15–0.30 m</span>
-            <span class="inline-flex items-center gap-1.5 text-[#A0ADBD] mono"><i class="w-2.5 h-2.5 rounded-sm bg-[#E9B65C] inline-block"></i>0.30–0.60 m</span>
-            <span class="inline-flex items-center gap-1.5 text-[#A0ADBD] mono"><i class="w-2.5 h-2.5 rounded-sm bg-[#F16D75] inline-block"></i>&gt;0.60 m</span>
+            <span class="inline-flex items-center gap-1.5 text-[#A0ADBD] mono"><i
+                class="w-2.5 h-2.5 rounded-sm bg-[#4BA3D9] inline-block"></i>0.03–0.15 m</span>
+            <span class="inline-flex items-center gap-1.5 text-[#A0ADBD] mono"><i
+                class="w-2.5 h-2.5 rounded-sm bg-[#36C2C9] inline-block"></i>0.15–0.30 m</span>
+            <span class="inline-flex items-center gap-1.5 text-[#A0ADBD] mono"><i
+                class="w-2.5 h-2.5 rounded-sm bg-[#E9B65C] inline-block"></i>0.30–0.60 m</span>
+            <span class="inline-flex items-center gap-1.5 text-[#A0ADBD] mono"><i
+                class="w-2.5 h-2.5 rounded-sm bg-[#F16D75] inline-block"></i>&gt;0.60 m</span>
           </div>
-          <div id="cursor-coords" class="hidden sm:block mono text-[#738196] truncate">Select terrain cell, building, station, or reservoir to inspect</div>
+          <div id="cursor-coords" class="hidden sm:block mono text-[#738196] truncate">Select terrain cell, building,
+            station, or reservoir to inspect</div>
         </div>
       </div>
     </main>
 
     <!-- RIGHT CONTEXTUAL ANALYTICS & ASSET INSPECTOR -->
-    <aside id="right-drawer" class="ut-drawer w-[310px] border-l flex flex-col overflow-y-auto shrink-0 p-3.5 space-y-4">
+    <aside id="right-drawer" class="ut-drawer w-[320px] border-l flex flex-col overflow-hidden shrink-0">
+      <div class="grid grid-cols-3 border-b border-[#253140] bg-[#080B10] shrink-0 text-[11px] font-medium">
+        <button type="button" onclick="switchRightPanel('outputs')" id="rtab-btn-outputs" class="py-2 text-[#62B5F5] border-b-2 border-[#62B5F5] transition">Outputs</button>
+        <button type="button" onclick="switchRightPanel('exposure')" id="rtab-btn-exposure" class="py-2 text-[#A0ADBD] border-b-2 border-transparent hover:text-[#F4F6F8] transition">Exposure</button>
+        <button type="button" onclick="switchRightPanel('boundaries')" id="rtab-btn-boundaries" class="py-2 text-[#A0ADBD] border-b-2 border-transparent hover:text-[#F4F6F8] transition">Boundaries</button>
+      </div>
 
-      <!-- SIMULATION SUMMARY METRICS -->
-      <section class="space-y-2">
+      <!-- PANEL 1: OUTPUTS & SPATIAL INSPECTOR -->
+      <div id="rtab-outputs" class="flex-1 overflow-y-auto p-3.5 space-y-4">
+        <section class="space-y-2">
+          <div class="flex items-center justify-between">
+            <h2 class="ct-label">Simulation Outputs</h2>
+            <span id="sim-time-ms" class="mono text-[11px] text-[#738196]">-- ms</span>
+          </div>
+          <div id="active-scenario-banner" class="text-xs font-medium text-[#F4F6F8] bg-[#111821] border border-[#253140] rounded-md px-2.5 py-1.5">
+            Loading...
+          </div>
+
+          <div class="grid grid-cols-2 border border-[#253140] rounded-md bg-[#080B10] divide-x divide-y divide-[#253140] mono">
+            <div class="p-2.5">
+              <div class="text-[10.5px] font-sans text-[#738196]">Stored Volume</div>
+              <div id="kpi-vol" class="text-sm font-semibold text-[#62B5F5] mt-0.5">-- MCM</div>
+            </div>
+            <div class="p-2.5">
+              <div class="text-[10.5px] font-sans text-[#738196]">Flooded Area</div>
+              <div id="kpi-area" class="text-sm font-semibold text-[#36C2C9] mt-0.5">-- km²</div>
+            </div>
+            <div class="p-2.5">
+              <div class="text-[10.5px] font-sans text-[#738196]">Max Urban Depth</div>
+              <div id="kpi-maxd" class="text-sm font-semibold text-[#E9B65C] mt-0.5">-- m</div>
+            </div>
+            <div class="p-2.5">
+              <div class="text-[10.5px] font-sans text-[#738196]">Mass Balance Err</div>
+              <div id="kpi-mberr" class="text-sm font-semibold text-[#43C59E] mt-0.5">-- %</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CONTEXTUAL ASSET & POINT INSPECTOR -->
+        <section class="border-t border-[#253140] pt-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <h2 class="ct-label">Spatial Asset Inspector</h2>
+            <span id="inspector-kind-tag" class="mono text-[10px] text-[#738196]">Ready</span>
+          </div>
+          <div id="inspector-body" class="text-xs text-[#A0ADBD] space-y-1.5">
+            Click any terrain cell, OSM building, road, waterway, bridge, CFM-DSS station, or WRD reservoir on the map.
+          </div>
+        </section>
+
+        <!-- CONSERVATION WATER BALANCE -->
+        <section class="border-t border-[#253140] pt-3 space-y-1.5">
+          <h2 class="ct-label">Water-Balance Budget</h2>
+          <div id="mass-balance-box" class="mono text-[11px] text-[#A0ADBD] space-y-1">Loading...</div>
+        </section>
+
+        <!-- FOCUS LOCALITIES -->
+        <section class="border-t border-[#253140] pt-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <h2 class="ct-label">Focus Basins (1.2 km)</h2>
+            <span class="text-[10px] mono text-[#738196]">Peak modeled</span>
+          </div>
+          <div id="locations-list" class="border border-[#253140] rounded-md divide-y divide-[#253140] bg-[#080B10]"></div>
+        </section>
+
+        <!-- SCIENTIFIC SCOPE & UNCERTAINTY DISCLOSURE -->
+        <details class="border-t border-[#253140] pt-3 text-[11px] text-[#738196]">
+          <summary class="cursor-pointer font-medium text-[#A0ADBD] hover:text-[#F4F6F8] transition">Scientific Scope &amp; Uncertainty</summary>
+          <p class="mt-2 leading-relaxed">
+            Hydrological routing runs Landlab OverlandFlow over Copernicus GLO-30 DSM (150 m UTM44N, EGM2008). Depths reflect scenario screening estimates (+/- 0.3–1.2 m DSM rooftop/canopy uncertainty) without physical SWMM drain pipes or field depth gauges. 3D relief applies configurable vertical exaggeration (`3x` default).
+          </p>
+        </details>
+      </div>
+
+      <!-- PANEL 2: INFRASTRUCTURE EXPOSURE ENGINE (EPSG:32644) -->
+      <div id="rtab-exposure" class="hidden flex-1 overflow-y-auto p-3.5 space-y-3.5">
         <div class="flex items-center justify-between">
-          <h2 class="ct-label">Simulation Outputs</h2>
-          <span id="sim-time-ms" class="mono text-[11px] text-[#738196]">-- ms</span>
+          <span class="ct-label text-[#F16D75]">Potential Exposure (UTM44N)</span>
+          <select id="ut-exp-thresh" onchange="refreshActiveExposure()" aria-label="Exposure depth threshold" class="bg-[#080B10] border border-[#253140] rounded px-1.5 py-0.5 text-[11px] mono text-[#62B5F5]">
+            <option value="0.05">&ge; 0.05m</option>
+            <option value="0.15" selected>&ge; 0.15m</option>
+            <option value="0.30">&ge; 0.30m</option>
+            <option value="0.60">&ge; 0.60m</option>
+          </select>
         </div>
-        <div id="active-scenario-banner" class="text-xs font-medium text-[#F4F6F8] bg-[#111821] border border-[#253140] rounded-md px-2.5 py-1.5">
-          Loading...
+        <div class="grid grid-cols-2 border border-[#253140] rounded-md bg-[#080B10] divide-x divide-y divide-[#253140] mono text-xs">
+          <div class="p-2.5"><div class="text-[10px] font-sans text-[#738196]">Exposed Buildings</div><div id="ut-exp-bld" class="text-sm font-semibold text-[#F16D75] mt-0.5">--</div></div>
+          <div class="p-2.5"><div class="text-[10px] font-sans text-[#738196]">Footprint Area</div><div id="ut-exp-area" class="text-sm font-semibold text-[#E9B65C] mt-0.5">-- ha</div></div>
+          <div class="p-2.5"><div class="text-[10px] font-sans text-[#738196]">Exposed Roads</div><div id="ut-exp-road" class="text-sm font-semibold text-[#62B5F5] mt-0.5">-- km</div></div>
+          <div class="p-2.5"><div class="text-[10px] font-sans text-[#738196]">OSM Civic Tags</div><div id="ut-exp-civic" class="text-sm font-semibold text-[#36C2C9] mt-0.5">--</div></div>
         </div>
-
-        <div class="grid grid-cols-2 border border-[#253140] rounded-md bg-[#080B10] divide-x divide-y divide-[#253140] mono">
-          <div class="p-2.5">
-            <div class="text-[10.5px] font-sans text-[#738196]">Stored Volume</div>
-            <div id="kpi-vol" class="text-sm font-semibold text-[#62B5F5] mt-0.5">-- MCM</div>
-          </div>
-          <div class="p-2.5">
-            <div class="text-[10.5px] font-sans text-[#738196]">Flooded Area</div>
-            <div id="kpi-area" class="text-sm font-semibold text-[#36C2C9] mt-0.5">-- km²</div>
-          </div>
-          <div class="p-2.5">
-            <div class="text-[10.5px] font-sans text-[#738196]">Max Urban Depth</div>
-            <div id="kpi-maxd" class="text-sm font-semibold text-[#E9B65C] mt-0.5">-- m</div>
-          </div>
-          <div class="p-2.5">
-            <div class="text-[10.5px] font-sans text-[#738196]">Mass Balance Err</div>
-            <div id="kpi-mberr" class="text-sm font-semibold text-[#43C59E] mt-0.5">-- %</div>
+        <div class="space-y-1.5">
+          <div class="ct-label">Highlight on 3D Map</div>
+          <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+            <button type="button" onclick="applyExposureHighlight('all')" class="ct-btn ct-btn-sm py-1 text-[#F16D75]">All Exposed</button>
+            <button type="button" onclick="applyExposureHighlight('building')" class="ct-btn ct-btn-sm py-1">Buildings Only</button>
+            <button type="button" onclick="applyExposureHighlight('road')" class="ct-btn ct-btn-sm py-1 text-[#62B5F5]">Roads Only</button>
+            <button type="button" onclick="applyExposureHighlight('clear')" class="ct-btn ct-btn-sm py-1 text-[#738196]">Clear Highlight</button>
           </div>
         </div>
-      </section>
-
-      <!-- CONTEXTUAL ASSET & POINT INSPECTOR -->
-      <section class="border-t border-[#253140] pt-3 space-y-2">
-        <div class="flex items-center justify-between">
-          <h2 class="ct-label">Spatial Asset Inspector</h2>
-          <span id="inspector-kind-tag" class="mono text-[10px] text-[#738196]">Ready</span>
-        </div>
-        <div id="inspector-body" class="text-xs text-[#A0ADBD] space-y-1.5">
-          Click any grid cell, OSM building, bridge, CFM-DSS station, or WRD reservoir on the map.
-        </div>
-      </section>
-
-      <!-- CONSERVATION WATER BALANCE -->
-      <section class="border-t border-[#253140] pt-3 space-y-1.5">
-        <h2 class="ct-label">Water-Balance Budget</h2>
-        <div id="mass-balance-box" class="mono text-[11px] text-[#A0ADBD] space-y-1">Loading...</div>
-      </section>
-
-      <!-- FOCUS LOCALITIES -->
-      <section class="border-t border-[#253140] pt-3 space-y-2">
-        <div class="flex items-center justify-between">
-          <h2 class="ct-label">Focus Basins (1.2 km)</h2>
-          <span class="text-[10px] mono text-[#738196]">Peak modeled</span>
-        </div>
-        <div id="locations-list" class="border border-[#253140] rounded-md divide-y divide-[#253140] bg-[#080B10]"></div>
-      </section>
-
-      <!-- SCIENTIFIC SCOPE & UNCERTAINTY DISCLOSURE -->
-      <details class="border-t border-[#253140] pt-3 text-[11px] text-[#738196]">
-        <summary class="cursor-pointer font-medium text-[#A0ADBD] hover:text-[#F4F6F8] transition">Scientific Scope &amp; Uncertainty</summary>
-        <p class="mt-2 leading-relaxed">
-          Hydrological routing runs Landlab OverlandFlow over Copernicus GLO-30 DSM (resampled to 150 m UTM44N, EGM2008). Depths reflect scenario screening estimates (+/- 0.3–1.2 m DSM rooftop/canopy uncertainty) without physical SWMM drain pipes or field gauge depth calibration. Isolated from bench IoT nodes.
+        <div id="ut-exp-breakdown" class="space-y-2 text-[11px] mono text-[#A0ADBD]">Loading exposure breakdown...</div>
+        <p class="text-[10px] text-[#738196] leading-relaxed border-t border-[#253140] pt-2">
+          Modelled potential exposure on a 150 m grid; does not indicate structural damage, road closure, or monetary loss.
         </p>
-      </details>
+      </div>
+
+      <!-- PANEL 3: NEIGHBOURHOODS (OFFICIAL WATERSHEDS & GCC WARDS) -->
+      <div id="rtab-boundaries" class="hidden flex-1 overflow-y-auto p-3.5 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <select id="ut-nb-type" onchange="refreshActiveNeighbourhoods()" aria-label="Boundary layer type" class="ct-select text-[11px] py-1 flex-1">
+            <option value="watersheds" selected>Watersheds (36)</option>
+            <option value="wards">GCC Wards (200)</option>
+          </select>
+          <select id="ut-nb-sort" onchange="renderActiveNeighbourhoodRows()" aria-label="Sort neighbourhoods" class="ct-select text-[11px] py-1 flex-1">
+            <option value="area" selected>Sort: Flood km²</option>
+            <option value="pct">Sort: % Flooded</option>
+            <option value="buildings">Sort: Buildings</option>
+            <option value="roads">Sort: Roads km</option>
+          </select>
+        </div>
+        <div id="ut-nb-summary" class="text-[11px] text-[#738196]">Loading official boundary summaries...</div>
+        <div id="ut-nb-list" class="border border-[#253140] rounded-md divide-y divide-[#253140] bg-[#080B10] text-xs"></div>
+      </div>
     </aside>
   </div>
 
@@ -453,9 +663,20 @@
     let activeScenarioData = null;
     let activeScenarioId = 'heavy_rainfall';
     let is3DPitch = true;
+    let terrainExaggeration = 3.0;
+    let floodDepthMode = 'final';
+    let floodOpacityVal = 0.50;
+    let deltaOverlayActive = false;
+    let latestCompareData = null;
+    let altMap = null;
+    let isSyncingCamera = false;
+    let activeExposureData = null;
+    let activeNeighbourhoodData = null;
     let playInterval = null;
     let focusMarkers = [];
     let activePopup = null;
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const motionDur = (ms) => prefersReducedMotion ? 0 : ms;
 
     function clearActivePopup() {
       if (activePopup) {
@@ -488,9 +709,27 @@
       map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
 
       map.on('load', async () => {
-        await loadGeospatialLayers();
-        await applyPresetScenario('heavy_rainfall');
+        await loadGeospatialLayers(map);
+        try {
+          if (map.getSource('copernicus-terrain')) {
+            map.setTerrain({ source: 'copernicus-terrain', exaggeration: terrainExaggeration });
+          }
+        } catch (_) {
+          terrainExaggeration = 0.0;
+          const tBtn = document.getElementById('btn-terrain');
+          if (tBtn) tBtn.innerText = '2D DEM 0x';
+        }
+        renderViewpointsDropdown();
+        const qs = new URLSearchParams(window.location.search);
+        const initialPreset = qs.get('preset') || 'heavy_rainfall';
+        await applyPresetScenario(initialPreset);
         await loadSavedList();
+        if (qs.get('loc')) await flyToLocation(qs.get('loc'));
+        if (qs.get('compare')) {
+          document.getElementById('cmp-alt').value = qs.get('compare');
+          await toggleComparisonWorkspace(true);
+        }
+        if (qs.get('demo') === '1') toggleDemoTour(true);
       });
 
       map.on('mousemove', (e) => {
@@ -502,42 +741,59 @@
 
       map.on('click', async (e) => {
         const feats = map.queryRenderedFeatures(e.point, {
-          layers: ['stations-pts', 'reservoir-pts', 'hist-flood-spots', 'osm-buildings-3d', 'osm-bridges', 'flood-cells-3d']
+          layers: [
+            'stations-pts',
+            'reservoir-pts',
+            'hist-flood-spots',
+            'osm-buildings-3d',
+            'osm-bridges',
+            'roads-major',
+            'streets-pilot',
+            'waterways',
+            'waterbodies',
+            'flood-cells-3d'
+          ]
         });
         const lon = e.lngLat.lng;
         const lat = e.lngLat.lat;
         let terrainHtml = '';
         let metaHtml = '';
+        let inDomain = false;
 
         try {
           const r = await fetch(`/api/urban/point?lon=${lon.toFixed(6)}&lat=${lat.toFixed(6)}&scenario_id=${encodeURIComponent(activeScenarioId)}`);
           if (r.ok) {
             const p = await r.json();
-            if (p.in_computational_domain) {
+            inDomain = Boolean(p.in_computational_domain);
+            if (inDomain) {
               const dsmVal = p.copernicus_dsm_elevation_m !== null && p.copernicus_dsm_elevation_m !== undefined ? `${p.copernicus_dsm_elevation_m} m` : 'Unavailable';
               terrainHtml = `
                 <div class="grid grid-cols-2 gap-1.5 mono">
                   <div class="p-2 rounded bg-[#080B10] border border-[#253140]">
-                    <div class="text-[10px] font-sans text-[#738196]">Copernicus DSM</div>
+                    <div class="text-[10px] font-sans text-[#738196] flex justify-between items-center gap-1.5 mb-0.5"><span>Copernicus DSM</span><span class="px-1 py-0.5 rounded bg-[#17212D] text-[9px] mono text-[#62B5F5]">DERIVED</span></div>
                     <div class="text-sm font-semibold text-[#62B5F5]">${dsmVal}</div>
                   </div>
                   <div class="p-2 rounded bg-[#080B10] border border-[#253140]">
-                    <div class="text-[10px] font-sans text-[#738196]">Modeled Depth</div>
+                    <div class="text-[10px] font-sans text-[#738196] flex justify-between items-center gap-1.5 mb-0.5"><span>Modeled Depth</span><span class="px-1 py-0.5 rounded bg-[#17212D] text-[9px] mono text-[#E9B65C]">MODELED</span></div>
                     <div class="text-sm font-semibold text-[#E9B65C]">${p.modeled_depth_m} m</div>
                   </div>
                 </div>
-                <div class="mono text-[11px] text-[#A0ADBD] pt-1">Coords: ${p.lat}°N, ${p.lon}°E · Peak: ${p.modeled_max_depth_m} m</div>
+                <div class="mono text-[10.5px] text-[#A0ADBD] pt-1">Coords: ${p.lat}°N, ${p.lon}°E · Peak Modeled: ${p.modeled_max_depth_m} m</div>
               `;
               metaHtml = `
-                <div>UTM44N: ${p.easting_utm44n} E, ${p.northing_utm44n} N</div>
-                <div>Grid Cell: [${esc(p.grid_cell.join(', '))}] · Impervious: ${(p.impervious_fraction * 100).toFixed(0)}%</div>
+                <div>Domain: Inside 150 m pilot grid (cell [${esc(p.grid_cell.join(', '))}])</div>
+                <div>UTM44N: ${p.easting_utm44n} E, ${p.northing_utm44n} N · Impervious (EST): ${(p.impervious_fraction * 100).toFixed(0)}%</div>
                 <div>Datum: ${esc(p.vertical_datum)}</div>
               `;
             } else {
-              terrainHtml = `<div class="text-[#A0ADBD]">${esc(p.message)}</div>`;
+              terrainHtml = `
+                <div class="p-2 rounded bg-[#1A0D10]/70 border border-[#E9B65C]/40 text-[#E9B65C] text-[11px]">
+                  <strong>Outside Computational Grid (UNAVAILABLE):</strong> ${esc(p.message)}
+                </div>
+              `;
             }
           }
-        } catch (_) {}
+        } catch (_) { }
 
         let featHtml = '';
         let featLabel = 'Terrain Grid';
@@ -546,26 +802,33 @@
           const props = f.properties || {};
           if (f.layer.id === 'osm-buildings-3d') {
             featLabel = 'OSM Building';
-            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140] space-y-0.5"><div class="text-[#F4F6F8] font-medium">${esc(props.name || 'Unnamed Footprint')}</div><div class="mono text-[11px] text-[#A0ADBD]">Type: ${esc(props.building_type)} · Height: ${esc(props.height_m)} m</div></div>`;
-            metaHtml += `<div>Height Provenance: ${esc(props.height_source)} · OSM #${esc(props.osm_id)}</div>`;
+            const hProv = String(props.height_source || 'estimated').includes('tag') ? 'OBSERVED' : 'ESTIMATED';
+            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140] space-y-1"><div class="flex justify-between items-center gap-2"><span class="text-[#F4F6F8] font-medium">${esc(props.name || 'Unnamed Footprint')}</span><span class="mono text-[9.5px] px-1 rounded bg-[#17212D] text-[#36C2C9]">${hProv}</span></div><div class="mono text-[10.5px] text-[#A0ADBD]">ID: OSM #${esc(props.osm_id || 'N/A')} · Type: ${esc(props.building_type)} · H: ${esc(props.height_m)} m</div></div>`;
+            metaHtml += `<div>Height Derivation: ${esc(props.height_source)} · Source: OSM PBF</div>`;
+          } else if (f.layer.id === 'roads-major' || f.layer.id === 'streets-pilot') {
+            featLabel = 'OSM Roadway';
+            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140] space-y-1"><div class="flex justify-between items-center gap-2"><span class="text-[#F4F6F8] font-medium">${esc(props.name || 'Unnamed Road Segment')}</span><span class="mono text-[9.5px] px-1 rounded bg-[#17212D] text-[#62B5F5]">DERIVED</span></div><div class="mono text-[10.5px] text-[#A0ADBD]">ID: OSM #${esc(props.osm_id || 'N/A')} · Class: ${esc(props.highway)} · Lanes: ${esc(props.lanes || 'Unavailable')}</div></div>`;
+          } else if (f.layer.id === 'waterways' || f.layer.id === 'waterbodies') {
+            featLabel = f.layer.id === 'waterways' ? 'CFM-DSS Waterway' : 'Official Waterbody';
+            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140] space-y-1"><div class="flex justify-between items-center gap-2"><span class="text-[#36C2C9] font-medium">${esc(props.name || props.waterbody || 'Hydrologic Feature')}</span><span class="mono text-[9.5px] px-1 rounded bg-[#17212D] text-[#43C59E]">OBSERVED GIS</span></div><div class="mono text-[10.5px] text-[#A0ADBD]">ID: ${esc(props.id || props.osm_id || 'WFS')} · Dataset: TN CFM-DSS WFS</div></div>`;
           } else if (f.layer.id === 'stations-pts') {
             featLabel = 'CFM-DSS Station';
-            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140] space-y-0.5"><div class="text-[#43C59E] font-medium">${esc(props.station_name)}</div><div class="mono text-[11px] text-[#A0ADBD]">${esc(props.station_kind)} · ${esc(props.subbasin)}</div></div>`;
-            metaHtml += `<div>Coordinate Mode: ${esc(props.observation_mode)}</div>`;
+            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140] space-y-1"><div class="flex justify-between items-center gap-2"><span class="text-[#43C59E] font-medium">${esc(props.station_name)}</span><span class="mono text-[9.5px] px-1 rounded bg-[#17212D] text-[#43C59E]">OBSERVED</span></div><div class="mono text-[10.5px] text-[#A0ADBD]">${esc(props.station_kind)} · ${esc(props.subbasin)} · ${inDomain ? 'Inside 150m grid' : 'Outside pilot grid'}</div></div>`;
+            metaHtml += `<div>Coordinate Mode: ${esc(props.observation_mode)} · Source: TN CFM-DSS</div>`;
           } else if (f.layer.id === 'reservoir-pts') {
             featLabel = 'WRD Reservoir';
-            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140] space-y-0.5"><div class="text-[#62B5F5] font-medium">${esc(props.reservoir_name)}</div><div class="mono text-[11px] text-[#A0ADBD]">Live: ${esc(props.storage_capacity_live_mcm)} / ${esc(props.storage_capacity_gross_mcm)} MCM (${esc(props.storage_fill_pct)}%)</div></div>`;
-            metaHtml += `<div>Provenance: ${esc(props.provenance)}</div>`;
+            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140] space-y-1"><div class="flex justify-between items-center gap-2"><span class="text-[#62B5F5] font-medium">${esc(props.reservoir_name)}</span><span class="mono text-[9.5px] px-1 rounded bg-[#17212D] text-[#62B5F5]">OBSERVED</span></div><div class="mono text-[10.5px] text-[#A0ADBD]">Live Storage: ${esc(props.storage_capacity_live_mcm)} / ${esc(props.storage_capacity_gross_mcm)} MCM (${esc(props.storage_fill_pct)}%)</div></div>`;
+            metaHtml += `<div>Provenance: ${esc(props.provenance)} · Dead Storage: ${esc(props.storage_capacity_dead_mcm)} MCM</div>`;
           } else if (f.layer.id === 'osm-bridges') {
             featLabel = 'OSM Bridge';
-            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140]"><div class="text-[#E9B65C] font-medium">${esc(props.name || 'Road Bridge')}</div><div class="mono text-[11px] text-[#A0ADBD]">Class: ${esc(props.highway)}</div></div>`;
+            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140]"><div class="text-[#E9B65C] font-medium">${esc(props.name || 'Road Bridge')}</div><div class="mono text-[10.5px] text-[#A0ADBD]">ID: OSM #${esc(props.osm_id || 'N/A')} · Class: ${esc(props.highway)}</div></div>`;
           } else if (f.layer.id === 'hist-flood-spots') {
             featLabel = 'Historical Flood Spot';
-            const depthFt = props.inundation_height_ft ? `${esc(props.inundation_height_ft)} ft` : 'Unavailable';
-            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140]"><div class="text-[#F4F6F8] font-medium">${esc(props.area_details || props.tehsil)}</div><div class="mono text-[11px] text-[#A0ADBD]">Reported depth: ${depthFt}</div></div>`;
+            const depthFt = props.inundation_height_ft ? `${esc(props.inundation_height_ft)} ft (OBSERVED)` : 'Unavailable';
+            featHtml = `<div class="p-2 rounded bg-[#111821] border border-[#253140]"><div class="text-[#F4F6F8] font-medium">${esc(props.area_details || props.tehsil)}</div><div class="mono text-[10.5px] text-[#A0ADBD]">Historical reported depth: ${depthFt}</div></div>`;
           } else if (f.layer.id === 'flood-cells-3d') {
             featLabel = 'Hydro Cell';
-            featHtml = `<div class="mono text-[11px] text-[#36C2C9]">Unit discharge q = ${esc(props.unit_discharge_m2_s)} m²/s</div>`;
+            featHtml = `<div class="mono text-[11px] text-[#36C2C9]">Unit discharge q = ${esc(props.unit_discharge_m2_s)} m²/s (MODELED)</div>`;
           }
         }
 
@@ -575,7 +838,7 @@
 
         if (feats.length > 0 || terrainHtml) {
           clearActivePopup();
-          activePopup = new maplibregl.Popup({ closeButton: true, maxWidth: '260px' })
+          activePopup = new maplibregl.Popup({ closeButton: true, maxWidth: '275px' })
             .setLngLat([lon, lat])
             .setHTML(`<div class="space-y-1.5 text-xs"><div class="ct-label">${esc(featLabel)}</div>${terrainHtml}${featHtml}</div>`)
             .addTo(map);
@@ -583,66 +846,82 @@
       });
     }
 
-    async function loadGeospatialLayers() {
-      const meta = await (await fetch('/api/urban/geo/dem_metadata')).json();
+    async function loadGeospatialLayers(targetMap, opts = {}) {
+      const [meta, stData, resData] = await Promise.all([
+        fetch('/api/urban/geo/dem_metadata').then(r => r.json()),
+        fetch('/api/urban/stations').then(r => r.json()),
+        fetch('/api/urban/reservoirs').then(r => r.json()),
+      ]);
 
-      map.addSource('gcc-boundary', { type: 'geojson', data: '/api/urban/geo/gcc_boundary' });
-      map.addLayer({ id: 'gcc-land', type: 'fill', source: 'gcc-boundary', paint: { 'fill-color': '#0C121B', 'fill-opacity': 0.96 } });
-      map.addLayer({ id: 'gcc-outline', type: 'line', source: 'gcc-boundary', paint: { 'line-color': '#253140', 'line-width': 1.25 } });
+      targetMap.addSource('copernicus-terrain', {
+        type: 'raster-dem',
+        tiles: ['/api/urban/geo/terrain_tiles/{z}/{x}/{y}.png'],
+        tileSize: 256,
+        encoding: 'terrarium',
+        bounds: [80.043, 12.904, 80.287, 13.057],
+        minzoom: 9,
+        maxzoom: 15
+      });
 
-      map.addSource('dem-hillshade-src', {
+      targetMap.addSource('gcc-boundary', { type: 'geojson', data: '/api/urban/geo/gcc_boundary' });
+      targetMap.addLayer({ id: 'gcc-land', type: 'fill', source: 'gcc-boundary', paint: { 'fill-color': '#0C121B', 'fill-opacity': 0.96 } });
+      targetMap.addLayer({ id: 'gcc-outline', type: 'line', source: 'gcc-boundary', paint: { 'line-color': '#253140', 'line-width': 1.25 } });
+
+      targetMap.addSource('dem-hillshade-src', {
         type: 'image',
         url: '/api/urban/geo/hillshade',
         coordinates: meta.bounds_wgs84_quad
       });
-      map.addLayer({ id: 'dem-hillshade', type: 'raster', source: 'dem-hillshade-src', paint: { 'raster-opacity': 0.82 } });
+      targetMap.addLayer({ id: 'dem-hillshade', type: 'raster', source: 'dem-hillshade-src', paint: { 'raster-opacity': 0.82 } });
 
       const q = meta.bounds_wgs84_quad;
-      map.addSource('pilot-domain-box', {
+      targetMap.addSource('pilot-domain-box', {
         type: 'geojson',
         data: { type: 'Feature', geometry: { type: 'Polygon', coordinates: [[q[0], q[1], q[2], q[3], q[0]]] } }
       });
-      map.addLayer({
+      targetMap.addLayer({
         id: 'pilot-domain-outline',
         type: 'line',
         source: 'pilot-domain-box',
         paint: { 'line-color': '#344050', 'line-width': 1.2, 'line-dasharray': [4, 3] }
       });
 
-      map.addSource('watersheds', { type: 'geojson', data: '/api/urban/geo/watersheds' });
-      map.addLayer({ id: 'watersheds-line', type: 'line', source: 'watersheds', paint: { 'line-color': '#2B4058', 'line-width': 0.9, 'line-opacity': 0.55, 'line-dasharray': [3, 2] } });
+      targetMap.addSource('watersheds', { type: 'geojson', data: '/api/urban/geo/watersheds' });
+      targetMap.addLayer({ id: 'watersheds-line', type: 'line', source: 'watersheds', paint: { 'line-color': '#2B4058', 'line-width': 0.9, 'line-opacity': 0.55, 'line-dasharray': [3, 2] } });
 
-      map.addSource('wards', { type: 'geojson', data: '/api/urban/geo/wards' });
-      map.addLayer({ id: 'wards-line', type: 'line', source: 'wards', layout: { visibility: 'none' }, paint: { 'line-color': '#738196', 'line-width': 0.6, 'line-opacity': 0.35 } });
+      targetMap.addSource('wards', { type: 'geojson', data: '/api/urban/geo/wards' });
+      targetMap.addLayer({ id: 'wards-line', type: 'line', source: 'wards', layout: { visibility: 'none' }, paint: { 'line-color': '#738196', 'line-width': 0.6, 'line-opacity': 0.35 } });
 
-      map.addSource('osm-parks', { type: 'geojson', data: '/api/urban/geo/parks' });
-      map.addLayer({ id: 'osm-parks', type: 'fill', source: 'osm-parks', paint: { 'fill-color': '#183D37', 'fill-opacity': 0.45 } });
+      targetMap.addSource('osm-parks', { type: 'geojson', data: '/api/urban/geo/parks' });
+      targetMap.addLayer({ id: 'osm-parks', type: 'fill', source: 'osm-parks', paint: { 'fill-color': '#183D37', 'fill-opacity': 0.45 } });
 
-      map.addSource('waterbodies', { type: 'geojson', data: '/api/urban/geo/waterbodies' });
-      map.addLayer({ id: 'waterbodies', type: 'fill', source: 'waterbodies', paint: { 'fill-color': '#133750', 'fill-opacity': 0.65 } });
-      map.addLayer({ id: 'waterbodies-outline', type: 'line', source: 'waterbodies', paint: { 'line-color': '#36C2C9', 'line-width': 0.8, 'line-opacity': 0.45 } });
+      targetMap.addSource('waterbodies', { type: 'geojson', data: '/api/urban/geo/waterbodies' });
+      targetMap.addLayer({ id: 'waterbodies', type: 'fill', source: 'waterbodies', paint: { 'fill-color': '#133750', 'fill-opacity': 0.65 } });
+      targetMap.addLayer({ id: 'waterbodies-outline', type: 'line', source: 'waterbodies', paint: { 'line-color': '#36C2C9', 'line-width': 0.8, 'line-opacity': 0.45 } });
 
-      map.addSource('waterways', { type: 'geojson', data: '/api/urban/geo/waterways' });
-      map.addLayer({ id: 'waterways', type: 'line', source: 'waterways', paint: { 'line-color': '#36C2C9', 'line-width': 1.6, 'line-opacity': 0.72 } });
+      targetMap.addSource('waterways', { type: 'geojson', data: '/api/urban/geo/waterways' });
+      targetMap.addLayer({ id: 'waterways', type: 'line', source: 'waterways', paint: { 'line-color': '#36C2C9', 'line-width': 1.6, 'line-opacity': 0.72 } });
 
-      map.addSource('streets-pilot', { type: 'geojson', data: '/api/urban/geo/streets_pilot' });
-      map.addLayer({ id: 'streets-pilot', type: 'line', source: 'streets-pilot', minzoom: 12.2, paint: { 'line-color': '#243040', 'line-width': 0.85, 'line-opacity': 0.7 } });
+      targetMap.addSource('streets-pilot', { type: 'geojson', data: '/api/urban/geo/streets_pilot' });
+      targetMap.addLayer({ id: 'streets-pilot', type: 'line', source: 'streets-pilot', minzoom: 12.2, paint: { 'line-color': '#243040', 'line-width': 0.85, 'line-opacity': 0.7 } });
 
-      map.addSource('roads-major', { type: 'geojson', data: '/api/urban/geo/roads_major' });
-      map.addLayer({ id: 'roads-major', type: 'line', source: 'roads-major', paint: { 'line-color': '#3B4C62', 'line-width': ['match', ['get', 'highway'], 'motorway', 2.4, 'trunk', 2.2, 'primary', 1.8, 1.2], 'line-opacity': 0.8 } });
+      targetMap.addSource('roads-major', { type: 'geojson', data: '/api/urban/geo/roads_major' });
+      targetMap.addLayer({ id: 'roads-major', type: 'line', source: 'roads-major', paint: { 'line-color': '#3B4C62', 'line-width': ['match', ['get', 'highway'], 'motorway', 2.4, 'trunk', 2.2, 'primary', 1.8, 1.2], 'line-opacity': 0.8 } });
 
-      map.addSource('osm-bridges', { type: 'geojson', data: '/api/urban/geo/bridges' });
-      map.addLayer({ id: 'osm-bridges', type: 'line', source: 'osm-bridges', paint: { 'line-color': '#D9A74A', 'line-width': 2.6, 'line-opacity': 0.85 } });
+      targetMap.addSource('osm-bridges', { type: 'geojson', data: '/api/urban/geo/bridges' });
+      targetMap.addLayer({ id: 'osm-bridges', type: 'line', source: 'osm-bridges', paint: { 'line-color': '#D9A74A', 'line-width': 2.6, 'line-opacity': 0.85 } });
 
-      map.addSource('flood-raster-src', {
-        type: 'image',
-        url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-        coordinates: meta.bounds_wgs84_quad
-      });
-      map.addLayer({ id: 'flood-raster', type: 'raster', source: 'flood-raster-src', paint: { 'raster-opacity': 0.44, 'raster-resampling': 'nearest' } });
+      const blankPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+      const initRasterUrl = opts.initialRasterUrl || blankPng;
+      const initCellsData = opts.initialCells || { type: 'FeatureCollection', features: [] };
+      targetMap.addSource('flood-raster-src', { type: 'image', url: initRasterUrl, coordinates: meta.bounds_wgs84_quad });
+      targetMap.addLayer({ id: 'flood-raster', type: 'raster', source: 'flood-raster-src', paint: { 'raster-opacity': floodOpacityVal, 'raster-resampling': 'nearest' } });
 
-      map.addSource('flood-cells-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-      map.addLayer({
+      targetMap.addSource('flood-delta-src', { type: 'image', url: blankPng, coordinates: meta.bounds_wgs84_quad });
+      targetMap.addLayer({ id: 'flood-delta-raster', type: 'raster', source: 'flood-delta-src', layout: { visibility: 'none' }, paint: { 'raster-opacity': 0.72, 'raster-resampling': 'nearest' } });
+
+      targetMap.addSource('flood-cells-src', { type: 'geojson', data: initCellsData });
+      targetMap.addLayer({
         id: 'flood-cells-3d',
         type: 'fill-extrusion',
         source: 'flood-cells-src',
@@ -653,16 +932,16 @@
         }
       });
 
-      map.addSource('flow-vectors-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-      map.addLayer({
+      targetMap.addSource('flow-vectors-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      targetMap.addLayer({
         id: 'flow-vectors',
         type: 'line',
         source: 'flow-vectors-src',
         paint: { 'line-color': '#9CD6FA', 'line-width': 1.25, 'line-opacity': 0.65 }
       });
 
-      map.addSource('osm-buildings', { type: 'geojson', data: '/api/urban/geo/buildings' });
-      map.addLayer({
+      targetMap.addSource('osm-buildings', { type: 'geojson', data: '/api/urban/geo/buildings' });
+      targetMap.addLayer({
         id: 'osm-buildings-3d',
         type: 'fill-extrusion',
         source: 'osm-buildings',
@@ -680,8 +959,26 @@
         }
       });
 
-      map.addSource('hist-flood-src', { type: 'geojson', data: '/api/urban/geo/flood_spots' });
-      map.addLayer({
+      targetMap.addSource('exposure-highlight-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      targetMap.addLayer({
+        id: 'exposure-buildings-fill',
+        type: 'fill',
+        source: 'exposure-highlight-src',
+        filter: ['==', ['get', 'asset_kind'], 'building'],
+        layout: { visibility: 'none' },
+        paint: { 'fill-color': '#F16D75', 'fill-opacity': 0.68, 'fill-outline-color': '#F4F6F8' }
+      });
+      targetMap.addLayer({
+        id: 'exposure-roads-line',
+        type: 'line',
+        source: 'exposure-highlight-src',
+        filter: ['==', ['get', 'asset_kind'], 'road'],
+        layout: { visibility: 'none' },
+        paint: { 'line-color': '#62B5F5', 'line-width': 2.6, 'line-opacity': 0.9 }
+      });
+
+      targetMap.addSource('hist-flood-src', { type: 'geojson', data: '/api/urban/geo/flood_spots' });
+      targetMap.addLayer({
         id: 'hist-flood-spots',
         type: 'circle',
         source: 'hist-flood-src',
@@ -689,38 +986,36 @@
         paint: { 'circle-radius': 4.5, 'circle-color': '#E9B65C', 'circle-stroke-width': 1, 'circle-stroke-color': '#080B10' }
       });
 
-      const stData = await (await fetch('/api/urban/stations')).json();
-      map.addSource('stations-src', {
+      targetMap.addSource('stations-src', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
           features: stData.stations.map(s => ({ type: 'Feature', properties: s, geometry: { type: 'Point', coordinates: s.coordinates } }))
         }
       });
-      map.addLayer({
+      targetMap.addLayer({
         id: 'stations-pts',
         type: 'circle',
         source: 'stations-src',
         paint: { 'circle-radius': 4.2, 'circle-color': '#43C59E', 'circle-stroke-width': 1.2, 'circle-stroke-color': '#080B10' }
       });
 
-      const resData = await (await fetch('/api/urban/reservoirs')).json();
-      map.addSource('reservoirs-src', {
+      targetMap.addSource('reservoirs-src', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
           features: resData.reservoirs.map(r => ({ type: 'Feature', properties: r, geometry: { type: 'Point', coordinates: r.coordinates } }))
         }
       });
-      map.addLayer({
+      targetMap.addLayer({
         id: 'reservoir-pts',
         type: 'circle',
         source: 'reservoirs-src',
         paint: { 'circle-radius': 6.5, 'circle-color': '#62B5F5', 'circle-stroke-width': 1.5, 'circle-stroke-color': '#080B10' }
       });
 
-      map.addSource('focus-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-      map.addLayer({
+      targetMap.addSource('focus-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      targetMap.addLayer({
         id: 'focus-pts',
         type: 'circle',
         source: 'focus-src',
@@ -739,7 +1034,7 @@
     }
 
     function syncSliderLabels() {
-      ['rain', 'dur', 'drain', 'infil', 'spill', 'mann'].forEach(k => {
+      ['rain', 'dur', 'drain', 'infil', 'spill', 'mann', 'initd'].forEach(k => {
         const sl = document.getElementById(`sl-${k}`);
         const num = document.getElementById(`num-${k}`);
         if (sl && num) num.value = sl.value;
@@ -801,6 +1096,7 @@
           infiltration_rate_mm_hr: parseFloat(document.getElementById('num-infil').value),
           chembarambakkam_discharge_cusecs: parseFloat(document.getElementById('num-spill').value),
           mannings_n: parseFloat(document.getElementById('num-mann').value),
+          initial_depth_m: parseFloat(document.getElementById('num-initd').value || '0'),
         };
         const bounds = [
           ['rainfall_intensity_mm_hr', 0, 350],
@@ -809,6 +1105,7 @@
           ['infiltration_rate_mm_hr', 0, 100],
           ['chembarambakkam_discharge_cusecs', 0, 80000],
           ['mannings_n', 0.01, 0.30],
+          ['initial_depth_m', 0, 10],
         ];
         for (const [key, lo, hi] of bounds) {
           const val = payload[key];
@@ -843,6 +1140,7 @@
       document.getElementById('sl-infil').value = sc.infiltration_rate_mm_hr;
       document.getElementById('sl-spill').value = sc.chembarambakkam_discharge_cusecs;
       document.getElementById('sl-mann').value = sc.mannings_n;
+      if (document.getElementById('sl-initd')) document.getElementById('sl-initd').value = sc.initial_depth_m || 0;
       syncSliderLabels();
     }
 
@@ -887,12 +1185,15 @@
         <div class="flex justify-between pt-1 border-t border-[#253140]"><span>Residual</span><span class="text-[#43C59E]">${mb.residual_m3 || 0} m³</span></div>
       `;
 
-      if (map && map.getSource('flood-raster-src') && data.raster_png_data_url) {
+      const rasterUrl = floodDepthMode === 'max' && data.max_raster_png_data_url ? data.max_raster_png_data_url : data.raster_png_data_url;
+      if (map && map.getSource('flood-raster-src') && rasterUrl) {
         map.getSource('flood-raster-src').updateImage({
-          url: data.raster_png_data_url,
+          url: rasterUrl,
           coordinates: data.domain.bounds_wgs84_quad
         });
       }
+      if (!document.getElementById('rtab-exposure').classList.contains('hidden')) refreshActiveExposure();
+      if (!document.getElementById('rtab-boundaries').classList.contains('hidden')) refreshActiveNeighbourhoods();
       if (map && map.getSource('flood-cells-src')) {
         map.getSource('flood-cells-src').setData(data.flood_overlay_geojson || { type: 'FeatureCollection', features: [] });
       }
@@ -959,13 +1260,33 @@
       const idx = parseInt(idxStr, 10);
       const fr = activeScenarioData.timeline_frames[idx];
       if (!fr) return;
-      document.getElementById('timeline-label').innerText = `${fr.label} (${fr.rain_mm_hr} mm/hr)`;
+      let cumRain = 0;
+      for (let i = 0; i <= idx; i++) {
+        cumRain += Number(activeScenarioData.timeline_frames[i]?.rain_mm_hr || 0);
+      }
+      const modeHist = activeScenarioData.scenario?.mode === 'historical_replay';
+      const rainReadout = modeHist ? `${fr.rain_mm_hr} mm/hr · Cum ${cumRain.toFixed(1)} mm obs` : `${fr.rain_mm_hr} mm/hr`;
+      document.getElementById('timeline-label').innerText = `${fr.label} (${rainReadout})`;
       document.getElementById('timeline-step-stats').innerText = `${fr.stored_mcm} MCM | ${fr.urban_inundated_km2} km²`;
       if (map && map.getSource('flood-raster-src') && fr.raster_png_data_url) {
+        const useUrl = (floodDepthMode === 'max' && idx === activeScenarioData.timeline_frames.length - 1 && activeScenarioData.max_raster_png_data_url)
+          ? activeScenarioData.max_raster_png_data_url
+          : fr.raster_png_data_url;
         map.getSource('flood-raster-src').updateImage({
-          url: fr.raster_png_data_url,
+          url: useUrl,
           coordinates: activeScenarioData.domain.bounds_wgs84_quad
         });
+      }
+      if (altMap && !document.getElementById('compare-split-pane').classList.contains('hidden') && latestAltScenarioData?.timeline_frames) {
+        const altFrames = latestAltScenarioData.timeline_frames;
+        const altIdx = Math.min(idx, altFrames.length - 1);
+        const afr = altFrames[altIdx];
+        if (afr && altMap.getSource('flood-raster-src') && afr.raster_png_data_url) {
+          altMap.getSource('flood-raster-src').updateImage({
+            url: afr.raster_png_data_url,
+            coordinates: latestAltScenarioData.domain.bounds_wgs84_quad
+          });
+        }
       }
     }
 
@@ -1007,26 +1328,42 @@
       }, 650);
     }
 
+    let latestAltScenarioData = null;
+
     async function runScenarioCompare() {
       const baseId = document.getElementById('cmp-base').value;
       const altId = document.getElementById('cmp-alt').value;
       const res = await fetch('/api/urban/scenario/compare', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ baseline_id: baseId, alternate_id: altId })
+        body: JSON.stringify({ baseline_id: baseId, alternate_id: altId, include_exposure: true })
       });
       if (!res.ok) return;
       const c = await res.json();
+      latestCompareData = c;
       const box = document.getElementById('compare-output');
       box.classList.remove('hidden');
+      const pctV = c.pct_delta_stored_volume !== null ? ` (${c.pct_delta_stored_volume >= 0 ? '+' : ''}${c.pct_delta_stored_volume}%)` : ' (N/A)';
+      const pctA = c.pct_delta_inundated_area !== null ? ` (${c.pct_delta_inundated_area >= 0 ? '+' : ''}${c.pct_delta_inundated_area}%)` : ' (N/A)';
+      const exp = c.infrastructure_exposure_comparison;
+      const expRow = exp ? `<div class="flex justify-between"><span>Exposed Bldgs:</span><span class="text-[#F16D75]">${exp.deltas.exposed_buildings_count >= 0 ? '+' : ''}${exp.deltas.exposed_buildings_count}</span></div><div class="flex justify-between"><span>Exposed Roads:</span><span class="text-[#36C2C9]">${exp.deltas.exposed_roads_km >= 0 ? '+' : ''}${exp.deltas.exposed_roads_km} km</span></div>` : '';
       box.innerHTML = `
         <div class="text-[#F4F6F8] font-medium font-sans">${esc(c.baseline_scenario)} vs ${esc(c.alternate_scenario)}</div>
-        <div class="flex justify-between"><span>Delta Volume:</span><span class="text-[#62B5F5]">${c.delta_stored_volume_mcm >= 0 ? '+' : ''}${c.delta_stored_volume_mcm} MCM</span></div>
-        <div class="flex justify-between"><span>Delta Area:</span><span class="text-[#E9B65C]">${c.delta_inundated_area_km2 >= 0 ? '+' : ''}${c.delta_inundated_area_km2} km²</span></div>
+        <div class="flex justify-between"><span>Delta Volume:</span><span class="text-[#62B5F5]">${c.delta_stored_volume_mcm >= 0 ? '+' : ''}${c.delta_stored_volume_mcm} MCM${esc(pctV)}</span></div>
+        <div class="flex justify-between"><span>Delta Area:</span><span class="text-[#E9B65C]">${c.delta_inundated_area_km2 >= 0 ? '+' : ''}${c.delta_inundated_area_km2} km²${esc(pctA)}</span></div>
         <div class="flex justify-between"><span>Delta Max Depth:</span><span class="text-[#F16D75]">${c.delta_max_urban_depth_m >= 0 ? '+' : ''}${c.delta_max_urban_depth_m} m</span></div>
+        ${expRow}
       `;
+      if (map && map.getSource('flood-delta-src') && c.delta_raster_png_data_url && activeScenarioData?.domain) {
+        map.getSource('flood-delta-src').updateImage({
+          url: c.delta_raster_png_data_url,
+          coordinates: activeScenarioData.domain.bounds_wgs84_quad
+        });
+      }
+      return c;
     }
 
+    let savedListCache = [];
     async function saveCurrentScenario() {
       const nm = document.getElementById('save-name-input').value.trim();
       if (!nm) return;
@@ -1042,6 +1379,7 @@
           infiltration_rate_mm_hr: parseFloat(document.getElementById('num-infil').value),
           chembarambakkam_discharge_cusecs: parseFloat(document.getElementById('num-spill').value),
           mannings_n: parseFloat(document.getElementById('num-mann').value),
+          initial_depth_m: parseFloat(document.getElementById('num-initd').value || '0'),
         })
       });
       document.getElementById('save-name-input').value = '';
@@ -1052,25 +1390,99 @@
       const res = await fetch('/api/urban/scenarios/saved');
       if (!res.ok) return;
       const d = await res.json();
+      savedListCache = d.scenarios || [];
       const sel = document.getElementById('saved-scenarios-select');
       sel.innerHTML = '<option value="">Load saved scenario...</option>';
-      (d.scenarios || []).forEach(s => {
+      savedListCache.forEach(s => {
         const opt = document.createElement('option');
-        opt.value = JSON.stringify(s.config);
+        opt.value = s.id || s.saved_name;
         opt.textContent = s.saved_name;
         sel.appendChild(opt);
       });
     }
 
-    async function loadSavedScenario(cfgStr) {
-      if (!cfgStr) return;
-      const cfg = JSON.parse(cfgStr);
-      updateSlidersFromConfig(cfg);
+    async function loadSavedScenario(key) {
+      if (!key) return;
+      const entry = savedListCache.find(s => (s.id || s.saved_name) === key);
+      if (!entry) return;
+      updateSlidersFromConfig(entry.config);
       await runCustomScenario();
+    }
+
+    async function duplicateSelectedSaved() {
+      const key = document.getElementById('saved-scenarios-select').value;
+      if (!key) { showSimError('Select a saved preset first to duplicate.'); return; }
+      const r = await fetch(`/api/urban/scenarios/saved/${encodeURIComponent(key)}/duplicate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+      if (r.ok) await loadSavedList();
+    }
+
+    function toggleRenamePrompt() {
+      const key = document.getElementById('saved-scenarios-select').value;
+      if (!key) { showSimError('Select a saved preset first to rename.'); return; }
+      const box = document.getElementById('saved-crud-confirm');
+      box.classList.remove('hidden');
+      box.innerHTML = `
+        <div class="text-[#A0ADBD]">Rename selected preset:</div>
+        <div class="flex gap-1">
+          <input id="rename-preset-input" type="text" class="ct-input flex-1 text-xs py-0.5" value="${esc(key)}" />
+          <button type="button" onclick="confirmRenameSaved('${esc(key)}')" class="ct-btn ct-btn-primary ct-btn-sm py-0.5">OK</button>
+          <button type="button" onclick="hideCrudBox()" class="ct-btn ct-btn-sm py-0.5">Cancel</button>
+        </div>
+      `;
+    }
+
+    async function confirmRenameSaved(key) {
+      const newName = document.getElementById('rename-preset-input')?.value.trim();
+      if (!newName) return;
+      const r = await fetch(`/api/urban/scenarios/saved/${encodeURIComponent(key)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ new_name: newName })
+      });
+      hideCrudBox();
+      if (r.ok) await loadSavedList();
+    }
+
+    function requestDeleteSaved() {
+      const key = document.getElementById('saved-scenarios-select').value;
+      if (!key) { showSimError('Select a saved preset first to delete.'); return; }
+      const box = document.getElementById('saved-crud-confirm');
+      box.classList.remove('hidden');
+      box.innerHTML = `
+        <div class="text-[#F16D75]">Delete saved scenario "${esc(key)}"?</div>
+        <div class="flex gap-1.5">
+          <button type="button" onclick="confirmDeleteSaved('${esc(key)}')" class="ct-btn ct-btn-sm py-0.5 text-[#F16D75] border-[#F16D75]/50">Confirm Delete</button>
+          <button type="button" onclick="hideCrudBox()" class="ct-btn ct-btn-sm py-0.5">Cancel</button>
+        </div>
+      `;
+    }
+
+    async function confirmDeleteSaved(key) {
+      const r = await fetch(`/api/urban/scenarios/saved/${encodeURIComponent(key)}`, { method: 'DELETE' });
+      hideCrudBox();
+      if (r.ok) await loadSavedList();
+    }
+
+    function hideCrudBox() {
+      const box = document.getElementById('saved-crud-confirm');
+      if (box) { box.classList.add('hidden'); box.innerHTML = ''; }
     }
 
     function exportActive(fmt) {
       window.open(`/api/urban/scenario/${encodeURIComponent(activeScenarioId)}/export?fmt=${fmt}`, '_blank');
+    }
+
+    function downloadPdfReport() {
+      const cmp = document.getElementById('cmp-alt')?.value || '';
+      const thresh = document.getElementById('ut-exp-thresh')?.value || '0.15';
+      const qs = new URLSearchParams({ scenario_id: activeScenarioId, threshold_m: thresh });
+      if (cmp && cmp !== activeScenarioId) qs.set('compare_id', cmp);
+      window.open(`/api/urban/report/pdf?${qs.toString()}`, '_blank');
+    }
+
+    function exportCsvReport() {
+      const thresh = document.getElementById('ut-exp-thresh')?.value || '0.15';
+      window.open(`/api/urban/report/csv?scenario_id=${encodeURIComponent(activeScenarioId)}&threshold_m=${thresh}`, '_blank');
     }
 
     async function flyToLocation(locId) {
@@ -1079,9 +1491,9 @@
         if (!res.ok) return;
         const loc = await res.json();
         if (map && loc.coordinates) {
-          map.flyTo({ center: loc.coordinates, zoom: 13.8, pitch: is3DPitch ? 55 : 0, bearing: -10, duration: 950 });
+          map.flyTo({ center: loc.coordinates, zoom: 13.8, pitch: is3DPitch ? 55 : 0, bearing: -10, duration: motionDur(950) });
         }
-      } catch (_) {}
+      } catch (_) { }
     }
     window.flyToLocation = flyToLocation;
     window.applyPresetScenario = applyPresetScenario;
@@ -1089,12 +1501,293 @@
     function toggle3DPitch() {
       is3DPitch = !is3DPitch;
       document.getElementById('btn-tilt').innerText = is3DPitch ? '3D Pitch' : '2D Top';
-      if (map) map.easeTo({ pitch: is3DPitch ? 52 : 0, duration: 450 });
+      if (map) map.easeTo({ pitch: is3DPitch ? 52 : 0, duration: motionDur(450) });
+    }
+
+    function resetNorth() {
+      if (map) map.easeTo({ bearing: 0, duration: motionDur(400) });
     }
 
     function resetOverview() {
       clearActivePopup();
-      if (map) map.flyTo({ center: [80.205, 12.978], zoom: 11.4, pitch: is3DPitch ? 50 : 0, bearing: -12, duration: 850 });
+      if (map) map.flyTo({ center: [80.205, 12.978], zoom: 11.4, pitch: is3DPitch ? 50 : 0, bearing: -12, duration: motionDur(850) });
+    }
+
+    function cycleTerrainExaggeration() {
+      const levels = [3.0, 1.0, 0.0];
+      const nextIdx = (levels.indexOf(terrainExaggeration) + 1) % levels.length;
+      terrainExaggeration = levels[nextIdx];
+      const btn = document.getElementById('btn-terrain');
+      if (btn) btn.innerText = terrainExaggeration > 0 ? `3D DEM ${terrainExaggeration}x` : '2D DEM 0x';
+      try {
+        if (map) {
+          if (terrainExaggeration > 0 && map.getSource('copernicus-terrain')) {
+            map.setTerrain({ source: 'copernicus-terrain', exaggeration: terrainExaggeration });
+          } else {
+            map.setTerrain(null);
+          }
+        }
+      } catch (_) {}
+    }
+
+    function updateFloodRasterMode(mode) {
+      floodDepthMode = mode;
+      if (activeScenarioData) renderScenarioResult(activeScenarioData);
+    }
+
+    function setFloodOpacity(val) {
+      floodOpacityVal = parseFloat(val);
+      if (map && map.getLayer('flood-raster')) map.setPaintProperty('flood-raster', 'raster-opacity', floodOpacityVal);
+    }
+
+    function toggleDeltaRasterMode(forceState) {
+      deltaOverlayActive = forceState !== undefined ? forceState : !deltaOverlayActive;
+      const chk = document.getElementById('chk-delta-layer');
+      if (chk) chk.checked = deltaOverlayActive;
+      if (map && map.getLayer('flood-delta-raster')) {
+        map.setLayoutProperty('flood-delta-raster', 'visibility', deltaOverlayActive ? 'visible' : 'none');
+      }
+      if (deltaOverlayActive && !latestCompareData) runScenarioCompare();
+    }
+
+    function syncCamera(srcMap, dstMap) {
+      if (isSyncingCamera || !srcMap || !dstMap) return;
+      isSyncingCamera = true;
+      dstMap.jumpTo({
+        center: srcMap.getCenter(),
+        zoom: srcMap.getZoom(),
+        bearing: srcMap.getBearing(),
+        pitch: srcMap.getPitch()
+      });
+      isSyncingCamera = false;
+    }
+
+    function updateCompareSwipe(pctStr) {
+      const pct = Math.max(10, Math.min(90, parseFloat(pctStr)));
+      document.getElementById('map-alt-wrap').style.clipPath = `polygon(${pct}% 0, 100% 0, 100% 100%, ${pct}% 100%)`;
+      document.getElementById('compare-divider-line').style.left = `${pct}%`;
+    }
+
+    async function toggleComparisonWorkspace(forceOpen) {
+      const pane = document.getElementById('compare-split-pane');
+      const open = forceOpen !== undefined ? forceOpen : pane.classList.contains('hidden');
+      if (!open) {
+        pane.classList.add('hidden');
+        pane.dataset.altReady = '0';
+        return;
+      }
+      pane.dataset.altReady = '0';
+      pane.classList.remove('hidden');
+      const baseId = document.getElementById('cmp-base').value;
+      const altId = document.getElementById('cmp-alt').value;
+      document.getElementById('cmp-left-lbl').innerText = baseId;
+      document.getElementById('cmp-right-lbl').innerText = altId;
+      await applyPresetScenario(baseId);
+      await runScenarioCompare();
+      const altRes = await (await fetch(`/api/urban/scenario/${encodeURIComponent(altId)}`)).json();
+      latestAltScenarioData = altRes;
+      const syncAltScenario = () => {
+        if (altRes.raster_png_data_url && altMap.getSource('flood-raster-src')) {
+          altMap.getSource('flood-raster-src').updateImage({ url: altRes.raster_png_data_url, coordinates: altRes.domain.bounds_wgs84_quad });
+        }
+        if (altMap.getSource('flood-cells-src')) {
+          altMap.getSource('flood-cells-src').setData(altRes.flood_overlay_geojson || { type: 'FeatureCollection', features: [] });
+        }
+        if (typeof map.getTerrain === 'function' && typeof altMap.setTerrain === 'function') {
+          const tCfg = map.getTerrain();
+          altMap.setTerrain(tCfg || null);
+        }
+        altMap.triggerRepaint();
+      };
+
+      if (!altMap) {
+        altMap = new maplibregl.Map({
+          container: 'map-alt',
+          style: OFFLINE_STYLE,
+          center: map.getCenter(),
+          zoom: map.getZoom(),
+          pitch: map.getPitch(),
+          bearing: map.getBearing(),
+          antialias: true,
+          attributionControl: false
+        });
+        altMap.on('load', async () => {
+          await loadGeospatialLayers(altMap, {
+            initialRasterUrl: altRes.raster_png_data_url,
+            initialCells: altRes.flood_overlay_geojson,
+          });
+          syncAltScenario();
+          altMap.once('idle', () => { pane.dataset.altReady = '1'; });
+          setTimeout(() => { pane.dataset.altReady = '1'; }, 2800);
+        });
+        map.on('move', () => syncCamera(map, altMap));
+        altMap.on('move', () => syncCamera(altMap, map));
+      } else {
+        altMap.resize();
+        syncCamera(map, altMap);
+        syncAltScenario();
+        altMap.once('idle', () => { pane.dataset.altReady = '1'; });
+        setTimeout(() => { pane.dataset.altReady = '1'; }, 1200);
+      }
+      updateCompareSwipe(50);
+    }
+
+    function switchRightPanel(tab) {
+      ['outputs', 'exposure', 'boundaries'].forEach(t => {
+        document.getElementById(`rtab-${t}`).classList.toggle('hidden', t !== tab);
+        const btn = document.getElementById(`rtab-btn-${t}`);
+        btn.classList.toggle('text-[#62B5F5]', t === tab);
+        btn.classList.toggle('border-[#62B5F5]', t === tab);
+        btn.classList.toggle('text-[#A0ADBD]', t !== tab);
+        btn.classList.toggle('border-transparent', t !== tab);
+      });
+      if (tab === 'exposure') refreshActiveExposure();
+      if (tab === 'boundaries') refreshActiveNeighbourhoods();
+    }
+
+    async function refreshActiveExposure() {
+      const thresh = parseFloat(document.getElementById('ut-exp-thresh')?.value || '0.15');
+      const r = await fetch(`/api/urban/exposure?scenario_id=${encodeURIComponent(activeScenarioId)}&threshold_m=${thresh}&include_geojson=true`);
+      if (!r.ok) return;
+      const e = await r.json();
+      activeExposureData = e;
+      document.getElementById('ut-exp-bld').innerText = (e.buildings.exposed_count || 0).toLocaleString();
+      document.getElementById('ut-exp-area').innerText = `${e.buildings.exposed_footprint_area_ha} ha`;
+      document.getElementById('ut-exp-road').innerText = `${e.roads.exposed_length_km} km`;
+      document.getElementById('ut-exp-civic').innerText = `${e.buildings.critical_civic_facilities.total_exposed}`;
+
+      const tierLines = Object.entries(e.buildings.depth_tiers_count || {}).map(([k, v]) => `<div class="flex justify-between"><span>${esc(k)}</span><span>${v} bldgs</span></div>`).join('');
+      const roadLines = (e.roads.by_highway_class || []).slice(0, 5).map(rc => `<div class="flex justify-between"><span>${esc(rc.highway_class)}</span><span>${rc.exposed_length_km} km</span></div>`).join('');
+      document.getElementById('ut-exp-breakdown').innerHTML = `
+        <div class="border-t border-[#253140] pt-2 space-y-1"><div class="text-[10px] font-sans text-[#738196] uppercase">Building Depth Tiers</div>${tierLines}</div>
+        <div class="border-t border-[#253140] pt-2 space-y-1"><div class="text-[10px] font-sans text-[#738196] uppercase">Top Road Classes</div>${roadLines}</div>
+      `;
+    }
+
+    function applyExposureHighlight(kind) {
+      if (!map || !map.getSource('exposure-highlight-src')) return;
+      if (kind === 'clear' || !activeExposureData?.highlight_geojson) {
+        toggleMapLayer(['exposure-buildings-fill', 'exposure-roads-line'], false);
+        const chk = document.getElementById('chk-exposure-layer');
+        if (chk) chk.checked = false;
+        return;
+      }
+      const feats = activeExposureData.highlight_geojson.features || [];
+      const filtered = kind === 'all' ? feats : feats.filter(f => f.properties?.asset_kind === kind);
+      map.getSource('exposure-highlight-src').setData({ type: 'FeatureCollection', features: filtered });
+      toggleMapLayer(['exposure-buildings-fill', 'exposure-roads-line'], true);
+      const chk = document.getElementById('chk-exposure-layer');
+      if (chk) chk.checked = true;
+    }
+
+    async function refreshActiveNeighbourhoods() {
+      const bType = document.getElementById('ut-nb-type')?.value || 'watersheds';
+      const thresh = parseFloat(document.getElementById('ut-exp-thresh')?.value || '0.15');
+      const r = await fetch(`/api/urban/neighbourhoods?scenario_id=${encodeURIComponent(activeScenarioId)}&boundary_type=${bType}&threshold_m=${thresh}`);
+      if (!r.ok) return;
+      activeNeighbourhoodData = await r.json();
+      renderActiveNeighbourhoodRows();
+    }
+
+    function renderActiveNeighbourhoodRows() {
+      if (!activeNeighbourhoodData) return;
+      const sortKey = document.getElementById('ut-nb-sort')?.value || 'area';
+      const inDom = (activeNeighbourhoodData.regions || []).filter(r => r.in_computational_domain);
+      inDom.sort((a, b) => {
+        if (sortKey === 'pct') return (b.inundated_pct_of_in_domain || 0) - (a.inundated_pct_of_in_domain || 0);
+        if (sortKey === 'buildings') return (b.exposed_buildings_count || 0) - (a.exposed_buildings_count || 0);
+        if (sortKey === 'roads') return (b.exposed_roads_km || 0) - (a.exposed_roads_km || 0);
+        return (b.inundated_area_km2 || 0) - (a.inundated_area_km2 || 0);
+      });
+      document.getElementById('ut-nb-summary').innerText = `${inDom.length} in-domain regions · ${activeNeighbourhoodData.outside_domain_regions_count} outside domain`;
+      document.getElementById('ut-nb-list').innerHTML = inDom.slice(0, 36).map(rg => `
+        <button type="button" onclick="flyToCoords(${rg.centroid[0]}, ${rg.centroid[1]})" class="w-full text-left px-2.5 py-2 hover:bg-[#17212D] transition block">
+          <div class="flex justify-between items-center gap-2">
+            <span class="font-medium text-[#F4F6F8] truncate">${esc(rg.name)}</span>
+            <span class="mono text-[10.5px] text-[#36C2C9] shrink-0">${rg.inundated_area_km2} km² (${rg.inundated_pct_of_in_domain}%)</span>
+          </div>
+          <div class="mono text-[10px] text-[#738196] flex justify-between mt-0.5">
+            <span>Cov ${rg.domain_coverage_pct}% · Max ${rg.max_depth_m}m</span>
+            <span>${rg.exposed_buildings_count} bldgs · ${rg.exposed_roads_km} km</span>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function flyToCoords(lon, lat) {
+      if (map) map.flyTo({ center: [lon, lat], zoom: 13.6, pitch: is3DPitch ? 52 : 0, duration: motionDur(850) });
+    }
+
+    // Saved Geographical Viewpoints (localStorage backed)
+    function renderViewpointsDropdown() {
+      const sel = document.getElementById('viewpoints-select');
+      if (!sel) return;
+      const saved = JSON.parse(localStorage.getItem('civictwin_viewpoints') || '[]');
+      sel.innerHTML = '<option value="">Viewpoints...</option>';
+      saved.forEach((vp, idx) => {
+        const opt = document.createElement('option');
+        opt.value = String(idx);
+        opt.textContent = vp.name;
+        sel.appendChild(opt);
+      });
+    }
+
+    function saveCurrentViewpoint() {
+      if (!map) return;
+      const c = map.getCenter();
+      const saved = JSON.parse(localStorage.getItem('civictwin_viewpoints') || '[]');
+      const label = `View ${saved.length + 1} (${c.lat.toFixed(3)}°N, ${c.lng.toFixed(3)}°E)`;
+      saved.push({ name: label, center: [c.lng, c.lat], zoom: map.getZoom(), pitch: map.getPitch(), bearing: map.getBearing() });
+      localStorage.setItem('civictwin_viewpoints', JSON.stringify(saved.slice(-12)));
+      renderViewpointsDropdown();
+    }
+
+    function jumpSavedViewpoint(idxStr) {
+      if (idxStr === '' || !map) return;
+      const saved = JSON.parse(localStorage.getItem('civictwin_viewpoints') || '[]');
+      const vp = saved[parseInt(idxStr, 10)];
+      if (vp) map.flyTo({ ...vp, duration: motionDur(800) });
+    }
+
+    // Lightweight Guided Demonstration Sequence (13 Steps)
+    const DEMO_STEPS = [
+      { title: 'CivicTwin-R Overview', desc: 'Introduction to South Chennai pilot & architectural isolation from bench IoT nodes.', action: () => window.open('/showcase#urbantwin', '_blank') },
+      { title: 'Chennai 3D Geographical Explorer', desc: 'Inspect Copernicus GLO-30 3D DEM relief (`3x`), 18,198 extruded buildings, 465 waterways & 56 WFS stations.', action: () => resetOverview() },
+      { title: 'Selected Neighbourhood: Velachery', desc: 'Fly to Velachery basin hotspot and click any building or road for observed vs derived vs modeled provenance.', action: () => flyToLocation('velachery') },
+      { title: 'Heavy-Rainfall Landlab Simulation', desc: 'Execute 45 mm/hr 4h monsoon overland routing over 111x175 UTM44N grid with full water balance.', action: () => applyPresetScenario('heavy_rainfall') },
+      { title: 'Side-by-Side Scenario Comparison', desc: 'Compare Heavy Rain vs Degraded 25% Drainage side-by-side with swipe curtain & delta raster.', action: () => toggleComparisonWorkspace(true) },
+      { title: 'Infrastructure Exposure Engine', desc: 'Evaluate EPSG:32644 projected buildings, OSM civic facilities, road km, watersheds & GCC wards.', action: () => switchRightPanel('exposure') },
+      { title: 'Cyclone Michaung Historical Replay', desc: 'Drive Landlab with preserved Dec 2023 hourly rainfall showing observed vs modeled tags.', action: () => { toggleComparisonWorkspace(false); applyPresetScenario('michaung_replay'); } },
+      { title: 'Offline A4 PDF Report Export', desc: 'Download print-ready ReportLab engineering report with actual maps, exposure & limitations.', action: () => downloadPdfReport() },
+      { title: 'Experimental Three.js Tank Lab', desc: 'Examine the isolated virtual bench two-tank twin running RK4 ODE over MQTT QoS 1.', action: () => window.open('/showcase#twin3d', '_blank') },
+      { title: 'Mosquitto MQTT & Node-RED UI', desc: 'Observe live broker message delivery and Node-RED operational dashboard on :1880/ui.', action: () => window.open('http://127.0.0.1:1880/ui/', '_blank') },
+      { title: 'InfluxDB 2.x & SQLite WAL', desc: 'Verify dual-write telemetry storage across InfluxDB :8086 and SQLite explorer.', action: () => window.open('/showcase#database', '_blank') },
+      { title: 'Sensor Dropout & Hysteresis Recovery', desc: 'Inspect FRESH/STALE/OFFLINE transitions and anti-chatter 3% warning hysteresis.', action: () => window.open('/showcase#reliability', '_blank') },
+      { title: 'Missing-Data Reconstruction Benchmarks', desc: 'Review zero-leakage causal RK4 vs LOCF and retrospective linear interpolation.', action: () => window.open('/showcase#reconstruction', '_blank') }
+    ];
+    let demoStepIdx = 0;
+
+    function toggleDemoTour(force) {
+      const el = document.getElementById('demo-guide-dock');
+      const show = force !== undefined ? force : el.classList.contains('hidden');
+      el.classList.toggle('hidden', !show);
+      if (show) renderDemoStep();
+    }
+
+    function renderDemoStep() {
+      const s = DEMO_STEPS[demoStepIdx];
+      document.getElementById('demo-step-num').innerText = String(demoStepIdx + 1);
+      document.getElementById('demo-step-title').innerText = s.title;
+      document.getElementById('demo-step-desc').innerText = s.desc;
+    }
+
+    function stepDemoTour(delta) {
+      demoStepIdx = (demoStepIdx + delta + DEMO_STEPS.length) % DEMO_STEPS.length;
+      renderDemoStep();
+    }
+
+    function executeDemoStepAction() {
+      DEMO_STEPS[demoStepIdx].action();
     }
 
     function toggleFullscreen() {
@@ -1186,4 +1879,5 @@
     initMap();
   </script>
 </body>
+
 </html>

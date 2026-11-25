@@ -3,7 +3,7 @@
 [![CI](https://github.com/navneethtripathy/IoT-Project/actions/workflows/ci.yml/badge.svg)](https://github.com/navneethtripathy/IoT-Project/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-CivicTwin-R is an academic cyber-physical and geospatial digital twin platform combining a 3D terrain-routed urban flood modeling environment for South Chennai (`Landlab 2D OverlandFlow` over `Copernicus GLO-30`, official `TN CFM-DSS WFS`, and `OpenStreetMap` data) with an isolated dual-node IoT telemetry, numerical ODE modeling, and missing-data reconstruction validation pipeline.
+CivicTwin-R is an academic cyber-physical and geospatial digital twin platform combining an offline 3D Copernicus GLO-30 elevation-driven urban flood intelligence studio for South Chennai (`Landlab 2D OverlandFlow`, metric `EPSG:32644` spatial infrastructure exposure, neighbourhood watershed/ward analytics, interactive side-by-side counterfactual comparison, and downloadable ReportLab/Matplotlib engineering reports) with an isolated dual-node IoT telemetry, numerical ODE modeling, and missing-data reconstruction validation pipeline.
 
 ---
 
@@ -11,24 +11,32 @@ CivicTwin-R is an academic cyber-physical and geospatial digital twin platform c
 
 Urban flash flooding requires integrating sparse environmental monitoring, noisy cyber-physical sensor links, and terrain-governed overland runoff into an interpretable decision-support platform. CivicTwin-R addresses four concrete engineering challenges:
 
-1. **Geospatial Grounding:** Replace synthetic flood boxes with hydro-conditioned 2D shallow-water routing on `EPSG:32644` (`UTM Zone 44N`, `150 m` grid) paired with `18,198` extruded OpenStreetMap buildings, `9,942` major roads, `38,827` pilot streets, `1,229` bridges, and TN CFM-DSS hydrography.
-2. **Offline-First 3D Urban Visualization:** Render WebGL terrain relief, waterways, wetlands, and scenario inundation rasters purely from locally served vendor libraries and processed GeoJSON assets (`0` external requests required at runtime).
+1. **Geospatial Grounding & Metric Exposure Intelligence:** Replace synthetic flood boxes with hydro-conditioned 2D shallow-water routing on `EPSG:32644` (`UTM Zone 44N`, `150 m` grid) paired with `18,198` extruded OpenStreetMap buildings, `48,769` deduplicated roads (`9,942` major + `38,827` pilot streets), `1,229` bridges, `36` South Chennai watersheds, `200` GCC wards, and TN CFM-DSS hydrography.
+2. **Offline-First 3D Copernicus Terrain Visualization:** Render interactive MapLibre GL JS `raster-dem` Terrarium 3D elevation relief (`3x/1x/0x`), waterways, wetlands, side-by-side swipe comparisons, and provenance-tagged asset inspectors purely from locally served assets (`0` external requests required at runtime).
 3. **Dual-Persistence Edge Telemetry:** Sustain resilient telemetry ingestion (`Pydantic v2` schema checks, sequence deduplication, `FRESH`/`STALE`/`OFFLINE` tracking, and `3%` anti-chatter hysteresis) across Mosquitto MQTT (`1883`), SQLite WAL, InfluxDB 2.x (`8086`), and Node-RED (`1880/ui/`).
-4. **Zero-Leakage Missing-Data Resilience:** Benchmark causal online streaming recovery (**Setting A**) against retrospective gap interpolation (**Setting B**) using a calibrated 4th-order Runge-Kutta (`RK4`) Torricelli bench twin.
+4. **Zero-Leakage Missing-Data Resilience & Engineering Reporting:** Benchmark causal online streaming recovery (**Setting A**) against retrospective gap interpolation (**Setting B**) using a segmented causal 4th-order Runge-Kutta (`RK4`) Torricelli bench twin, alongside print-ready offline A4 PDF and CSV scenario dossiers.
 
 ---
 
-## 2. Visual Overview (Actual Application Screenshots)
+## 2. Visual Overview (Verified Offline Playwright & Live Screenshots)
 
-| Obsidian Ocean Overview Hub (`/showcase`) | Chennai 3D Urban Flood Digital Twin (`/urban-twin`) |
+| Obsidian Ocean Overview Hub (`/showcase`) | Chennai 3D Urban Explorer (`/urban-twin`) |
 | :---: | :---: |
-| ![Obsidian Ocean Overview Hub](showcase/screenshots/01_showcase_overview.png) | ![Chennai 3D Urban Flood Digital Twin](showcase/screenshots/02_urban_twin_fullscreen.png) |
-| **Velachery 3D Buildings & Point Inspector** | **Cyclone Michaung Replay & Impact Delta** |
-| ![Velachery 3D Buildings and Point Inspector](showcase/screenshots/03_3d_geographical_detail.png) | ![Cyclone Michaung Replay](showcase/screenshots/07_cyclone_michaung_replay.png) |
-| **Experimental IoT Tank Twin (`/showcase` IoT Lab)** | **Node-RED Operational Dashboard (`:1880/ui/`)** |
-| ![Three.js Experimental Tank Twin](showcase/screenshots/09_experimental_iot_lab.png) | ![Node-RED Operational Dashboard](showcase/screenshots/14_nodered_dashboard.png) |
-| **InfluxDB 2.x Data Explorer (`:8086`)** | **Historical Basin Analytics (`/showcase`)** |
-| ![InfluxDB Data Explorer](showcase/screenshots/11_influxdb_ui.png) | ![Chennai Basin Historical Analysis](showcase/screenshots/08_rainfall_reservoir_analytics.png) |
+| ![Obsidian Ocean Overview Hub](showcase/screenshots/01_showcase_overview.png) | ![Chennai 3D Urban Explorer](showcase/screenshots/02_urban_explorer.png) |
+| **Velachery 3D Copernicus Terrain & Buildings** | **Asset Provenance Inspector (`DERIVED` / `MODELED`)** |
+| ![Velachery 3D Terrain and Buildings](showcase/screenshots/03_3d_geographical_detail.png) | ![Asset Provenance Inspector](showcase/screenshots/05_selected_asset_inspector.png) |
+| **Side-by-Side Swipe Scenario Comparison** | **Impact Intelligence & Exposure Workbench** |
+| ![Side-by-Side Swipe Comparison](showcase/screenshots/07_side_by_side_comparison.png) | ![Impact Intelligence Workbench](showcase/screenshots/08_impact_intelligence.png) |
+| **Official GCC Ward & Watershed Analytics** | **Cyclone Michaung Historical Replay** |
+| ![Official Ward and Watershed Aggregation](showcase/screenshots/09_neighbourhood_analysis.png) | ![Cyclone Michaung Historical Replay](showcase/screenshots/10_cyclone_michaung_replay.png) |
+| **Experimental Three.js Tank Lab (`/showcase`)** | **Research ODE Causal Trajectory & Benchmarks** |
+| ![Experimental IoT Tank Lab](showcase/screenshots/11_experimental_iot_lab.png) | ![Research ODE Forward Trajectory](showcase/screenshots/12_research_analytics.png) |
+| **Node-RED Operational Dashboard (`:1880/ui/`)** | **InfluxDB 2.x Data Explorer (`:8086`)** |
+| ![Node-RED Operational Dashboard](showcase/screenshots/13_nodered_dashboard.png) | ![InfluxDB Data Explorer](showcase/screenshots/14_influxdb_interface.png) |
+| **Offline A4 Engineering PDF Report (ReportLab)** | **Reports & Guided 13-Step Demonstration UI** |
+| ![Engineering PDF Report Page 1](showcase/screenshots/15_engineering_pdf_report.png) | ![Engineering Reports and Guided Demo](showcase/screenshots/15_engineering_reports_and_demo.png) |
+| **Responsive Tablet Viewport (`768x1024`)** | **Responsive Mobile Viewport (`390x844`)** |
+| ![Responsive Tablet Layout](showcase/screenshots/16_responsive_tablet.png) | ![Responsive Mobile Layout](showcase/screenshots/16_responsive_mobile.png) |
 
 ---
 
@@ -37,22 +45,22 @@ Urban flash flooding requires integrating sparse environmental monitoring, noisy
 CivicTwin-R enforces strict separation between city-scale hydrological modeling (**Workstream A**) and laboratory bench sensor validation (**Workstream B**):
 
 ```text
-Workstream A (Urban Twin)                Workstream B (Experimental IoT Tank Twin)
-────────────────────────                 ──────────────────────────────────────
-Copernicus GLO-30 + WFS + OSM            Node 01 (50 cm) & Node 02 (60 cm)
+Workstream A (Urban Flood Intelligence)   Workstream B (Experimental IoT Tank Twin)
+──────────────────────────────────────    ──────────────────────────────────────
+Copernicus GLO-30 + WFS + OSM + GCC/WS    Node 01 (50 cm) & Node 02 (60 cm)
         │                                        │
-        ▼  150m UTM 44N Grid                     ▼  MQTT QoS 1 (127.0.0.1:1883)
-Landlab 2D OverlandFlow                  Mosquitto Broker ──► Node-RED (:1880/ui/)
-        │                                        │
-        ▼                                        ▼
-/api/urban/* (FastAPI)                   IngestionService ─► SQLite (WAL) + InfluxDB (:8086)
+        ▼  150m UTM 44N Grid (EPSG:32644)        ▼  MQTT QoS 1 (127.0.0.1:1883)
+Landlab 2D OverlandFlow & Exposure        Mosquitto Broker ──► Node-RED (:1880/ui/)
         │                                        │
         ▼                                        ▼
-Offline MapLibre 3D UI (/urban-twin)     RK4 Torricelli Solver & Three.js Twin (/showcase)
+/api/urban/* + PDF/CSV Report Engine      IngestionService ─► SQLite (WAL) + InfluxDB (:8086)
+        │                                        │
+        ▼                                        ▼
+3D MapLibre Terrain UI (/urban-twin)      Causal Segment RK4 Solver & Three.js (/showcase)
 ```
 
-- **Urban Twin (`/urban-twin`):** Interactive 2D/3D MapLibre GL JS viewer featuring 8 predefined flood scenarios (normal, heavy/extreme rainfall, reduced/improved drainage counterfactuals, Cyclone Michaung 24h replay, monitoring dropout, Chembarambakkam `25,000 cusecs` 12h spillway release), real-time parameter sliders, storm progression playback, side-by-side impact delta comparison, DEM/building click inspection, and GeoJSON/JSON export.
-- **Showcase Control Center (`/showcase`):** Unified multi-tab interface embedding the Chennai 3D Twin alongside real-time service status probes (`/api/services/status`), Three.js tank physics, RK4 trajectory comparisons, reconstruction benchmarks, database record explorer, and live MQTT stream inspector.
+- **Urban Twin (`/urban-twin`):** Interactive 2D/3D MapLibre GL JS viewer featuring true `raster-dem` Copernicus 3D elevation (`3x/1x/0x`), North orientation reset, saved viewpoints, 8 predefined flood scenarios plus initial ponded depth (`0–2 m`), full saved-scenario CRUD (`save`, `load`, `duplicate`, `rename`, `delete`), interactive side-by-side swipe comparison & spatial delta raster, exposure & boundary drawers (`36` watersheds, `200` GCC wards), provenance-labeled inspector (`OBSERVED`, `DERIVED`, `ESTIMATED`, `MODELED`, `UNAVAILABLE`), and PDF/CSV/GeoJSON exports.
+- **Showcase Control Center (`/showcase`):** Unified multi-tab platform featuring the embedded Urban Twin overview (`Impact Intelligence` with bounded `3–7` step Landlab sensitivity sweeps, `Watersheds`/`GCC Wards` sorting, and `Reports & 13-Step Guided Demo`), Three.js tank physics, causal RK4 trajectory comparisons, reconstruction benchmarks, database record explorer, and live MQTT stream inspector.
 
 ---
 
@@ -73,10 +81,10 @@ Offline MapLibre 3D UI (/urban-twin)     RK4 Torricelli Solver & Three.js Twin (
 
 ## 5. Technology Stack
 
-- **Geospatial & Scientific Computing:** Python `3.11+` (`3.14` verified locally, `3.12` CI), `Landlab 2.11`, `Rasterio`, `GeoPandas`, `Shapely`, `PyProj`, `PyOsmium`, `NumPy`, `SciPy`, `Pandas`, `Matplotlib`.
-- **Backend & Messaging:** `FastAPI`, `Uvicorn`, `Pydantic v2`, `paho-mqtt`, Eclipse Mosquitto (`1883`), Node-RED (`1880`).
+- **Geospatial & Scientific Computing:** Python `3.11+` (`3.14` verified locally, `3.12` CI), `Landlab 2.11`, `Rasterio`, `GeoPandas`, `Shapely`, `PyProj`, `PyOsmium`, `NumPy`, `SciPy`, `Pandas`, `Matplotlib`, `ReportLab`.
+- **Backend & Messaging:** `FastAPI`, `Uvicorn`, `Pydantic v2`, `paho-mqtt`, `httpx`, Eclipse Mosquitto (`1883`), Node-RED (`1880`).
 - **Persistence:** `SQLite 3` (WAL mode) primary + optional concurrent `InfluxDB 2.x` (`8086`).
-- **Offline Frontend:** `MapLibre GL JS`, `Three.js` + `OrbitControls`, `Chart.js`, `Tailwind CSS` (vendored locally under `backend/app/static/vendor/`).
+- **Offline Frontend:** `MapLibre GL JS v3.6.2` (`setTerrain`), `Three.js` + `OrbitControls`, `Chart.js`, `Tailwind CSS` (vendored locally under `backend/app/static/vendor/`).
 
 ---
 
@@ -98,8 +106,10 @@ CivicTwin-R/
 │   └── storage_influx.py         # InfluxDB 2.x dual-write Flux backend
 ├── digital_twin/
 │   ├── geoprocessor.py           # Copernicus DEM UTM44N, WFS cleanup & OSM PBF pipeline
-│   ├── terrain_hydrology.py      # Landlab 2D OverlandFlow simulation & scenario comparison
-│   ├── model.py, scenarios.py, forecast.py, reconstruction.py, edge_warning.py, tank_twin.py
+│   ├── terrain_hydrology.py      # Landlab 2D OverlandFlow, Terrarium tiles, sensitivity & CRUD
+│   ├── exposure_engine.py        # EPSG:32644 spatial exposure & watershed/ward intersections
+│   ├── report_generator.py       # Offline A4 ReportLab + Matplotlib PDF & CSV report generator
+│   └── model.py, scenarios.py, forecast.py, reconstruction.py, edge_warning.py, tank_twin.py
 ├── data/
 │   ├── geo/raw_wfs/              # 18 TN CFM-DSS WFS GeoJSON layers (EPSG:4326)
 │   ├── geo/processed/            # UTM44N DEM NPZ, hillshade PNG & simplified OSM/WFS assets
@@ -110,9 +120,9 @@ CivicTwin-R/
 ├── firmware/                     # Reference ESP32 firmware & Wokwi circuit configuration
 ├── mqtt/ & nodered/              # Mosquitto configuration & Node-RED v3.6 dashboard flows
 ├── presentation/ & reports/      # Preserved academic presentation & engineering validation reports
-├── scripts/                      # Lifecycle (setup, showcase_start/stop/verify) & geo ETL
+├── scripts/                      # Lifecycle (setup/start/stop/verify), Playwright QA & geo ETL
 ├── showcase/screenshots/         # Verified live application screenshots
-└── tests/                        # Automated unit, hydrology, integration & storage test suites
+└── tests/                        # Unit, hydrology, spatial exposure, ODE & integration suites
 ```
 
 ---
@@ -148,18 +158,22 @@ cd CivicTwin-R
 ### Verification Tests
 
 ```bash
-# Portable offline unit, numerical hydrology, geospatial & API tests
-PYTHONPATH=. pytest tests/test_all.py tests/test_tank_twin.py tests/test_chennai_twin.py tests/test_terrain_hydrology.py tests/test_urban_twin.py -v
+# Portable offline unit, numerical hydrology, exposure, geospatial & API tests (CI suite)
+PYTHONPATH=. pytest tests/test_all.py tests/test_tank_twin.py tests/test_chennai_twin.py tests/test_terrain_hydrology.py tests/test_urban_twin.py tests/test_urban_intelligence.py -v
 
-# Full local integration suite (with Mosquitto, InfluxDB & Node-RED running)
+# Full local integration suite (with Mosquitto, InfluxDB & Node-RED running: 166 tests)
 PYTHONPATH=. pytest tests/ -v
+
+# Headless Chrome strict-offline end-to-end QA (0 external requests, 0 console/page errors)
+python3 scripts/verify_browser_qa.py
 ```
 
 ---
 
-## 8. Data Sources, Limitations & Licensing
+## 8. Data Sources, Security & Licensing
 
 - **Data Provenance:** See [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) (`Copernicus GLO-30 DEM`, `TN CFM-DSS WFS`, `OpenStreetMap ODbL`, `WRD Reservoirs`, `ERA5/IMD Michaung`).
-- **Scientific Limitations:** See [docs/LIMITATIONS.md](docs/LIMITATIONS.md). Reported flood extents use a `150 m` DSM screening approximation without subsurface pipe networks or river gauge depth calibration and must not be used for operational emergency forecasting.
+- **Scientific Limitations:** See [docs/LIMITATIONS.md](docs/LIMITATIONS.md). Reported flood extents and infrastructure intersections use a `150 m` DSM screening approximation without subsurface pipe networks or river gauge depth calibration; outputs indicate *modelled potential exposure*, never structural damage, road closures, casualties, or financial cost.
+- **Security & Secret Hygiene:** Runtime credentials live solely in gitignored `.env` (`setup.sh` generates randomized local InfluxDB tokens; default template `.env.example` contains placeholders only). Historical development default strings present in pre-release commits prior to `b0fb8de` have been rotated and superseded.
 - **Additional Documentation:** [Architecture](docs/ARCHITECTURE.md) | [Methodology](docs/METHODOLOGY.md) | [Setup](docs/SETUP.md) | [Demonstration](docs/DEMONSTRATION.md) | [Technical Report](docs/CivicTwin-R_Technical_Report.md)
 - **Contributors & License:** Team #5 — CivicTwin-R, licensed under the [MIT License](LICENSE).

@@ -66,11 +66,15 @@ python3 scripts/process_chennai_geodata.py
 ## 5. Automated Testing & Scientific Benchmarks
 
 ```bash
-# Offline unit, physics calibration, geospatial DEM/WFS/OSM, and Landlab 2D tests (CI suite)
-PYTHONPATH=. pytest tests/test_all.py tests/test_tank_twin.py tests/test_chennai_twin.py tests/test_terrain_hydrology.py tests/test_urban_twin.py -v
+# Offline unit, physics calibration, exposure, geospatial DEM/WFS/OSM, and Landlab 2D tests (CI suite)
+PYTHONPATH=. pytest tests/test_all.py tests/test_tank_twin.py tests/test_chennai_twin.py tests/test_terrain_hydrology.py tests/test_urban_twin.py tests/test_urban_intelligence.py -v
 
 # Full local test suite (includes live Mosquitto, Node-RED & InfluxDB integration suites)
 PYTHONPATH=. pytest tests/ -v
+
+# Static lint & security scan (Ruff + Bandit)
+ruff check backend digital_twin tests/test_urban_intelligence.py scripts/verify_browser_qa.py --select E9,F,B,S --ignore S101,S104,S110,S112,S311,S603,S607
+bandit -r backend digital_twin -ll
 
 # Headless Chrome strict-offline browser QA & screenshot capture
 python3 scripts/verify_browser_qa.py

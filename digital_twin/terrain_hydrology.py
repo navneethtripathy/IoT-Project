@@ -37,12 +37,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from collections import OrderedDict
 import numpy as np
+import landlab
 from landlab import NodeStatus, RasterModelGrid
 from landlab.components import OverlandFlow
 from PIL import Image
 from pyproj import Transformer
-from scipy.ndimage import label
+from rasterio.transform import from_origin
+from rasterio.warp import Resampling, reproject
 
 logger = logging.getLogger("civictwin.terrain_hydrology")
 
@@ -477,7 +480,7 @@ def run_controlled_overland_grid(
 
     has_active_forcing = any(r > 0 for r in rain_schedule_mm_hr) or len(source_nodes) > 0 or v_init > 0.0
 
-    for step_idx, (rain_mm_hr, step_dur_s) in enumerate(zip(rain_schedule_mm_hr, step_durations_sec)):
+    for step_idx, (rain_mm_hr, step_dur_s) in enumerate(zip(rain_schedule_mm_hr, step_durations_sec, strict=False)):
         if not has_active_forcing:
             if record_snapshots:
                 snapshots.append(np.zeros((rows, cols), dtype=np.float32))
@@ -799,11 +802,12 @@ class ChennaiTerrainTwinEngine:
         # Build raster PNG data URL (or static image payload) AND GeoJSON cells for interactive picking
         flood_geojson = self._build_flood_geojson(depth_final, depth_max, sim["qx_m2_s"], sim["qy_m2_s"])
         raster_b64 = self._encode_depth_png_b64(depth_final)
+        max_raster_b64 = self._encode_depth_png_b64(depth_max)
         flow_vectors_geojson = self._build_flow_vectors_geojson(depth_final, sim["qx_m2_s"], sim["qy_m2_s"])
 
         # Encode snapshot thumbnails/rasters for timeline scrubber
         timeline_frames = []
-        for idx, (snap, s_stat) in enumerate(zip(sim["snapshots"], sim["snapshot_stats"])):
+        for idx, (snap, s_stat) in enumerate(zip(sim["snapshots"], sim["snapshot_stats"], strict=False)):
             timeline_frames.append({
                 "step": idx,
                 "label": ts_labels[idx] if idx < len(ts_labels) else f"T+{s_stat['hour']}h",
@@ -830,8 +834,18 @@ class ChennaiTerrainTwinEngine:
                 "nominal_drain_cap_mm_hr": cfg.nominal_drain_cap_mm_hr,
                 "chembarambakkam_discharge_cusecs": cfg.chembarambakkam_discharge_cusecs,
                 "mannings_n": cfg.mannings_n,
+                "initial_depth_m": cfg.initial_depth_m,
                 "provenance_tags": cfg.provenance_tags or [],
                 "historical_metadata": hyeto_meta,
+                "reproducibility": {
+                    "cache_key": ckey,
+                    "app_version": "1.0.0",
+                    "solver_version": f"Landlab {getattr(landlab, '__version__', '2.x')} (de Almeida et al. 2012)",
+                    "dataset_version": "Copernicus-GLO30-150m + OSM-South-Chennai + TN-CFM-DSS-WFS + ERA5-IMD-Michaung",
+                    "grid_shape": [self.rows, self.cols],
+                    "dx_m": self.dx_m,
+                    "crs": UTM44N_CRS,
+                },
             },
             "domain": {
                 "crs": UTM44N_CRS,
@@ -863,6 +877,7 @@ class ChennaiTerrainTwinEngine:
             "flood_overlay_geojson": flood_geojson,
             "flow_vectors_geojson": flow_vectors_geojson,
             "raster_png_data_url": raster_b64,
+            "max_raster_png_data_url": max_raster_b64,
             "timeline_frames": timeline_frames,
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "_final_depth_grid": depth_final,
@@ -975,7 +990,7 @@ class ChennaiTerrainTwinEngine:
             rs, cs = rs[top_idx], cs[top_idx]
 
         features = []
-        for r, c in zip(rs, cs):
+        for r, c in zip(rs, cs, strict=False):
             d = float(depth_final[r, c])
             dm = float(depth_max[r, c])
             if d < 0.15:
@@ -1060,8 +1075,159 @@ class ChennaiTerrainTwinEngine:
         Image.fromarray(rgba, mode="RGBA").save(buf, format="PNG")
         return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
 
-    def compare_scenarios(self, base_result: Dict[str, Any], alt_result: Dict[str, Any]) -> Dict[str, Any]:
-        """Compute explicit numerical difference between two executed scenario states."""
+    def render_terrarium_tile_png(self, z: int, x: int, y: int) -> bytes:
+        """
+        Render a 256x256 MapLibre Terrarium RGB elevation tile strictly offline from the
+        loaded Copernicus GLO-30 UTM44N DEM (`height_m = (R*256 + G + B/256) - 32768`).
+        """
+        if not self._loaded:
+            raise RuntimeError("DEM terrain grid not loaded.")
+        cache: Optional[OrderedDict] = getattr(self, "_terrarium_tile_cache", None)
+        if cache is None:
+            cache = OrderedDict()
+            self._terrarium_tile_cache = cache
+        key = (int(z), int(x), int(y))
+        if key in cache:
+            cache.move_to_end(key)
+            return cache[key]
+        if not hasattr(self, "_merc_dem_grid"):
+            self._prepare_mercator_dem()
+
+        z_clamped = max(0, min(18, int(z)))
+        n_tiles = 1 << z_clamped
+        tile_origin_m = 20037508.342789244
+        world_m = 2.0 * tile_origin_m
+        tile_span_m = world_m / n_tiles
+
+        tx0 = -tile_origin_m + int(x) * tile_span_m
+        ty1 = tile_origin_m - int(y) * tile_span_m
+        px_step = tile_span_m / 256.0
+
+        xs = tx0 + (np.arange(256, dtype=np.float64) + 0.5) * px_step
+        ys = ty1 - (np.arange(256, dtype=np.float64) + 0.5) * px_step
+
+        mx0, my1, mdx, m_rows, m_cols = (
+            self._merc_x_min,
+            self._merc_y_max,
+            self._merc_dx,
+            self._merc_rows,
+            self._merc_cols,
+        )
+        grid = self._merc_dem_grid
+
+        cols_f = (xs - mx0) / mdx - 0.5
+        rows_f = (my1 - ys) / mdx - 0.5
+
+        in_x = (cols_f >= 0.0) & (cols_f <= m_cols - 1.0)
+        in_y = (rows_f >= 0.0) & (rows_f <= m_rows - 1.0)
+        elev = np.zeros((256, 256), dtype=np.float64)
+
+        if np.any(in_x) and np.any(in_y):
+            yi = np.where(in_y)[0]
+            xi = np.where(in_x)[0]
+            rf = np.clip(rows_f[yi], 0.0, m_rows - 1.0001)
+            cf = np.clip(cols_f[xi], 0.0, m_cols - 1.0001)
+            r0 = np.floor(rf).astype(np.int32)
+            c0 = np.floor(cf).astype(np.int32)
+            dr = (rf - r0)[:, None]
+            dc = (cf - c0)[None, :]
+            v00 = grid[np.ix_(r0, c0)]
+            v01 = grid[np.ix_(r0, c0 + 1)]
+            v10 = grid[np.ix_(r0 + 1, c0)]
+            v11 = grid[np.ix_(r0 + 1, c0 + 1)]
+            patch = (v00 * (1 - dr) * (1 - dc) + v01 * (1 - dr) * dc + v10 * dr * (1 - dc) + v11 * dr * dc)
+            elev[np.ix_(yi, xi)] = np.clip(patch, 0.0, 250.0)
+
+        # Terrarium encoding: val = elev + 32768.0
+        val = np.clip(elev + 32768.0, 0.0, 65535.996)
+        r_ch = np.floor(val / 256.0).astype(np.uint8)
+        g_ch = np.floor(val % 256.0).astype(np.uint8)
+        b_ch = np.floor((val - np.floor(val)) * 256.0).astype(np.uint8)
+        rgb = np.stack([r_ch, g_ch, b_ch], axis=-1)
+
+        buf = io.BytesIO()
+        Image.fromarray(rgb, mode="RGB").save(buf, format="PNG")
+        png_bytes = buf.getvalue()
+        cache[key] = png_bytes
+        if len(cache) > 512:
+            cache.popitem(last=False)
+        return png_bytes
+
+    def _prepare_mercator_dem(self) -> None:
+        tf_merc = Transformer.from_crs(WGS84_CRS, "EPSG:3857", always_xy=True)
+        lons = [pt[0] for pt in self.bounds_wgs84_quad]
+        lats = [pt[1] for pt in self.bounds_wgs84_quad]
+        mx_vals, my_vals = tf_merc.transform(lons, lats)
+        mx_min, mx_max = min(mx_vals), max(mx_vals)
+        my_min, my_max = min(my_vals), max(my_vals)
+
+        merc_dx = 75.0
+        m_cols = int(math.ceil((mx_max - mx_min) / merc_dx))
+        m_rows = int(math.ceil((my_max - my_min) / merc_dx))
+        dst = np.full((m_rows, m_cols), -9999.0, dtype=np.float32)
+
+        src_clean = np.where(self.valid_land_mask & np.isfinite(self.elevation_m), self.elevation_m, 0.0).astype(np.float32)
+        src_tr = from_origin(self.x_min, self.y_max, self.dx_m, self.dx_m)
+        dst_tr = from_origin(mx_min, my_max, merc_dx, merc_dx)
+
+        reproject(
+            source=src_clean,
+            destination=dst,
+            src_transform=src_tr,
+            src_crs=UTM44N_CRS,
+            src_nodata=-9999.0,
+            dst_transform=dst_tr,
+            dst_crs="EPSG:3857",
+            resampling=Resampling.bilinear,
+            dst_nodata=-9999.0,
+        )
+        dst = np.where((dst < -900.0) | (~np.isfinite(dst)), 0.0, dst)
+        self._merc_dem_grid = dst
+        self._merc_x_min = mx_min
+        self._merc_y_max = my_max
+        self._merc_dx = merc_dx
+        self._merc_rows = m_rows
+        self._merc_cols = m_cols
+
+    def _encode_delta_png_b64(self, diff_m: np.ndarray) -> str:
+        """Encode diverging flood-depth change (Alt - Base) as transparent RGBA PNG."""
+        urban_or_wet = self.valid_land_mask & (~self.perm_water_mask)
+        d = np.where(urban_or_wet, diff_m, 0.0)
+        rgba = np.zeros((self.rows, self.cols, 4), dtype=np.uint8)
+
+        # Depth decrease (improvement: cyan/teal) vs increase (deterioration: amber/coral)
+        dec_strong = d <= -0.15
+        dec_mild = (d > -0.15) & (d <= -0.03)
+        inc_mild = (d >= 0.03) & (d < 0.15)
+        inc_strong = d >= 0.15
+
+        rgba[dec_mild] = [54, 194, 201, 155]
+        rgba[dec_strong] = [67, 197, 158, 210]
+        rgba[inc_mild] = [233, 182, 92, 175]
+        rgba[inc_strong] = [241, 109, 117, 220]
+
+        buf = io.BytesIO()
+        Image.fromarray(rgba, mode="RGBA").save(buf, format="PNG")
+        return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+
+    def _depth_tier_areas(self, depth_grid: np.ndarray) -> Dict[str, float]:
+        urban = self.valid_land_mask & (~self.perm_water_mask) & (~self.wetland_mask)
+        c_km2 = self.cell_area_m2 / 1e6
+        return {
+            "0.03-0.15m": round(float(((urban) & (depth_grid >= 0.03) & (depth_grid < 0.15)).sum()) * c_km2, 3),
+            "0.15-0.30m": round(float(((urban) & (depth_grid >= 0.15) & (depth_grid < 0.30)).sum()) * c_km2, 3),
+            "0.30-0.60m": round(float(((urban) & (depth_grid >= 0.30) & (depth_grid < 0.60)).sum()) * c_km2, 3),
+            ">=0.60m": round(float(((urban) & (depth_grid >= 0.60)).sum()) * c_km2, 3),
+        }
+
+    def compare_scenarios(
+        self,
+        base_result: Dict[str, Any],
+        alt_result: Dict[str, Any],
+        include_exposure: bool = False,
+        threshold_m: float = 0.15,
+    ) -> Dict[str, Any]:
+        """Compute explicit cell-by-cell numerical & spatial difference between two executed scenario states."""
         d_base = base_result["_final_depth_grid"]
         d_alt = alt_result["_final_depth_grid"]
         diff = d_alt - d_base
@@ -1069,6 +1235,11 @@ class ChennaiTerrainTwinEngine:
 
         base_sum = base_result["summary"]
         alt_sum = alt_result["summary"]
+
+        def _pct(b: float, a: float) -> Optional[float]:
+            if b is None or abs(b) < 1e-9:
+                return None
+            return round(((a - b) / b) * 100.0, 2)
 
         loc_diffs = []
         base_map = {l["id"]: l for l in base_result["location_impacts"]}
@@ -1082,43 +1253,255 @@ class ChennaiTerrainTwinEngine:
                 "baseline_max_depth_m": b_d,
                 "alternate_max_depth_m": a_d,
                 "delta_max_depth_m": round(a_d - b_d, 3),
+                "pct_delta_max_depth": _pct(b_d, a_d),
                 "baseline_area_km2": b_loc.get("inundated_area_km2", 0.0),
                 "alternate_area_km2": alt_loc["inundated_area_km2"],
                 "delta_area_km2": round(alt_loc["inundated_area_km2"] - b_loc.get("inundated_area_km2", 0.0), 2),
             })
 
-        return {
+        mb0 = base_sum.get("mass_balance", {})
+        mb1 = alt_sum.get("mass_balance", {})
+        wb_comp = {}
+        for k in ["v_rain_m3", "v_upstream_m3", "v_infil_m3", "v_drain_m3", "v_outflow_m3", "v_final_m3", "residual_m3"]:
+            b_val = float(mb0.get(k, 0.0))
+            a_val = float(mb1.get(k, 0.0))
+            wb_comp[k] = {
+                "baseline_m3": round(b_val, 3),
+                "alternate_m3": round(a_val, 3),
+                "delta_m3": round(a_val - b_val, 3),
+                "pct_change": _pct(b_val, a_val),
+            }
+
+        tiers_b = self._depth_tier_areas(d_base)
+        tiers_a = self._depth_tier_areas(d_alt)
+        tiers_delta = {k: round(tiers_a[k] - tiers_b[k], 3) for k in tiers_b}
+
+        v0 = base_sum["stored_water_volume_mcm"]
+        v1 = alt_sum["stored_water_volume_mcm"]
+        ar0 = base_sum["urban_inundated_area_km2"]
+        ar1 = alt_sum["urban_inundated_area_km2"]
+        md0 = base_sum["max_urban_depth_m"]
+        md1 = alt_sum["max_urban_depth_m"]
+
+        out = {
             "baseline_scenario": base_result["scenario"]["name"],
+            "baseline_scenario_id": base_result["scenario"]["id"],
             "alternate_scenario": alt_result["scenario"]["name"],
-            "delta_stored_volume_mcm": round(alt_sum["stored_water_volume_mcm"] - base_sum["stored_water_volume_mcm"], 4),
-            "delta_inundated_area_km2": round(alt_sum["urban_inundated_area_km2"] - base_sum["urban_inundated_area_km2"], 2),
-            "delta_max_urban_depth_m": round(alt_sum["max_urban_depth_m"] - base_sum["max_urban_depth_m"], 3),
+            "alternate_scenario_id": alt_result["scenario"]["id"],
+            "grid_compatible": True,
+            "crs": UTM44N_CRS,
+            "dx_m": self.dx_m,
+            "baseline_summary": {
+                "stored_water_volume_mcm": v0,
+                "urban_inundated_area_km2": ar0,
+                "max_urban_depth_m": md0,
+                "residual_m3": mb0.get("residual_m3", 0.0),
+            },
+            "alternate_summary": {
+                "stored_water_volume_mcm": v1,
+                "urban_inundated_area_km2": ar1,
+                "max_urban_depth_m": md1,
+                "residual_m3": mb1.get("residual_m3", 0.0),
+            },
+            "delta_stored_volume_mcm": round(v1 - v0, 4),
+            "pct_delta_stored_volume": _pct(v0, v1),
+            "delta_inundated_area_km2": round(ar1 - ar0, 2),
+            "pct_delta_inundated_area": _pct(ar0, ar1),
+            "delta_max_urban_depth_m": round(md1 - md0, 3),
+            "pct_delta_max_urban_depth": _pct(md0, md1),
             "max_local_increase_m": round(float(diff[urban].max()) if urban.any() else 0.0, 3),
             "max_local_decrease_m": round(float(diff[urban].min()) if urban.any() else 0.0, 3),
+            "water_balance_comparison": wb_comp,
+            "depth_distribution_km2": {
+                "baseline": tiers_b,
+                "alternate": tiers_a,
+                "delta": tiers_delta,
+            },
+            "delta_raster_png_data_url": self._encode_delta_png_b64(diff),
             "location_comparisons": loc_diffs,
+        }
+
+        if include_exposure:
+            from digital_twin.exposure_engine import get_exposure_engine
+
+            out["infrastructure_exposure_comparison"] = get_exposure_engine().compare_exposure(
+                d_base,
+                d_alt,
+                base_result["scenario"]["id"],
+                base_result["scenario"]["name"],
+                alt_result["scenario"]["id"],
+                alt_result["scenario"]["name"],
+                threshold_m=threshold_m,
+            )
+
+        return out
+
+    def run_sensitivity_sweep(
+        self,
+        parameter: str,
+        min_val: float,
+        max_val: float,
+        steps: int = 5,
+        base_cfg: Optional[HydroScenarioConfig] = None,
+        include_exposure: bool = True,
+        threshold_m: float = 0.15,
+    ) -> Dict[str, Any]:
+        """Run bounded one-at-a-time sensitivity analysis over real Landlab 2D executions."""
+        allowed_bounds = {
+            "rainfall_intensity_mm_hr": (0.0, 250.0, "mm/hr"),
+            "drainage_efficiency_pct": (0.0, 250.0, "%"),
+            "infiltration_rate_mm_hr": (0.0, 50.0, "mm/hr"),
+            "initial_depth_m": (0.0, 3.0, "m"),
+        }
+        if parameter not in allowed_bounds:
+            raise ValueError(f"Unsupported sensitivity parameter '{parameter}'. Allowed: {list(allowed_bounds.keys())}")
+        lo_lim, hi_lim, unit = allowed_bounds[parameter]
+        lo = float(min_val)
+        hi = float(max_val)
+        if lo > hi:
+            lo, hi = hi, lo
+        if lo < lo_lim or hi > hi_lim:
+            raise ValueError(f"{parameter} sweep [{lo}, {hi}] exceeds safe bounds [{lo_lim}, {hi_lim}]")
+        n_steps = max(3, min(7, int(steps)))
+
+        base = base_cfg or PREDEFINED_SCENARIOS["heavy_rainfall"]
+        vals = np.linspace(lo, hi, n_steps)
+        exp_eng = None
+        if include_exposure:
+            from digital_twin.exposure_engine import get_exposure_engine
+            exp_eng = get_exposure_engine()
+
+        points = []
+        for idx, v in enumerate(vals):
+            v_r = round(float(v), 3)
+            kw = asdict(base)
+            kw[parameter] = v_r
+            kw["scenario_id"] = f"sens_{parameter}_{idx}_{v_r}"
+            kw["scenario_name"] = f"Sensitivity {parameter}={v_r} {unit}"
+            kw["mode"] = "scenario_simulation"
+            kw["rain_hyetograph_mm_hr"] = None
+            cfg = HydroScenarioConfig(**kw)
+            res = self.run_scenario(cfg)
+            s = res["summary"]
+            pt = {
+                "parameter_value": v_r,
+                "stored_water_volume_mcm": s["stored_water_volume_mcm"],
+                "urban_inundated_area_km2": s["urban_inundated_area_km2"],
+                "max_urban_depth_m": s["max_urban_depth_m"],
+                "mean_flooded_urban_depth_m": s["mean_flooded_urban_depth_m"],
+                "mass_balance_residual_m3": s["mass_balance"]["residual_m3"],
+                "computation_time_ms": s["computation_time_ms"],
+            }
+            if exp_eng is not None:
+                e = exp_eng.evaluate_scenario_exposure(
+                    res["_final_depth_grid"],
+                    cfg.scenario_id,
+                    cfg.scenario_name,
+                    threshold_m=threshold_m,
+                    include_highlight_geojson=False,
+                )
+                pt["exposed_buildings_count"] = e["buildings"]["exposed_count"]
+                pt["exposed_roads_km"] = e["roads"]["exposed_length_km"]
+            points.append(pt)
+
+        return {
+            "parameter": parameter,
+            "unit": unit,
+            "steps": n_steps,
+            "baseline_scenario_id": base.scenario_id,
+            "baseline_scenario_name": base.scenario_name,
+            "depth_threshold_m": threshold_m,
+            "points": points,
+            "methodology_note": (
+                "Deterministic one-at-a-time parameter sweep executing full Landlab 2D OverlandFlow grids. "
+                "Shows model response sensitivity; does not represent calibrated probabilistic confidence intervals."
+            ),
         }
 
     def list_saved_scenarios(self) -> List[Dict[str, Any]]:
         if not self._saved_scenarios_path.exists():
             return []
         try:
-            return json.loads(self._saved_scenarios_path.read_text())
+            items = json.loads(self._saved_scenarios_path.read_text())
+            for item in items:
+                if "id" not in item:
+                    item["id"] = self._slugify(item.get("saved_name", "saved"))
+            return items
         except Exception:
             return []
 
+    @staticmethod
+    def _slugify(name: str) -> str:
+        clean = "".join(c.lower() if c.isalnum() else "_" for c in name).strip("_")
+        while "__" in clean:
+            clean = clean.replace("__", "_")
+        return clean or "scenario"
+
     def save_scenario_config(self, name: str, cfg: HydroScenarioConfig) -> Dict[str, Any]:
         saved = self.list_saved_scenarios()
+        sid = self._slugify(name)
+        now_utc = datetime.now(timezone.utc).isoformat()
         entry = {
-            "saved_name": name,
-            "saved_at_utc": datetime.now(timezone.utc).isoformat(),
+            "id": sid,
+            "saved_name": name.strip(),
+            "saved_at_utc": now_utc,
+            "updated_at_utc": now_utc,
             "config": asdict(cfg),
+            "reproducibility": {
+                "cache_key": cfg.cache_key(),
+                "solver_version": f"Landlab {getattr(landlab, '__version__', '2.x')}",
+                "grid_shape": [self.rows, self.cols],
+                "dx_m": self.dx_m,
+            },
         }
-        # Replace if duplicate saved_name
-        saved = [s for s in saved if s.get("saved_name") != name]
+        saved = [s for s in saved if s.get("saved_name") != entry["saved_name"] and s.get("id") != sid]
         saved.append(entry)
         self._saved_scenarios_path.parent.mkdir(parents=True, exist_ok=True)
         self._saved_scenarios_path.write_text(json.dumps(saved, indent=2))
         return entry
+
+    def rename_saved_scenario(self, scenario_key: str, new_name: str) -> Optional[Dict[str, Any]]:
+        clean_new = new_name.strip()
+        if not clean_new:
+            raise ValueError("New scenario name cannot be empty.")
+        saved = self.list_saved_scenarios()
+        target = next((s for s in saved if s.get("id") == scenario_key or s.get("saved_name") == scenario_key), None)
+        if not target:
+            return None
+        new_id = self._slugify(clean_new)
+        saved = [s for s in saved if s is target or (s.get("id") != new_id and s.get("saved_name") != clean_new)]
+        target["id"] = new_id
+        target["saved_name"] = clean_new
+        target["config"]["scenario_name"] = clean_new
+        target["updated_at_utc"] = datetime.now(timezone.utc).isoformat()
+        self._saved_scenarios_path.write_text(json.dumps(saved, indent=2))
+        return target
+
+    def duplicate_saved_scenario(self, scenario_key: str, new_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        saved = self.list_saved_scenarios()
+        target = next((s for s in saved if s.get("id") == scenario_key or s.get("saved_name") == scenario_key), None)
+        if not target:
+            return None
+        dup_name = (new_name or f"{target['saved_name']} Copy").strip()
+        existing_names = {s.get("saved_name") for s in saved}
+        idx = 2
+        candidate = dup_name
+        while candidate in existing_names:
+            candidate = f"{dup_name} {idx}"
+            idx += 1
+        cfg_dict = dict(target["config"])
+        cfg_dict["scenario_id"] = self._slugify(candidate)
+        cfg_dict["scenario_name"] = candidate
+        cfg = HydroScenarioConfig(**cfg_dict)
+        return self.save_scenario_config(candidate, cfg)
+
+    def delete_saved_scenario(self, scenario_key: str) -> bool:
+        saved = self.list_saved_scenarios()
+        filtered = [s for s in saved if s.get("id") != scenario_key and s.get("saved_name") != scenario_key]
+        if len(filtered) == len(saved):
+            return False
+        self._saved_scenarios_path.write_text(json.dumps(filtered, indent=2))
+        return True
 
 
 def normalize_scenario_id(scenario_id: str) -> str:

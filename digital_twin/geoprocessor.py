@@ -208,7 +208,7 @@ def build_dem_utm44n(
         # 2) Enforce smooth downstream channel monotonicity from ocean boundary (prevents remaining 150m bridge humps)
         ch_dist = np.full((rows, cols), -1, dtype=np.int32)
         q = deque()
-        for r_o, c_o in zip(*np.where(ocean_mask)):
+        for r_o, c_o in zip(*np.where(ocean_mask), strict=False):
             ch_dist[r_o, c_o] = 0
             q.append((int(r_o), int(c_o)))
         nbrs = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
@@ -221,7 +221,7 @@ def build_dem_utm44n(
                     ch_dist[nr, nc] = cd + 1
                     q.append((nr, nc))
         # Breach any downstream channel hump along shortest-hop gradient to ocean
-        ch_cells = [(int(ch_dist[r, c]), int(r), int(c)) for r, c in zip(*np.where(channel_mask)) if ch_dist[r, c] > 0]
+        ch_cells = [(int(ch_dist[r, c]), int(r), int(c)) for r, c in zip(*np.where(channel_mask), strict=False) if ch_dist[r, c] > 0]
         ch_cells.sort(reverse=True)
         for _ in range(3):
             for cd, r, c in ch_cells:

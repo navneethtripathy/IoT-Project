@@ -75,6 +75,30 @@ else
     FAILURES=$((FAILURES + 1))
 fi
 
+TILE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://${API_HOST}:${API_PORT}/api/urban/geo/terrain_tiles/12/2960/1899.png")
+if [ "$TILE_CODE" = "200" ]; then
+    echo "[PASS] 3D Copernicus Terrarium Tiles: HTTP 200"
+else
+    echo "[FAIL] 3D Copernicus Terrarium Tiles: HTTP ${TILE_CODE}"
+    FAILURES=$((FAILURES + 1))
+fi
+
+EXP_JSON=$(curl -sf "http://${API_HOST}:${API_PORT}/api/urban/exposure?scenario_id=heavy_rainfall&include_geojson=false" || echo "")
+if echo "$EXP_JSON" | grep -q "modelled_potential_exposure"; then
+    echo "[PASS] Spatial Exposure Engine: /api/urban/exposure OK"
+else
+    echo "[FAIL] Spatial Exposure Engine: /api/urban/exposure check failed"
+    FAILURES=$((FAILURES + 1))
+fi
+
+PDF_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://${API_HOST}:${API_PORT}/api/urban/report/pdf?scenario_id=heavy_rainfall")
+if [ "$PDF_CODE" = "200" ]; then
+    echo "[PASS] Engineering PDF Report: HTTP 200"
+else
+    echo "[FAIL] Engineering PDF Report: HTTP ${PDF_CODE}"
+    FAILURES=$((FAILURES + 1))
+fi
+
 NR_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:${NODERED_PORT}/ui/")
 if [ "$NR_CODE" = "200" ]; then
     echo "[PASS] Node-RED Dashboard: HTTP 200 on http://127.0.0.1:${NODERED_PORT}/ui/"
