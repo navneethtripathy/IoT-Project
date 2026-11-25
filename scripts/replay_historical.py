@@ -13,12 +13,10 @@ Safety Guarantees:
 from __future__ import annotations
 
 import csv
-import json
 import logging
 import sys
 import threading
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Callable
 
@@ -27,7 +25,7 @@ _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
 from backend import config
-from backend.models import TelemetryMessage, DataSource, SensorStatus
+from backend.models import DataSource, SensorStatus
 
 logging.basicConfig(
     level=logging.INFO,

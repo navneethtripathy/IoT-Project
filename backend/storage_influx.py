@@ -196,8 +196,8 @@ class InfluxDBStorage(StorageBackend):
             self._write_api.close()
             self._client.close()
             logger.info("InfluxDB client closed")
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug("InfluxDB close ignored error: %s", e)
 
     def _run_query(self, flux: str) -> list[dict]:
         try:

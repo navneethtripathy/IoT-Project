@@ -25,7 +25,6 @@ import argparse
 import json
 import logging
 import ssl
-import sys
 import time
 import urllib.parse
 import urllib.request

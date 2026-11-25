@@ -11,7 +11,6 @@ import json
 import logging
 import time
 import threading
-from datetime import datetime, timezone
 from typing import Optional
 
 from digital_twin.model import DigitalTwinEngine, create_default_zones

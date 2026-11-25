@@ -48,7 +48,7 @@ include = ["backend*", "digital_twin*", "experiments*", "scripts*"]
 exclude = ["data*", "results*", "reports*", "firmware*", "nodered*", "presentation*", "mqtt*", "docs*", "tests*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "backend/tests", "digital_twin/tests"]
+testpaths = ["tests"]
 addopts = "-W ignore::DeprecationWarning -W ignore::pytest.PytestConfigWarning"
 markers = [
     "integration: live end-to-end integration tests requiring running services",

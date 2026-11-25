@@ -57,12 +57,12 @@ services:
       - "8086:8086"   # InfluxDB UI + API — reachable from Mac
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=civictwin_local
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME:-civictwin}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD:?Set INFLUXDB_PASSWORD in .env}
       - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-civictwin}
       - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-telemetry}
       - DOCKER_INFLUXDB_INIT_RETENTION=30d
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN:-civictwin-dev-token}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN:?Set INFLUXDB_TOKEN in .env}
     volumes:
       - influxdb_data:/var/lib/influxdb2
     restart: unless-stopped
@@ -116,7 +116,7 @@ services:
       - MQTT_BROKER_PORT=1883
       # ── InfluxDB: use the Docker service name ─────────────────────
       - INFLUXDB_URL=http://influxdb:8086
-      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-civictwin-dev-token}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN:-}
       - INFLUXDB_ORG=${INFLUXDB_ORG:-civictwin}
       - INFLUXDB_BUCKET=${INFLUXDB_BUCKET:-telemetry}
       - INFLUXDB_ENABLED=${INFLUXDB_ENABLED:-true}

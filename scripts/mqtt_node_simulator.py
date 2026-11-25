@@ -16,7 +16,6 @@ import argparse
 import json
 import logging
 import math
-import os
 import random
 import signal
 import sys
@@ -32,7 +31,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 import paho.mqtt.client as mqtt
 
 from backend import config
-from digital_twin.edge_warning import EdgeWarningEvaluator, EdgeAlertState
+from digital_twin.edge_warning import EdgeWarningEvaluator
 from digital_twin.tank_twin import PhysicalTankModel, TankGeometry
 
 logging.basicConfig(
@@ -264,8 +263,8 @@ class MultiNodeMqttSimulator:
                 try:
                     with open(CONTROL_FILE, "w") as f_out:
                         json.dump(data, f_out, indent=2)
-                except Exception:
-                    pass
+                except OSError as e:
+                    logger.debug("Control file write skipped: %s", e)
         except Exception as e:
             logger.debug("Control file read skipped: %s", e)
 
@@ -297,7 +296,7 @@ class MultiNodeMqttSimulator:
                             self.client.publish(t_node, payload, qos=1)
                             self.client.publish(t_zone, payload, qos=1)
 
-                            logger.info(
+                            logger.debug(
                                 "[TX] %s -> Level=%.1fcm (%.1f%%) Status=%s Alert=%s",
                                 node.node_id,
                                 reading["water_level_cm"] or 0.0,

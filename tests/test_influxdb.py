@@ -7,14 +7,12 @@ and REST API endpoints.
 import time
 import urllib.request
 import json
-import pytest
 from datetime import datetime, timezone
 from fastapi.testclient import TestClient
 
-from backend import config
 from backend.app.main import app, storage
 from backend.models import IngestedTelemetry, DataSource, SensorStatus
-from backend.storage import SQLiteStorage, create_storage
+from backend.storage import SQLiteStorage
 from backend.storage_influx import InfluxDBStorage
 
 

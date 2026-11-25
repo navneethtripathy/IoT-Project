@@ -13,7 +13,7 @@ import json
 import logging
 import sqlite3
 import threading
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -396,13 +396,13 @@ class SQLiteStorage(StorageBackend):
         with self._lock:
             try:
                 self._conn.close()
-            except Exception:
-                pass
+            except sqlite3.Error as e:
+                logger.debug("SQLite close ignored error: %s", e)
         if self._secondary_storage is not None:
             try:
                 self._secondary_storage.close()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug("Secondary storage close ignored error: %s", e)
 
 
 class MemoryStorage(StorageBackend):

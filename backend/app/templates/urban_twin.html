@@ -7,7 +7,6 @@
   <script src="/static/vendor/tailwindcss.js"></script>
   <link href="/static/vendor/maplibre-gl.css" rel="stylesheet" />
   <script src="/static/vendor/maplibre-gl.js"></script>
-  <script src="/static/vendor/lucide.min.js"></script>
   <style>
     body {
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -211,7 +210,7 @@
       <div id="layer-popover" class="hidden absolute top-12 right-16 z-20 w-64 bg-slate-950/95 border border-slate-700 rounded-xl p-3 shadow-2xl text-xs space-y-1.5 backdrop-blur-md">
         <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
           <span class="font-bold text-cyan-300">Geospatial Layer Control</span>
-          <button onclick="toggleLayerMenu()" class="text-slate-400 hover:text-white">✕</button>
+          <button onclick="toggleLayerMenu()" class="text-slate-400 hover:text-white">&times;</button>
         </div>
         <label class="flex items-center justify-between cursor-pointer"><span class="text-slate-200">Flood Depth Raster (Landlab)</span><input type="checkbox" checked onchange="toggleMapLayer(['flood-raster'], this.checked)" /></label>
         <label class="flex items-center justify-between cursor-pointer"><span class="text-slate-200">3D Flood Depth Prisms</span><input type="checkbox" checked onchange="toggleMapLayer(['flood-cells-3d'], this.checked)" /></label>

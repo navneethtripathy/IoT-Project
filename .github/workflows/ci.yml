@@ -1,0 +1,43 @@
+name: CivicTwin-R CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Static syntax, shell, and JSON validation
+        run: |
+          python -m py_compile $(git ls-files '*.py')
+          python -c "import json, pathlib; [json.loads(p.read_text()) for p in [pathlib.Path('nodered/flows.json'), pathlib.Path('data/geo/processed/dem_metadata.json')]]"
+          for s in scripts/*.sh; do bash -n "$s"; done
+
+      - name: Run unit, hydrology, tank physics, and offline UI API tests
+        run: |
+          PYTHONPATH=. pytest \
+            tests/test_all.py \
+            tests/test_tank_twin.py \
+            tests/test_chennai_twin.py \
+            tests/test_terrain_hydrology.py \
+            tests/test_urban_twin.py \
+            -v

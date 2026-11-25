@@ -15,6 +15,7 @@ Verifies:
 from __future__ import annotations
 
 import os
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -31,9 +32,14 @@ def run_qa() -> int:
     external_blocked = []
 
     with sync_playwright() as p:
-        chrome_bin = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        chrome_bin = (
+            os.getenv("CHROME_PATH")
+            or shutil.which("google-chrome")
+            or shutil.which("chromium")
+            or "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        )
         browser = p.chromium.launch(
-            executable_path=chrome_bin if os.path.exists(chrome_bin) else None,
+            executable_path=chrome_bin if chrome_bin and os.path.exists(chrome_bin) else None,
             headless=True,
             args=["--use-gl=angle", "--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
         )
@@ -127,14 +133,16 @@ def run_qa() -> int:
         page.screenshot(path=str(SHOT_DIR / "10_experimental_tank_twin.png"))
 
         # 3. Node-RED Dashboard & Flow Editor
-        print("[3/5] Loading http://127.0.0.1:1880/ui/ ...")
+        print("[3/5] Loading http://127.0.0.1:1880/ui/ and flow editor ...")
         page_nr = context.new_page()
         page_nr.on("pageerror", lambda e: page_errors.append(f"[Node-RED] {e}"))
         page_nr.goto("http://127.0.0.1:1880/ui/", wait_until="networkidle", timeout=20000)
         time.sleep(2.0)
         page_nr.screenshot(path=str(SHOT_DIR / "11_nodered_dashboard.png"))
+        page_nr.goto("http://127.0.0.1:1880/", wait_until="domcontentloaded", timeout=20000)
+        assert "Node-RED" in page_nr.title(), f"Unexpected Node-RED editor title: {page_nr.title()}"
 
-        # 4. InfluxDB UI (port 8086) - sign in & query telemetry bucket if credentials present
+        # 4. InfluxDB UI (port 8086) - verify UI reachability & query Data Explorer if credentials present
         print("[4/5] Loading http://127.0.0.1:8086 ...")
         from dotenv import load_dotenv
         load_dotenv(_PROJECT_ROOT / ".env")
@@ -142,7 +150,8 @@ def run_qa() -> int:
         influx_pass = os.getenv("INFLUXDB_PASSWORD", "")
         page_inf = context.new_page()
         page_inf.goto("http://127.0.0.1:8086", wait_until="domcontentloaded", timeout=20000)
-        time.sleep(2.0)
+        time.sleep(1.5)
+        assert "InfluxDB" in page_inf.title(), f"Unexpected InfluxDB UI title: {page_inf.title()}"
         if influx_pass and page_inf.locator("input[name='username']").count() > 0:
             page_inf.fill("input[name='username']", influx_user)
             page_inf.fill("input[name='password']", influx_pass)
@@ -166,7 +175,7 @@ def run_qa() -> int:
                     if sub_btn.count() > 0:
                         sub_btn.first.click()
                         time.sleep(3.0)
-        page_inf.screenshot(path=str(SHOT_DIR / "12_influxdb_ui.png"))
+                        page_inf.screenshot(path=str(SHOT_DIR / "11_influxdb_ui.png"))
 
         browser.close()
 

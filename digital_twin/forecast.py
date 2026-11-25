@@ -18,8 +18,8 @@ from __future__ import annotations
 
 import logging
 import math
-from dataclasses import dataclass, field
-from datetime import datetime, timezone, timedelta
+from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Optional
 
 logger = logging.getLogger("civictwin.twin.forecast")

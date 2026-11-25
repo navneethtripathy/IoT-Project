@@ -26,8 +26,8 @@ def check_url(name: str, url: str) -> bool:
                 try:
                     data = json.loads(raw)
                     status_text = data.get("status", "ok")
-                except Exception:
-                    pass
+                except (json.JSONDecodeError, ValueError):
+                    status_text = "ok"
             print(f"[OK] {name} ({url}) - status: {status_text} (HTTP {resp.status})")
             return True
     except urllib.error.URLError as e:
@@ -71,7 +71,7 @@ def main():
     print(f"\nResult: {healthy}/{total} services active.")
 
     if not results["backend"]:
-        print("\nNote: Backend is offline. Run 'make run' or './scripts/start.sh' to start standalone mode.")
+        print("\nNote: Backend is offline. Run './scripts/showcase_start.sh' or 'make run' to start services.")
 
     return 0 if results["backend"] else 1
 

@@ -838,19 +838,21 @@ def get_services_status():
     influx_ok = bool(influx_target and hasattr(influx_target, "is_healthy") and influx_target.is_healthy())
     influx_count = influx_target.count() if influx_ok else 0
 
-    # 3. Node-RED HTTP UI check (127.0.0.1:1880/ui)
+    # 3. Node-RED HTTP UI check
+    import urllib.error
     nodered_ok = False
     nodered_editor_ok = False
+    nr_base = f"http://127.0.0.1:{config.NODERED_PORT}"
     for path_probe, flag in [("/ui/", "ui"), ("/", "ed")]:
         try:
-            with urllib.request.urlopen(f"http://127.0.0.1:1880{path_probe}", timeout=0.5) as resp:
+            with urllib.request.urlopen(f"{nr_base}{path_probe}", timeout=0.5) as resp:
                 if resp.status < 400:
                     if flag == "ui":
                         nodered_ok = True
                     else:
                         nodered_editor_ok = True
-        except Exception:
-            pass
+        except (OSError, urllib.error.URLError) as e:
+            logger.debug("Node-RED probe %s skipped: %s", path_probe, e)
 
     # 4. Simulator health via ingestion stats & node freshness
     ing_health = ingestion.get_health() if ingestion else {}
@@ -862,8 +864,8 @@ def get_services_status():
         "services": {
             "fastapi": {
                 "status": "online",
-                "url": "http://127.0.0.1:8000",
-                "docs_url": "http://127.0.0.1:8000/docs",
+                "url": f"http://{config.API_HOST}:{config.API_PORT}",
+                "docs_url": f"http://{config.API_HOST}:{config.API_PORT}/docs",
             },
             "mqtt_broker": {
                 "status": "connected" if (mqtt_client and mqtt_client.is_connected and mqtt_tcp_up) else ("reachable" if mqtt_tcp_up else "offline"),
@@ -888,8 +890,8 @@ def get_services_status():
                 "status": "online" if (nodered_ok or nodered_editor_ok) else "offline",
                 "dashboard_reachable": nodered_ok,
                 "editor_reachable": nodered_editor_ok,
-                "ui_url": "http://127.0.0.1:1880/ui",
-                "editor_url": "http://127.0.0.1:1880",
+                "ui_url": f"http://127.0.0.1:{config.NODERED_PORT}/ui/",
+                "editor_url": f"http://127.0.0.1:{config.NODERED_PORT}/",
             },
             "simulator": {
                 "status": "active" if (simulator is not None or msg_count > 0) else "idle",
@@ -908,7 +910,7 @@ def get_urban_twin_page():
     return FileResponse(URBAN_TWIN_HTML_PATH)
 
 
-_GEO_PROCESSED_DIR = config._PROJECT_ROOT / "data" / "geo" / "processed"
+_GEO_PROCESSED_DIR = config.GEO_PROCESSED_DIR
 _ACTIVE_SCENARIO_RESULT: dict = {}
 _SEARCH_INDEX_CACHE: Optional[list] = None
 
@@ -1453,8 +1455,8 @@ def control_showcase_node(node_id: str, action: str):
         try:
             with open(SIMULATOR_CONTROL_FILE, "r") as f:
                 control_data = json.load(f)
-        except Exception:
-            pass
+        except (OSError, json.JSONDecodeError) as e:
+            logger.debug("Ignoring stale simulator control file: %s", e)
 
     if "nodes" not in control_data:
         control_data["nodes"] = {}

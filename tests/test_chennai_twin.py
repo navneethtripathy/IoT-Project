@@ -16,17 +16,15 @@ from __future__ import annotations
 import csv
 import math
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_PROJECT_ROOT))
 
-import pytest
 from fastapi.testclient import TestClient
 
 from backend import config
-from backend.models import TelemetryMessage, DataSource, SensorStatus
+from backend.models import DataSource
 from backend.storage import MemoryStorage, SQLiteStorage, create_storage
 from backend.ingestion import IngestionService
 from backend.app.main import app

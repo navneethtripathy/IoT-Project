@@ -20,8 +20,6 @@ import urllib.request
 import pytest
 import paho.mqtt.client as mqtt
 
-from backend import config
-
 
 def is_port_open(host: str, port: int) -> bool:
     try:

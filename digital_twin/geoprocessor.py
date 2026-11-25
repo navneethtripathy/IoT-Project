@@ -23,7 +23,7 @@ import json
 import logging
 import math
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import geopandas as gpd
 import numpy as np
@@ -33,8 +33,8 @@ from pyproj import Transformer
 from rasterio.features import rasterize
 from rasterio.merge import merge
 from rasterio.warp import Resampling, reproject
-from scipy.ndimage import binary_dilation, label, median_filter
-from shapely.geometry import box, mapping
+from scipy.ndimage import label, median_filter
+from shapely.geometry import box
 from shapely.validation import make_valid
 
 logger = logging.getLogger("civictwin.geoprocessor")

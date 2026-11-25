@@ -1,120 +1,75 @@
-# CivicTwin-R — System Architecture
+# System Architecture
 
-## Overview
+CivicTwin-R implements two cleanly separated cyber-physical workstreams within a unified offline-capable web platform:
 
-CivicTwin-R is a cyber-physical digital twin system for urban flood monitoring.
-It follows a layered pipeline architecture with clear separation of concerns.
+1. **Chennai 3D Urban Flood Digital Twin (Primary Workstream A)** — Geospatial MapLibre GL JS WebGL interface (`EPSG:4326`) coupled with `Landlab OverlandFlow` 2D shallow-water routing on a metric `EPSG:32644` (UTM Zone 44N, `150 m`) grid derived from Copernicus GLO-30 topography, official Tamil Nadu CFM-DSS WFS layers, and OpenStreetMap extracts.
+2. **Experimental IoT Bench Twin & Telemetry Resilience Pipeline (Workstream B)** — Simulated two-node cyber-physical testbench (`node_01`, `node_02`) streaming ultrasonic level telemetry over Mosquitto MQTT (`1883`) into FastAPI (`8000`), dual-persisted to `SQLite` (WAL mode) and `InfluxDB 2.x` (`8086`), and visualized on both Three.js WebGL and Node-RED (`1880/ui/`).
 
-## Architecture Diagram
+---
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        DATA SOURCES                             │
-│                                                                 │
-│  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐    │
-│  │  ESP32 +     │  │   Python     │  │   Digital Twin     │    │
-│  │  HC-SR04     │  │   Sensor     │  │   Engine           │    │
-│  │  (Wokwi)    │  │   Simulator  │  │   (3 virtual zones)│    │
-│  └──────┬───────┘  └──────┬───────┘  └────────┬───────────┘    │
-│         │                 │                    │                │
-│         │    JSON/MQTT    │   Direct callback  │                │
-└─────────┼─────────────────┼────────────────────┼────────────────┘
-          │                 │                    │
-          ▼                 ▼                    ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     MESSAGING LAYER                             │
-│                                                                 │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  Mosquitto MQTT Broker (port 1883)                       │   │
-│  │  Topics: civictwin/v1/zones/{zone_id}/telemetry          │   │
-│  │          civictwin/v1/zones/{zone_id}/status              │   │
-│  │          civictwin/v1/zones/{zone_id}/alerts              │   │
-│  └──────────────────────────┬───────────────────────────────┘   │
-│                             │                                   │
-│         OR direct callback when MQTT unavailable                │
-└─────────────────────────────┼───────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    PROCESSING LAYER                              │
-│                                                                 │
-│  ┌────────────────────────────────────────────────────────┐     │
-│  │  Ingestion Service                                     │     │
-│  │  • Schema validation (Pydantic)                        │     │
-│  │  • Duplicate detection (device_id + sequence)          │     │
-│  │  • Stale reading detection (30s timeout)               │     │
-│  │  • Quality flag enrichment                             │     │
-│  │  • Threshold alert generation                          │     │
-│  └────────────────────┬───────────────────────────────────┘     │
-│                       │                                         │
-│  ┌────────────────────▼───────────────────────────────────┐     │
-│  │  FastAPI Backend (port 8000)                            │     │
-│  │  • REST API endpoints                                   │     │
-│  │  • Scenario management                                  │     │
-│  │  • Zone status aggregation                              │     │
-│  │  • Experiment results serving                           │     │
-│  └────────────────────┬───────────────────────────────────┘     │
-└────────────────────────┼────────────────────────────────────────┘
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-┌──────────────┐  ┌────────────┐  ┌──────────────┐
-│   SQLite     │  │  InfluxDB  │  │  In-Memory   │
-│  (default)   │  │  (optional)│  │  (testing)   │
-│  Fallback    │  │  2.x       │  │              │
-└──────────────┘  └────────────┘  └──────────────┘
+## Multi-Tier Data Flow
 
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                            │
-│                                                                 │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  Node-RED Dashboard (port 1880)                          │   │
-│  │  • System overview & health                              │   │
-│  │  • Per-zone water level gauges                           │   │
-│  │  • Scenario controls (start/stop/step)                   │   │
-│  │  • Alert display                                         │   │
-│  │  Polls FastAPI backend every 5–10 seconds                │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │  FastAPI Swagger UI (/docs)                              │   │
-│  │  Interactive API documentation                           │   │
-│  └──────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
+```text
+Workstream A — Urban Flood Terrain Twin
+  Copernicus GLO-30 DEM + CFM-DSS WFS + OSM PBF
+        |
+        v (EPSG:32644 UTM 44N, dx=150m, 111x175 cells)
+  digital_twin/terrain_hydrology.py (Landlab OverlandFlow)
+        |
+        v (GeoJSON + RGBA depth PNG + mass-balance summary)
+  FastAPI REST (/api/urban/*) -> Offline MapLibre 3D UI (/urban-twin)
+
+Workstream B — Experimental IoT Bench Pipeline
+  Node 01 (50 cm tank) & Node 02 (60 cm tank) [MQTT QoS 1]
+        |
+        +--> Mosquitto Broker (127.0.0.1:1883)
+                |
+                +--> Node-RED (127.0.0.1:1880/ui/) [Gauges, Charts, Debug]
+                +--> FastAPI IngestionService (Pydantic v2 + Dedup + Freshness + Hysteresis)
+                        |
+                        +--> SQLite WAL (data/civictwin.db)
+                        +--> InfluxDB 2.x (http://127.0.0.1:8086, bucket telemetry)
+                        +--> Torricelli RK4 Twin + Three.js WebGL (/showcase)
 ```
 
-## Execution Modes
+---
 
-### Mode A — Full Local Integration
-All services running: Mosquitto, InfluxDB, Node-RED, backend.
-ESP32 or Python simulator publishes via MQTT.
+## MQTT Topic & Payload Contract
 
-### Mode B — Demo / Offline Development
-Backend runs standalone with SQLite storage.
-Simulator feeds data directly into ingestion via callback.
-No Docker, MQTT broker, or InfluxDB required.
+Prefix: `civictwin/v1/` (QoS `1`).
 
-## Component Summary
+| Topic Pattern | Retain | Cadence | Purpose |
+| :--- | :--- | :--- | :--- |
+| `civictwin/v1/nodes/{device_id}/telemetry` | `false` | `5 s` | Depth, distance, fill %, quality flags, `source` tag |
+| `civictwin/v1/nodes/{device_id}/status` | `true` | `30 s` | Heap, uptime, Wi-Fi/MQTT flags, alert state |
+| `civictwin/v1/nodes/{device_id}/alerts` | `false` | Event | Hysteresis-filtered warning/critical transitions |
+| `civictwin/v1/zones/{zone_id}/telemetry` | `false` | `5 s` | Zone-mapped telemetry stream |
+| `civictwin/v1/zones/{zone_id}/status` | `true` | `30 s` | Zone heartbeat summary |
+| `civictwin/v1/zones/{zone_id}/alerts` | `false` | Event | Zone threshold transition alerts |
 
-| Component | Technology | Port | Required? |
-|-----------|-----------|------|-----------|
-| Sensor Simulator | Python | — | Yes (replaces ESP32) |
-| MQTT Broker | Mosquitto 2.0 | 1883 | Optional (Mode A) |
-| Backend API | FastAPI + Uvicorn | 8000 | Yes |
-| Time-Series DB | InfluxDB 2.7 | 8086 | Optional |
-| Fallback DB | SQLite | — | Default |
-| Dashboard | Node-RED 4.0 | 1880 | Optional |
-| Digital Twin | Python | — | Embedded in backend |
+### Telemetry Schema Highlights (`v1.0`)
+- Required fields: `schema_version`, `device_id`, `zone_id`, `sequence` (`>= 0`), `timestamp` (UTC ISO-8601), `sensor_status` (`valid | invalid | stale | offline | simulated`), `source`.
+- Optional analog rain fields: `rain_sensor_raw`, `rain_indicator_pct` (Wokwi potentiometer stand-in; uncalibrated relative indicator, never interpreted as `mm` or `mm/hr`, tagged with `rain_indicator_uncalibrated`).
+- Freshness state thresholds (configurable in `backend/config.py`): `FRESH` (`<= 30 s`), `STALE` (`30–90 s`), `OFFLINE` (`> 90 s`).
+- Edge alarm thresholds: `70.0%` warning, `85.0%` critical, with a `3.0%` hysteresis clearance band.
 
-## Data Flow
+---
 
-1. Sensor (physical or simulated) produces a distance measurement
-2. Distance is converted to water depth: `depth = container_height - distance`
-3. Depth is normalized to percentage: `pct = (depth / container_height) × 100`
-4. JSON telemetry message is published (MQTT or direct)
-5. Ingestion service validates, deduplicates, and enriches the message
-6. Record is persisted to storage (SQLite or InfluxDB)
-7. Threshold alerts are generated when levels exceed configured limits
-8. Dashboard polls the API and displays current zone states
+## Persistence Schema & Storage Roles
+
+1. **SQLite (Primary Store, WAL Mode):** Stores validated telemetry rows (`telemetry` table with `(device_id, sequence)` deduplication), zone states, and threshold alerts at `config.SQLITE_DB_PATH`. Inspectable read-only at `/api/database/tables` and `/api/database/records`.
+2. **InfluxDB 2.x (Parallel Time-Series Store):** Receives dual-written measurement `telemetry` with tags (`device_id`, `zone_id`, `sensor_status`, `source`) and float fields (`distance_cm`, `water_level_cm`, `water_level_pct`, `rain_indicator_pct`) in bucket `telemetry`. Falls back gracefully to SQLite if offline.
+
+---
+
+## Core Service Endpoints
+
+| Component | URL / Address | Function |
+| :--- | :--- | :--- |
+| Primary 3D Urban Twin | `http://127.0.0.1:8000/urban-twin` | Interactive MapLibre 3D flood terrain & scenario studio |
+| Control Center | `http://127.0.0.1:8000/showcase` | Unified multi-tab interface (Urban + IoT Lab + Explorer) |
+| Live Service Probes | `http://127.0.0.1:8000/api/services/status` | Real TCP/HTTP/DB health JSON for UI & verification |
+| OpenAPI / Swagger UI | `http://127.0.0.1:8000/docs` | Full interactive REST documentation |
+| InfluxDB 2.x UI | `http://127.0.0.1:8086` | Flux Data Explorer & time-series visualization |
+| Node-RED Dashboard | `http://127.0.0.1:1880/ui/` | Secondary MQTT operational dashboard (` flows editor at /`) |
+| Mosquitto MQTT | `tcp://127.0.0.1:1883` | Local MQTT message broker |
